@@ -1,7 +1,7 @@
 ---
 type: phase
 id: phase-13-validator-and-parser
-status: planned
+status: complete
 created: 2026-08-21
 updated: 2026-08-21
 related:
@@ -10,4 +10,4 @@ related:
 
 # Phase 13 — Validator and Parser
 
-Build a deterministic, category-agnostic brief parser and validator. It must identify product, quantity, requirements, budgets, delivery, and authorization where stated; it must ask for clarification on missing/conflicting values and reject unrelated text safely. No LLM is required in Demo Mode.
+`brief-parser.ts` now handles laptop, chair, monitor, and printer inputs with normalized requirements, unit/total budgets, delivery, clarification, conflict, and unrelated-request outcomes. Parser tests cover the migration-required prompt categories. No LLM is used in Demo Mode.

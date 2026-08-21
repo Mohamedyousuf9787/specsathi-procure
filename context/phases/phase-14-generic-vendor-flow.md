@@ -1,7 +1,7 @@
 ---
 type: phase
 id: phase-14-generic-vendor-flow
-status: planned
+status: complete
 created: 2026-08-21
 updated: 2026-08-21
 related:
@@ -10,4 +10,4 @@ related:
 
 # Phase 14 — Generic Vendor Flow
 
-Add a local vendor-search-provider abstraction that accepts a normalized buying brief and returns normalized offers from Vendor A and Vendor B. Keep unknown categories as deterministic no-match outcomes with no invented offers.
+`generic-vendor-flow.ts` now defines `VendorSearchProvider`, a local Vendor A/Vendor B provider, dynamic queries, normalized comparison, generic authorization, approval/rejection, final-term confirmation, simulated orders, and audit events. Laptop, chair, monitor, unknown printer, rejection, and changed terms are covered by tests.

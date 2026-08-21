@@ -12,4 +12,4 @@ related:
 
 # Active Work
 
-Complete release checks and reconcile the implementation records with final test, build, visual, and offline-readiness evidence. The primary risks remain weakening offline reliability, treating an over-limit offer as compliant, or creating a mock order before approval.
+Connect the generic parser and vendor flow to the product UI without reintroducing fixed category tabs or weakening the existing approval and audit experience. The primary risks remain silently converting unknown categories into legacy items, hiding clarification states, treating an over-limit offer as compliant, or creating a mock order before approval.

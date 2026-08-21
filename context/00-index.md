@@ -1,7 +1,7 @@
 ---
 type: index
 id: CTX-000
-phase: phase-11-generalization-baseline
+phase: phase-14-generic-vendor-flow
 status: active
 created: 2026-08-21
 updated: 2026-08-21
@@ -15,6 +15,6 @@ related:
 
 This vault is the recoverable working memory for the offline-first procurement-control demo. Start every resumed session with [[01-current-state]], then read [[02-active-work]] and [[03-next-actions]].
 
-Current phase: [[phases/phase-11-generalization-baseline]].
+Current phase: [[phases/phase-14-generic-vendor-flow]].
 
 Key decisions: [[decisions/DEC-001-initial-architecture]]. Migration baseline: [[checkpoints/CP-011-laptop-baseline]]. Resume with [[01-current-state]] and run the documented local checks before any further change.
