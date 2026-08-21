@@ -1,0 +1,20 @@
+<slide id="candidate_comparison">
+  <background color="paper"/>
+  <shape id="audit-thread" type="line" x="60" y="58" width="0" height="600" stroke="hairline" stroke-width="1"/>
+  <shape id="header-rule" type="line" x="110" y="94" width="88" height="0" stroke="accent" stroke-width="4"/>
+  <text id="kicker" x="110" y="58" width="300" height="22" font="caption" color="muted" wrap="false">04 · RANKED EVIDENCE</text>
+  <text id="title" x="110" y="132" width="820" height="70" font="display" size="46" color="primary" line-height="1.05">Every candidate remains visible.</text>
+  <text id="subtitle" x="110" y="222" width="760" height="34" font="body" size="20" color="muted">The selection is inspectable because every Vendor A and Vendor B option is retained and scored.</text>
+  <table id="candidate-table" x="110" y="290" width="750" height="266" columns="0.8,2.3,1.2,1.1,1.1,1.5" rows="46,55,55,55,55" font="body" size="14" color="ink" padding="10 10" header-fill="primary" header-border="1 primary" border-h="1 hairline" border-v="1 hairline" border-outer="1 hairline">
+    <tr color="#FFFFFF"><td>Rank</td><td>Offer</td><td>Fit</td><td>Price</td><td>Delivery</td><td>Policy</td></tr>
+    <tr><td>#1</td><td><strong>Atlas Business 14</strong></td><td>30/30</td><td>₹44,200</td><td>4 days</td><td color="#14752B">Eligible</td></tr>
+    <tr><td>#2</td><td><strong>Vector Plus 15</strong></td><td>30/30</td><td>₹48,600</td><td>4 days</td><td color="#9A3B00">Approval</td></tr>
+    <tr><td>#3</td><td><strong>Atlas Lite 14</strong></td><td>20/30</td><td>₹39,800</td><td>3 days</td><td color="#9A3B00">Blocked</td></tr>
+    <tr><td>#4</td><td><strong>Vector Work 14</strong></td><td>30/30</td><td>₹42,800</td><td>5 days</td><td color="#9A3B00">Blocked</td></tr>
+  </table>
+  <shape id="rule-card" type="rect" x="905" y="290" width="265" height="118" fill="surface" stroke="hairline" stroke-width="1"/>
+  <text id="rule-card-copy" x="930" y="314" width="215" height="76" font="body" color="ink" line-height="1.3"><p font="caption" size="13" color="accent">DECISION RULE</p><p font="heading" size="22">Best fit, within authority.</p></text>
+  <shape id="evidence-card" type="rect" x="905" y="438" width="265" height="118" fill="surface" stroke="hairline" stroke-width="1"/>
+  <text id="evidence-card-copy" x="930" y="462" width="215" height="78" font="body" color="ink" line-height="1.32"><p font="caption" size="13" color="accent">WHY RETAIN FAILURES</p><p size="17" color="muted">Blocked offers make the policy rationale auditable.</p></text>
+  <text id="page-number" x="1200" y="662" width="30" height="20" font="caption" color="muted" align="right" wrap="false">05</text>
+</slide>

@@ -1,0 +1,122 @@
+{
+  "project_info": {
+    "title": "SpecSathi Procure",
+    "created": 1787309078.176,
+    "last_updated": 1787309310.839,
+    "total_slides": 10
+  },
+  "slides": [
+    {
+      "id": "cover",
+      "state": "edited",
+      "pageNum": 1
+    },
+    {
+      "id": "control_problem",
+      "state": "edited",
+      "pageNum": 2
+    },
+    {
+      "id": "workflow",
+      "state": "edited",
+      "pageNum": 3
+    },
+    {
+      "id": "evidence_boundary",
+      "state": "edited",
+      "pageNum": 4
+    },
+    {
+      "id": "candidate_comparison",
+      "state": "edited",
+      "pageNum": 5
+    },
+    {
+      "id": "vendor_confirmation",
+      "state": "edited",
+      "pageNum": 6
+    },
+    {
+      "id": "unavailable_vendor",
+      "state": "edited",
+      "pageNum": 7
+    },
+    {
+      "id": "curated_demos",
+      "state": "edited",
+      "pageNum": 8
+    },
+    {
+      "id": "finance_handoff",
+      "state": "edited",
+      "pageNum": 9
+    },
+    {
+      "id": "judge_walkthrough",
+      "state": "edited",
+      "pageNum": 10
+    }
+  ],
+  "outline": [
+    {
+      "id": "cover",
+      "title": "SpecSathi Procure",
+      "summary": "Cover slide with the final-round title and human-held authorization-boundary proposition.",
+      "image_plan": "Use a suitable image if needed"
+    },
+    {
+      "id": "control_problem",
+      "title": "Autonomous buying needs controls",
+      "summary": "The procurement challenge and the need for explicit procurement control records.",
+      "image_plan": "Use a suitable image if needed"
+    },
+    {
+      "id": "workflow",
+      "title": "Workflow holds at risk",
+      "summary": "Record, compare, and control sequence across intake, evidence, and authorization.",
+      "image_plan": "Use a suitable image if needed"
+    },
+    {
+      "id": "evidence_boundary",
+      "title": "Real data, explicit verification",
+      "summary": "Live marketplace cards, fast bounded details, explicit verification, and transparent fallback.",
+      "image_plan": "Use a suitable image if needed"
+    },
+    {
+      "id": "candidate_comparison",
+      "title": "Every candidate remains visible",
+      "summary": "Visible all-candidates ranking and policy decisions without hidden alternatives.",
+      "image_plan": "Use a suitable image if needed"
+    },
+    {
+      "id": "vendor_confirmation",
+      "title": "Vendor confirmation is active",
+      "summary": "Accept, reject, and counter-offer re-evaluation at the vendor boundary.",
+      "image_plan": "Use a suitable image if needed"
+    },
+    {
+      "id": "unavailable_vendor",
+      "title": "Top vendor unavailable",
+      "summary": "The named unavailable-top-vendor re-ranking demonstration.",
+      "image_plan": "Use a suitable image if needed"
+    },
+    {
+      "id": "curated_demos",
+      "title": "Curated demos, clear intake",
+      "summary": "Laptop, mobile, furniture, and multi-item deterministic demo records.",
+      "image_plan": "Use a suitable image if needed"
+    },
+    {
+      "id": "finance_handoff",
+      "title": "Auditable finance handoff",
+      "summary": "Multi-item finance handoff and JSON/CSV decision record exports with no payment instruction.",
+      "image_plan": "Use a suitable image if needed"
+    },
+    {
+      "id": "judge_walkthrough",
+      "title": "Four-move judge walkthrough",
+      "summary": "Final-round live demonstration sequence and closing takeaway.",
+      "image_plan": "Use a suitable image if needed"
+    }
+  ]
+}

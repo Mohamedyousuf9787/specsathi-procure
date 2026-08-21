@@ -2,10 +2,13 @@ import { describe, expect, it } from "vitest";
 import { goldenItems } from "./procurement";
 import {
   canonicalCategory,
+  curatedDemoBriefs,
+  furnitureDemoBrief,
   getCategoryProfile,
   laptopDemoBrief,
   legacyItemToBuyingBrief,
   legacyOfferToVendorOffer,
+  mobileDemoBrief,
 } from "./generic-procurement";
 
 describe("generic procurement compatibility layer", () => {
@@ -26,9 +29,14 @@ describe("generic procurement compatibility layer", () => {
     expect(offer.attributes.specifications).toContain("adjustable height");
   });
 
-  it("provides a laptop profile and generic fallback without product tabs", () => {
+  it("provides laptop, mobile, and furniture profiles while retaining generic fallback", () => {
     expect(canonicalCategory("Notebooks")).toBe("laptop");
+    expect(canonicalCategory("smartphones")).toBe("mobile");
+    expect(canonicalCategory("desks")).toBe("furniture");
     expect(getCategoryProfile("printer").categoryId).toBe("generic");
     expect(laptopDemoBrief.hardRequirements).toHaveLength(3);
+    expect(mobileDemoBrief.hardRequirements.map((requirement) => requirement.key)).toEqual(["storage_gb", "network_5g", "battery_mah"]);
+    expect(furnitureDemoBrief.hardRequirements.map((requirement) => requirement.key)).toEqual(["ergonomic", "adjustable_height", "lumbar_support"]);
+    expect(Object.keys(curatedDemoBriefs)).toEqual(["laptop", "mobile", "furniture"]);
   });
 });

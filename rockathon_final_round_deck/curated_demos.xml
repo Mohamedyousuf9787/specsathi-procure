@@ -1,0 +1,21 @@
+<slide id="curated_demos">
+  <background color="paper"/>
+  <shape id="audit-thread" type="line" x="60" y="58" width="0" height="600" stroke="hairline" stroke-width="1"/>
+  <shape id="header-rule" type="line" x="110" y="94" width="88" height="0" stroke="accent" stroke-width="4"/>
+  <text id="kicker" x="110" y="58" width="330" height="22" font="caption" color="muted" wrap="false">07 · CURATED DEMOS</text>
+  <text id="title" x="110" y="132" width="780" height="70" font="display" size="46" color="primary" line-height="1.05">Curated demos broaden the story, not the clutter.</text>
+  <text id="subtitle" x="110" y="222" width="860" height="34" font="body" size="20" color="muted">Extra records are progressively disclosed, clearly deterministic, and always route through editable confirmation.</text>
+  <shape id="laptop-card" type="rect" x="110" y="315" width="250" height="230" fill="surface" stroke="hairline" stroke-width="1"/>
+  <icon id="laptop-icon" name="laptop" x="136" y="343" width="34" height="34" color="accent"/>
+  <text id="laptop-copy" x="136" y="402" width="190" height="105" font="body" color="ink" line-height="1.3"><p font="heading" size="22">Laptop</p><p size="16" color="muted">16 GB RAM · 512 GB SSD</p><p size="16" color="muted">Processor, delivery, authority</p></text>
+  <shape id="mobile-card" type="rect" x="380" y="315" width="250" height="230" fill="surface" stroke="hairline" stroke-width="1"/>
+  <icon id="mobile-icon" name="smartphone" x="406" y="343" width="34" height="34" color="accent"/>
+  <text id="mobile-copy" x="406" y="402" width="190" height="105" font="body" color="ink" line-height="1.3"><p font="heading" size="22">Mobile</p><p size="16" color="muted">5G · 128 GB storage</p><p size="16" color="muted">Battery, budget, delivery</p></text>
+  <shape id="furniture-card" type="rect" x="650" y="315" width="250" height="230" fill="surface" stroke="hairline" stroke-width="1"/>
+  <icon id="furniture-icon" name="armchair" x="676" y="343" width="34" height="34" color="accent"/>
+  <text id="furniture-copy" x="676" y="402" width="190" height="105" font="body" color="ink" line-height="1.3"><p font="heading" size="22">Furniture</p><p size="16" color="muted">Ergonomic · adjustable</p><p size="16" color="muted">Lumbar support, delivery</p></text>
+  <shape id="batch-card" type="rect" x="920" y="315" width="250" height="230" fill="surface" stroke="hairline" stroke-width="1"/>
+  <icon id="batch-icon" name="package" x="946" y="343" width="34" height="34" color="accent"/>
+  <text id="batch-copy" x="946" y="402" width="190" height="105" font="body" color="ink" line-height="1.3"><p font="heading" size="22">Multi-item</p><p size="16" color="muted">Stands · chairs · monitors</p><p size="16" color="muted">Batch audit and handoff</p></text>
+  <text id="page-number" x="1200" y="662" width="30" height="20" font="caption" color="muted" align="right" wrap="false">08</text>
+</slide>

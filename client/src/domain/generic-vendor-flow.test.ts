@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { parseBuyingBrief } from "./brief-parser";
-import { laptopDemoBrief } from "./generic-procurement";
+import { furnitureDemoBrief, laptopDemoBrief, mobileDemoBrief } from "./generic-procurement";
 import { genericLocalCatalog, LocalDemoVendorProvider, resolveGenericApproval, resolveVendorConfirmation, runGenericProcurement, runUnavailableTopVendorScenario } from "./generic-vendor-flow";
 
 const valid = (text: string) => {
@@ -31,6 +31,15 @@ describe("generic local vendor flow", () => {
   it("holds compliant chair and monitor requests for vendor confirmation", async () => {
     expect((await runGenericProcurement(valid("Buy 20 ergonomic chairs with adjustable height under ₹10,000 each within 5 days."))).status).toBe("CONFIRMING");
     expect((await runGenericProcurement(valid("Find 5 27 inch QHD HDMI monitors under ₹25,000 each within 7 days."))).status).toBe("CONFIRMING");
+  });
+
+  it("evaluates curated mobile and furniture records through the same Vendor A/Vendor B policy boundary", async () => {
+    const mobile = await runGenericProcurement(mobileDemoBrief);
+    const furniture = await runGenericProcurement(furnitureDemoBrief);
+    expect(mobile.status).toBe("CONFIRMING");
+    expect(mobile.recommendation.selected?.offer.id).toBe("mobile-a-1");
+    expect(furniture.status).toBe("CONFIRMING");
+    expect(furniture.recommendation.selected?.offer.id).toBe("furniture-a-1");
   });
 
   it("re-ranks a monitor when the top vendor becomes unavailable", async () => {

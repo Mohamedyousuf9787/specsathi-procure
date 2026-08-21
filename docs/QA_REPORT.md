@@ -35,7 +35,7 @@ The deterministic parser recognizes a focused set of common product and requirem
 | Tavily credential | Passed: bounded server-side authenticated health test; no key appears in source or browser payload. |
 | Live web evidence | Passed: authenticated server query returned normalized external titles, URLs, excerpts, and relevance. |
 | Provider failure | Passed: timeout mock returned local fallback without blocking procurement. |
-| Combined regression | Passed: 72 tests across 25 files, TypeScript, and production build. |
+| Combined regression | Passed: 76 tests across 27 files, TypeScript, and production build. |
 | Privacy audit metadata | Passed: `provider_audit_events` schema exists; unit test verifies metadata bounds and excludes untyped raw brief/query/key fields. |
 | Visual integration review | Passed: the secure-NLP consent disclosure and procurement-control intake render clearly at desktop size. |
 | Procurement audit trail | Passed: authenticated persistence route rejects anonymous writes; authenticated sessions persist bounded actual audit events, while anonymous sessions retain local-only history. |
@@ -75,3 +75,7 @@ The deterministic parser recognizes a focused set of common product and requirem
 | Final-round unavailable-top-vendor scenario | Passed: the named demo holds the nominal top Vendor A laptop as unavailable evidence, records the re-ranking in the audit trail, and selects the next eligible Vendor B offer without relaxing the brief. |
 | Final-round regression and visual review | Passed: 72 tests across 25 files, TypeScript, production build, and desktop/mobile screenshots of the Vendor A/B challenge workspace. |
 | Supporting-evidence provider boundary | Passed: the secondary Tavily check safely handles the provider’s current HTTP 403 response without secret exposure; product-card and policy flows do not depend on Tavily success. |
+| Curated deterministic catalog | Passed: laptop, mobile, and furniture fixtures use explicit category profiles and named Vendor A/Vendor B offers. Mobile and furniture use the normal policy comparison and explicit confirmation boundary. |
+| Multi-item finance handoff | Passed: the legacy three-item onboarding workflow exposes a simulated finance handoff, records an explicit local audit event, and produces JSON/CSV decision packages with no payment instruction. |
+| Final presentation | Passed: a 10-slide editable judge deck presents the real-time evidence boundary, comparison table, vendor confirmation, unavailable-vendor scenario, curated demos, and finance handoff. |
+| P1 final-round regression and visual review | Passed: 76 tests across 27 files, TypeScript, production build, and desktop screenshots of the compact curated intake, multi-item finance handoff, and Vendor A/B challenge workspace. |

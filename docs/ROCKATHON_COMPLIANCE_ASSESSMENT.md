@@ -21,7 +21,7 @@ The system remains deliberate about its evidence boundary. **Live SerpAPI market
 | Edge case: top vendor unavailable | **Satisfied** | The named **Demo: top vendor unavailable** control retains the blocked nominal top Vendor A candidate, re-ranks all offers, and selects the next eligible Vendor B offer. | `runUnavailableTopVendorScenario()`; `LocalDecision`; `Home.tsx` | `generic-vendor-flow.test.ts` — named unavailable-top-vendor scenario. |
 | Explain why the agent chose the recommended vendor | **Satisfied** | The recommendation ticket, score, decision reason, policy state, and all-candidates table expose the basis for selection. | `GenericRecommendation.reason`; `CandidateComparison` | `GenericProcurementWorkspace.interaction.test.ts`; `generic-vendor-flow.test.ts` |
 | Simulate negotiation or vendor-confirmation interaction | **Satisfied** | The confirmation panel allows explicit accept/reject or a price/delivery counter-offer. Material terms trigger deterministic re-evaluation and can reopen approval. | `VendorConfirmation`; `resolveVendorConfirmation()` | `GenericProcurementWorkspace.interaction.test.ts`; `generic-vendor-flow.test.ts` — counter-offer re-evaluation. |
-| Ravi-style three-brief workflow, draft confirmations, finance handoff | **Partially satisfied** | The legacy multi-item onboarding demo covers chairs, stands, and monitors, but there is no dedicated finance-export/send control. | `client/src/domain/procurement.ts`; legacy `Workspace` in `Home.tsx` | `client/src/domain/procurement.test.ts`; `client/src/domain/generic-procurement.test.ts` |
+| Ravi-style three-brief workflow, draft confirmations, finance handoff | **Satisfied for the final-round simulation** | The legacy multi-item onboarding demo covers chairs, stands, and monitors, then exposes an explicit simulated finance handoff with local JSON and CSV audit exports. | `client/src/domain/procurement.ts`; `client/src/domain/finance-handoff.ts`; legacy `Workspace` in `Home.tsx` | `client/src/domain/procurement.test.ts`; `client/src/domain/finance-handoff.test.ts`; `client/src/pages/Home.finance-handoff.interaction.test.ts` |
 
 ## Final-round demonstration sequence
 
@@ -34,7 +34,7 @@ The system remains deliberate about its evidence boundary. **Live SerpAPI market
 
 ## Remaining scope, stated honestly
 
-The core final-round controls are complete. Two useful **P1** additions remain outside the completed P0 build: a dedicated three-brief finance handoff/export and the Round 1 presentation deliverable. They do not alter the deployed policy boundaries, comparison, confirmation, or mandatory unavailable-vendor demonstration.
+The final-round simulation now includes the previously identified P1 additions: a three-item finance handoff/export and a 10-slide judge deck. The implementation remains intentionally bounded: all orders, handoffs, and vendor interactions are simulations and never initiate payments or real supplier commitments.
 
 ## Source
 

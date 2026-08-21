@@ -290,4 +290,13 @@ export function resolveApproval(session: ProcurementSession, itemId: string, app
   return next;
 }
 
+export function recordFinanceHandoff(session: ProcurementSession): ProcurementSession {
+  const next: ProcurementSession = { ...session, itemStates: session.itemStates.map((state) => ({ ...state })), audit: [...session.audit] };
+  const alreadyRecorded = next.audit.some((event) => event.type === "FINANCE_HANDOFF_SENT");
+  if (alreadyRecorded) return next;
+  const purchaseTotal = next.itemStates.reduce((sum, state) => sum + (state.order?.total ?? 0), 0);
+  addEvent(next.audit, { type: "FINANCE_HANDOFF_SENT", actor: "Requester", summary: "Simulated finance handoff recorded for the multi-item batch.", detail: `Audit package contains ${next.itemStates.length} item decisions and ₹${purchaseTotal.toLocaleString("en-IN")} in confirmed simulated orders. No payment instruction was created.` });
+  return next;
+}
+
 export const rupees = formatRupees;

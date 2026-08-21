@@ -88,7 +88,7 @@
 - [x] Identify and prioritize any gaps that prevent an honest claim of full challenge compliance.
 - [x] Produce a structured Rockathon requirement inventory covering functional, policy, audit, edge-case, scope, and Round 1 deliverable criteria.
 - [x] Produce an evidence-backed requirement-by-requirement compliance matrix tied to concrete product flows, code, and tests.
-- [ ] Present the remaining P1 gaps and obtain the user’s decision on whether final-round scope stops after the completed P0 controls or extends to P1 work.
+- [x] Present the remaining P1 gaps and obtain the user’s decision to extend the final-round scope with curated category demos, finance handoff, and a presentation deck.
 - [x] Diagnose whether real-time product-card unavailability is caused by provider quota, credentials, upstream response, request validation, or client-state handling.
 - [x] Correct the real-time product-card path so verified live results are visible when the provider succeeds and fallback remains explicit only when it fails.
 - [x] Run provider, regression, type, build, and runtime-log verification after the real-time card fix.
@@ -105,7 +105,17 @@
 - [x] Add a named unavailable-top-vendor demo that records the re-ranking decision and selects the next eligible offer.
 - [x] Add domain and rendered interaction regressions for all P0 demonstrations.
 - [x] Expand the Rockathon requirement matrix so every listed requirement cites a product flow, code, and specific regression evidence.
-- [ ] Re-run final-round build, visual, security, and release synchronization verification.
+- [x] Re-run final-round build, visual, security, and release synchronization verification.
+
+## Rockathon’26 Final-Round P1 Completion
+
+- [x] Define a compact, clearly labelled deterministic demo catalog for laptop, mobile, furniture, and the existing multi-item procurement scenario.
+- [x] Add unambiguous category demo controls that seed the normal editable requirement-confirmation path without cluttering the intake experience.
+- [x] Extend the local vendor catalog and policy comparisons with curated mobile and furniture offers from both deterministic Vendor A and Vendor B sources.
+- [x] Add a finance handoff for the multi-item demo with a concise batch summary, simulated send event, and local JSON/CSV audit exports.
+- [x] Add domain and rendered regressions for curated demos and finance handoff/export behavior.
+- [x] Write and generate a concise final-round judge presentation within the 12-slide plan limit.
+- [ ] Run final test, build, visual, source-safety, checkpoint, and GitHub synchronization verification for the complete release.
 
 - [x] Inspect available connectors and record the approved provider architecture without exposing credentials.
 - [x] Upgrade the static application to a secure full-stack project and preserve the local demo path.

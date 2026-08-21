@@ -1,0 +1,21 @@
+<slide id="evidence_boundary">
+  <background color="paper"/>
+  <shape id="audit-thread" type="line" x="60" y="58" width="0" height="600" stroke="hairline" stroke-width="1"/>
+  <shape id="header-rule" type="line" x="110" y="94" width="88" height="0" stroke="accent" stroke-width="4"/>
+  <text id="kicker" x="110" y="58" width="290" height="22" font="caption" color="muted" wrap="false">03 · EVIDENCE BOUNDARY</text>
+  <text id="title" x="110" y="132" width="770" height="68" font="display" size="46" color="primary" line-height="1.05">Real data is fast; verification stays explicit.</text>
+  <text id="subtitle" x="110" y="222" width="760" height="58" font="body" size="20" color="muted" line-height="1.35">SpecSathi separates useful marketplace discovery from evidence a requester must deliberately verify.</text>
+  <shape id="card-live" type="rect" x="110" y="320" width="320" height="245" fill="surface" stroke="hairline" stroke-width="1"/>
+  <icon id="card-live-icon" name="search" x="140" y="354" width="36" height="36" color="accent"/>
+  <text id="card-live-number" x="140" y="407" width="120" height="20" font="caption" color="accent" wrap="false">01 · IMMEDIATE</text>
+  <text id="card-live-copy" x="140" y="440" width="245" height="94" font="body" color="ink" line-height="1.35"><p font="heading" size="23">Marketplace cards</p><p size="16" color="muted">Server-side shopping results render as in-app product records, not a link list.</p></text>
+  <shape id="card-verify" type="rect" x="480" y="320" width="320" height="245" fill="surface" stroke="hairline" stroke-width="1"/>
+  <icon id="card-verify-icon" name="shield-check" x="510" y="354" width="36" height="36" color="accent"/>
+  <text id="card-verify-number" x="510" y="407" width="150" height="20" font="caption" color="accent" wrap="false">02 · ON DEMAND</text>
+  <text id="card-verify-copy" x="510" y="440" width="245" height="94" font="body" color="ink" line-height="1.35"><p font="heading" size="23">Full verification</p><p size="16" color="muted">Source-page specification enrichment occurs only when a requester asks for it.</p></text>
+  <shape id="card-fallback" type="rect" x="850" y="320" width="320" height="245" fill="surface" stroke="hairline" stroke-width="1"/>
+  <icon id="card-fallback-icon" name="database" x="880" y="354" width="36" height="36" color="accent"/>
+  <text id="card-fallback-number" x="880" y="407" width="160" height="20" font="caption" color="accent" wrap="false">03 · EXPLICIT</text>
+  <text id="card-fallback-copy" x="880" y="440" width="245" height="94" font="body" color="ink" line-height="1.35"><p font="heading" size="23">Vendor A / B demo</p><p size="16" color="muted">Provider failure uses clearly labelled deterministic challenge data.</p></text>
+  <text id="page-number" x="1200" y="662" width="30" height="20" font="caption" color="muted" align="right" wrap="false">04</text>
+</slide>

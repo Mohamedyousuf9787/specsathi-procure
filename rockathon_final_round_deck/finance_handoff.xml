@@ -1,0 +1,21 @@
+<slide id="finance_handoff">
+  <background color="paper"/>
+  <shape id="audit-thread" type="line" x="60" y="58" width="0" height="600" stroke="hairline" stroke-width="1"/>
+  <shape id="header-rule" type="line" x="110" y="94" width="88" height="0" stroke="accent" stroke-width="4"/>
+  <text id="kicker" x="110" y="58" width="330" height="22" font="caption" color="muted" wrap="false">08 · FINANCE HANDOFF</text>
+  <text id="title" x="110" y="132" width="820" height="70" font="display" size="46" color="primary" line-height="1.05">The batch ends in an auditable package.</text>
+  <text id="subtitle" x="110" y="222" width="850" height="34" font="body" size="20" color="muted">Multi-item decisions become a concise finance handoff—not a payment instruction or vendor commitment.</text>
+  <shape id="scope-strip" type="rect" x="110" y="292" width="460" height="42" fill="primary"/>
+  <text id="scope-copy" x="132" y="304" width="410" height="18" font="caption" size="14" color="#FFFFFF" wrap="false">SIMULATED FINANCE HANDOFF · NO PAYMENT</text>
+  <shape id="summary-card" type="rect" x="110" y="356" width="460" height="194" fill="surface" stroke="hairline" stroke-width="1"/>
+  <text id="summary-title" x="136" y="382" width="270" height="28" font="heading" size="24" color="ink">Q3 onboarding batch</text>
+  <text id="summary-copy" x="136" y="424" width="370" height="82" font="body" color="muted" line-height="1.35"><p>Stands · chairs · monitors</p><p>One decision package for finance review.</p></text>
+  <text id="summary-metrics" x="136" y="512" width="385" height="20" font="caption" size="14" color="accent" wrap="false">ITEM COUNT · AUDIT COUNT · CONFIRMED SIMULATED TOTAL</text>
+  <shape id="record-panel" type="rect" x="630" y="292" width="540" height="258" fill="#17233D" stroke="#17233D" stroke-width="1"/>
+  <text id="record-label" x="658" y="320" width="190" height="20" font="caption" color="#9DC7F4" wrap="false">JSON DECISION RECORD</text>
+  <text id="record-json" x="658" y="360" width="460" height="158" font="mono" size="15" color="#E7F0FB" line-height="1.45"><p>{</p><p>  &quot;scope&quot;: &quot;SIMULATED HANDOFF&quot;,</p><p>  &quot;items&quot;: 3,</p><p>  &quot;exports&quot;: [&quot;json&quot;, &quot;csv&quot;],</p><p>  &quot;payment_instruction&quot;: false</p><p>}</p></text>
+  <shape id="csv-strip" type="rect" x="630" y="568" width="540" height="42" fill="surface" stroke="hairline" stroke-width="1"/>
+  <icon id="csv-icon" name="file-text" x="654" y="578" width="22" height="22" color="accent"/>
+  <text id="csv-copy" x="692" y="578" width="410" height="22" font="caption" size="15" color="ink" wrap="false">LOCAL JSON + CSV EXPORTS · DECISION EVIDENCE ONLY</text>
+  <text id="page-number" x="1200" y="662" width="30" height="20" font="caption" color="muted" align="right" wrap="false">09</text>
+</slide>

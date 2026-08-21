@@ -1,0 +1,24 @@
+<slide id="vendor_confirmation">
+  <background color="paper"/>
+  <shape id="audit-thread" type="line" x="60" y="58" width="0" height="600" stroke="hairline" stroke-width="1"/>
+  <shape id="header-rule" type="line" x="110" y="94" width="88" height="0" stroke="accent" stroke-width="4"/>
+  <text id="kicker" x="110" y="58" width="330" height="22" font="caption" color="muted" wrap="false">05 · VENDOR BOUNDARY</text>
+  <text id="title" x="110" y="132" width="840" height="70" font="display" size="46" color="primary" line-height="1.05">Vendor confirmation is an active boundary.</text>
+  <text id="subtitle" x="110" y="222" width="790" height="34" font="body" size="20" color="muted">A changed vendor term is a new decision—not an invisible continuation of the old one.</text>
+  <shape id="vendor-ticket" type="rect" x="110" y="292" width="490" height="258" fill="surface" stroke="hairline" stroke-width="1"/>
+  <text id="ticket-label" x="138" y="320" width="220" height="20" font="caption" color="accent" wrap="false">RECOMMENDED VENDOR TICKET</text>
+  <text id="ticket-title" x="138" y="356" width="320" height="34" font="heading" size="25" color="ink">Atlas Business 14</text>
+  <text id="ticket-vendor" x="138" y="398" width="250" height="22" font="body" size="16" color="muted">Vendor A · best fit inside authority</text>
+  <shape id="ticket-rule" type="line" x="138" y="440" width="434" height="0" stroke="hairline" stroke-width="1"/>
+  <text id="ticket-terms" x="138" y="462" width="420" height="60" font="body" size="17" color="ink" line-height="1.35"><p>₹44,200 / unit · 4-day delivery · 14-day return</p><p color="muted" size="15">Terms are held for explicit vendor confirmation.</p></text>
+  <shape id="accept-panel" type="rect" x="675" y="292" width="495" height="74" fill="surface" stroke="hairline" stroke-width="1"/>
+  <icon id="accept-icon" name="circle-check" x="701" y="314" width="28" height="28" color="#14752B"/>
+  <text id="accept-copy" x="752" y="307" width="380" height="42" font="body" color="ink" line-height="1.2"><p font="heading" size="20">Accept confirmed terms</p><p size="14" color="muted">Creates a simulated order only.</p></text>
+  <shape id="reject-panel" type="rect" x="675" y="386" width="495" height="74" fill="surface" stroke="hairline" stroke-width="1"/>
+  <icon id="reject-icon" name="x" x="701" y="408" width="28" height="28" color="#9A3B00"/>
+  <text id="reject-copy" x="752" y="401" width="380" height="42" font="body" color="ink" line-height="1.2"><p font="heading" size="20">Reject vendor terms</p><p size="14" color="muted">Stops the proposed simulated purchase.</p></text>
+  <shape id="counter-panel" type="rect" x="675" y="480" width="495" height="74" fill="#EDF6FF" stroke="#9DC7F4" stroke-width="1"/>
+  <icon id="counter-icon" name="refresh-cw" x="701" y="502" width="28" height="28" color="accent"/>
+  <text id="counter-copy" x="752" y="495" width="380" height="42" font="body" color="ink" line-height="1.2"><p font="heading" size="20">Counter price or delivery</p><p size="14" color="muted">Re-evaluates fit, authority, and approval.</p></text>
+  <text id="page-number" x="1200" y="662" width="30" height="20" font="caption" color="muted" align="right" wrap="false">06</text>
+</slide>

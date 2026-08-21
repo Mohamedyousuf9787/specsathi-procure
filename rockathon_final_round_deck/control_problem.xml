@@ -1,0 +1,19 @@
+<slide id="control_problem">
+  <background color="paper"/>
+  <shape id="audit-thread" type="line" x="60" y="58" width="0" height="600" stroke="hairline" stroke-width="1"/>
+  <shape id="header-rule" type="line" x="110" y="94" width="88" height="0" stroke="accent" stroke-width="4"/>
+  <text id="kicker" x="110" y="58" width="260" height="22" font="caption" color="muted" wrap="false">01 · THE CONTROL GAP</text>
+  <text id="title" x="110" y="135" width="510" height="132" font="display" size="48" color="primary" line-height="1.05"><p>Autonomous buying</p><p>needs controls.</p></text>
+  <text id="proposition" x="110" y="310" width="500" height="110" font="body" size="24" color="ink" line-height="1.35">A recommendation cannot authorize a purchase. Procurement must retain specification, delivery, budget, availability, and approval boundaries.</text>
+  <text id="footer-note" x="110" y="585" width="480" height="44" font="caption" size="15" color="muted" line-height="1.35">SpecSathi converts an ordinary-language request into an inspectable decision record.</text>
+  <shape id="risk-card-brief" type="rect" x="700" y="145" width="480" height="112" fill="surface" stroke="hairline" stroke-width="1"/>
+  <icon id="brief-icon" name="file-text" x="728" y="177" width="34" height="34" color="accent"/>
+  <text id="brief-card" x="790" y="166" width="350" height="72" font="body" color="ink" line-height="1.3"><p font="heading" size="21">Brief ambiguity</p><p size="16" color="muted">Natural language can omit constraints that change the decision.</p></text>
+  <shape id="risk-card-vendor" type="rect" x="700" y="286" width="480" height="112" fill="surface" stroke="hairline" stroke-width="1"/>
+  <icon id="vendor-icon" name="search" x="728" y="318" width="34" height="34" color="accent"/>
+  <text id="vendor-card" x="790" y="307" width="350" height="72" font="body" color="ink" line-height="1.3"><p font="heading" size="21">Vendor variance</p><p size="16" color="muted">Price alone hides stock, delivery, reliability, and return risk.</p></text>
+  <shape id="risk-card-authority" type="rect" x="700" y="427" width="480" height="112" fill="surface" stroke="hairline" stroke-width="1"/>
+  <icon id="authority-icon" name="shield-check" x="728" y="459" width="34" height="34" color="accent"/>
+  <text id="authority-card" x="790" y="448" width="350" height="72" font="body" color="ink" line-height="1.3"><p font="heading" size="21">Authorization risk</p><p size="16" color="muted">An otherwise suitable option may exceed delegated authority.</p></text>
+  <text id="page-number" x="1200" y="662" width="30" height="20" font="caption" color="muted" align="right" wrap="false">02</text>
+</slide>

@@ -53,18 +53,8 @@ export type VendorOffer = {
   sourceReference?: string;
 };
 
-export type AttributeDefinition = {
-  key: string;
-  label: string;
-  type: "text" | "number" | "boolean";
-  unit?: string;
-};
-
-export type ValidationFinding = {
-  level: "warning" | "invalid";
-  message: string;
-};
-
+export type AttributeDefinition = { key: string; label: string; type: "text" | "number" | "boolean"; unit?: string };
+export type ValidationFinding = { level: "warning" | "invalid"; message: string };
 export type CategoryProfile = {
   categoryId: string;
   displayName: string;
@@ -80,109 +70,73 @@ const laptopAttributes: AttributeDefinition[] = [
   { key: "cpu", label: "Processor", type: "text" },
   { key: "display_inches", label: "Display", type: "number", unit: "inch" },
 ];
+const mobileAttributes: AttributeDefinition[] = [
+  { key: "storage_gb", label: "Storage", type: "number", unit: "GB" },
+  { key: "network_5g", label: "5G", type: "boolean" },
+  { key: "battery_mah", label: "Battery", type: "number", unit: "mAh" },
+];
+const furnitureAttributes: AttributeDefinition[] = [
+  { key: "ergonomic", label: "Ergonomic design", type: "boolean" },
+  { key: "adjustable_height", label: "Adjustable height", type: "boolean" },
+  { key: "lumbar_support", label: "Lumbar support", type: "boolean" },
+];
 
-export const laptopProfile: CategoryProfile = {
-  categoryId: "laptop",
-  displayName: "Laptop",
-  aliases: ["laptop", "laptops", "notebook", "notebooks", "computer", "computers"],
-  knownAttributes: laptopAttributes,
-  validateRequirement: (requirement) => laptopAttributes.some((attribute) => attribute.key === requirement.key)
-    ? []
-    : [{ level: "warning", message: `${requirement.label} is not a known laptop attribute and will be checked as generic text.` }],
-  explainRequirement: (requirement) => `${requirement.label} must ${requirement.operator.replaceAll("_", " ")} ${String(requirement.value)}${requirement.unit ? ` ${requirement.unit}` : ""}.`,
-};
+const profileExplanation = (requirement: Requirement) => `${requirement.label} must ${requirement.operator.replaceAll("_", " ")} ${String(requirement.value)}${requirement.unit ? ` ${requirement.unit}` : ""}.`;
+const profileValidator = (attributes: AttributeDefinition[], name: string) => (requirement: Requirement) => attributes.some(attribute => attribute.key === requirement.key) ? [] : [{ level: "warning" as const, message: `${requirement.label} is not a known ${name} attribute and will be checked as generic text.` }];
 
-export const genericProfile: CategoryProfile = {
-  categoryId: "generic",
-  displayName: "Generic product",
-  aliases: [],
-  knownAttributes: [],
-  explainRequirement: (requirement) => `${requirement.label} is treated as a ${requirement.isHard ? "hard" : "preference"} requirement.`,
-};
-
-export const categoryProfiles: CategoryProfile[] = [laptopProfile, genericProfile];
+export const laptopProfile: CategoryProfile = { categoryId: "laptop", displayName: "Laptop", aliases: ["laptop", "laptops", "notebook", "notebooks", "computer", "computers"], knownAttributes: laptopAttributes, validateRequirement: profileValidator(laptopAttributes, "laptop"), explainRequirement: profileExplanation };
+export const mobileProfile: CategoryProfile = { categoryId: "mobile", displayName: "Mobile device", aliases: ["mobile", "mobiles", "phone", "phones", "smartphone", "smartphones"], knownAttributes: mobileAttributes, validateRequirement: profileValidator(mobileAttributes, "mobile"), explainRequirement: profileExplanation };
+export const furnitureProfile: CategoryProfile = { categoryId: "furniture", displayName: "Office furniture", aliases: ["furniture", "desk", "desks", "table", "tables", "workstation", "workstations"], knownAttributes: furnitureAttributes, validateRequirement: profileValidator(furnitureAttributes, "furniture"), explainRequirement: profileExplanation };
+export const genericProfile: CategoryProfile = { categoryId: "generic", displayName: "Generic product", aliases: [], knownAttributes: [], explainRequirement: requirement => `${requirement.label} is treated as a ${requirement.isHard ? "hard" : "preference"} requirement.` };
+export const categoryProfiles: CategoryProfile[] = [laptopProfile, mobileProfile, furnitureProfile, genericProfile];
 
 export function canonicalCategory(value: string): string {
   const normalized = value.trim().toLowerCase();
-  const match = categoryProfiles.find((profile) => profile.aliases.includes(normalized));
+  const match = categoryProfiles.find(profile => profile.aliases.includes(normalized));
   return match?.categoryId ?? (normalized.replace(/\s+/g, "-") || "generic");
 }
-
 export function getCategoryProfile(category: string): CategoryProfile {
   const canonical = canonicalCategory(category);
-  return categoryProfiles.find((profile) => profile.categoryId === canonical) ?? genericProfile;
+  return categoryProfiles.find(profile => profile.categoryId === canonical) ?? genericProfile;
 }
 
-const legacyCategoryLabel: Record<string, string> = {
-  stands: "laptop stand",
-  chairs: "office chair",
-  monitors: "external monitor",
-};
-
+const legacyCategoryLabel: Record<string, string> = { stands: "laptop stand", chairs: "office chair", monitors: "external monitor" };
 export function requirementFromLegacySpec(spec: string): Requirement {
-  return {
-    key: spec.toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_|_$/g, ""),
-    label: spec,
-    operator: "contains",
-    value: spec,
-    isHard: true,
-    sourceText: spec,
-  };
+  return { key: spec.toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_|_$/g, ""), label: spec, operator: "contains", value: spec, isHard: true, sourceText: spec };
 }
-
 export function legacyItemToBuyingBrief(item: LegacyBuyingItem, sourceText = item.name): BuyingBrief {
-  return {
-    id: `compat-${item.id}`,
-    productCategory: legacyCategoryLabel[item.id] ?? item.name.toLowerCase(),
-    productDescription: item.name,
-    quantity: item.quantity,
-    hardRequirements: item.requiredSpecs.map(requirementFromLegacySpec),
-    softPreferences: [],
-    maxUnitPriceInr: item.authorizationLimit,
-    deliveryDeadlineDays: item.deliveryDays,
-    returnPolicyRequirement: item.minReturnDays ? `${item.minReturnDays} days` : undefined,
-    authorizationLimitInr: item.authorizationLimit,
-    sourceText,
-    confidence: 1,
-  };
+  return { id: `compat-${item.id}`, productCategory: legacyCategoryLabel[item.id] ?? item.name.toLowerCase(), productDescription: item.name, quantity: item.quantity, hardRequirements: item.requiredSpecs.map(requirementFromLegacySpec), softPreferences: [], maxUnitPriceInr: item.authorizationLimit, deliveryDeadlineDays: item.deliveryDays, returnPolicyRequirement: item.minReturnDays ? `${item.minReturnDays} days` : undefined, authorizationLimitInr: item.authorizationLimit, sourceText, confidence: 1 };
 }
-
 export function legacyOfferToVendorOffer(offer: LegacyVendorOffer): VendorOffer {
-  const attributes = Object.fromEntries(offer.specs.map((spec) => [spec.toLowerCase().replace(/[^a-z0-9]+/g, "_"), true]));
-  return {
-    id: offer.id,
-    vendorId: offer.vendor.toLowerCase().replace(/\s+/g, "-"),
-    vendorName: offer.vendor,
-    productCategory: legacyCategoryLabel[offer.category] ?? offer.category,
-    productName: offer.product,
-    description: offer.specs.join(", "),
-    attributes: { ...attributes, specifications: offer.specs.join(", ") },
-    unitPriceInr: offer.unitPrice,
-    availableQuantity: offer.stock,
-    availability: !offer.available ? "unavailable" : offer.stock <= 5 ? "low_stock" : "in_stock",
-    deliveryDays: offer.deliveryDays,
-    sellerRating: offer.sellerRating,
-    returnDays: offer.returnDays,
-    returnPolicy: `${offer.returnDays} days`,
-    sourceType: "simulated",
-    sourceReference: offer.id,
-  };
+  const attributes = Object.fromEntries(offer.specs.map(spec => [spec.toLowerCase().replace(/[^a-z0-9]+/g, "_"), true]));
+  return { id: offer.id, vendorId: offer.vendor.toLowerCase().replace(/\s+/g, "-"), vendorName: offer.vendor, productCategory: legacyCategoryLabel[offer.category] ?? offer.category, productName: offer.product, description: offer.specs.join(", "), attributes: { ...attributes, specifications: offer.specs.join(", ") }, unitPriceInr: offer.unitPrice, availableQuantity: offer.stock, availability: !offer.available ? "unavailable" : offer.stock <= 5 ? "low_stock" : "in_stock", deliveryDays: offer.deliveryDays, sellerRating: offer.sellerRating, returnDays: offer.returnDays, returnPolicy: `${offer.returnDays} days`, sourceType: "simulated", sourceReference: offer.id };
 }
 
 export const laptopDemoBrief: BuyingBrief = {
-  id: "demo-laptop-16gb",
-  productCategory: "laptop",
-  productDescription: "Business laptop for new team members",
-  quantity: 10,
+  id: "demo-laptop-16gb", productCategory: "laptop", productDescription: "Business laptop for new team members", quantity: 10,
   hardRequirements: [
     { key: "ram_gb", label: "RAM", operator: "at_least", value: 16, unit: "GB", isHard: true, sourceText: "16 GB RAM" },
     { key: "storage_gb", label: "SSD storage", operator: "at_least", value: 512, unit: "GB", isHard: true, sourceText: "512 GB SSD" },
     { key: "cpu", label: "Processor", operator: "contains", value: "i5", isHard: true, sourceText: "Intel Core i5 or equivalent" },
   ],
-  softPreferences: [{ key: "display_inches", label: "Display", operator: "preferred", value: 14, unit: "inch", isHard: false }],
-  maxUnitPriceInr: 45000,
-  deliveryDeadlineDays: 5,
-  authorizationLimitInr: 45000,
-  sourceText: "Purchase 10 laptops with 16 GB RAM and 512 GB SSD under ₹45,000 each within 5 days.",
-  confidence: 1,
+  softPreferences: [{ key: "display_inches", label: "Display", operator: "preferred", value: 14, unit: "inch", isHard: false }], maxUnitPriceInr: 45000, deliveryDeadlineDays: 5, authorizationLimitInr: 45000, sourceText: "Purchase 10 laptops with 16 GB RAM and 512 GB SSD under ₹45,000 each within 5 days.", confidence: 1,
 };
+export const mobileDemoBrief: BuyingBrief = {
+  id: "demo-mobile-5g", productCategory: "mobile", productDescription: "5G mobile device for a field-sales team", quantity: 12,
+  hardRequirements: [
+    { key: "storage_gb", label: "Storage", operator: "at_least", value: 128, unit: "GB", isHard: true, sourceText: "128 GB storage" },
+    { key: "network_5g", label: "5G", operator: "equals", value: true, isHard: true, sourceText: "5G connectivity" },
+    { key: "battery_mah", label: "Battery", operator: "at_least", value: 5000, unit: "mAh", isHard: true, sourceText: "5000 mAh battery" },
+  ],
+  softPreferences: [], maxUnitPriceInr: 22000, deliveryDeadlineDays: 5, authorizationLimitInr: 20000, sourceText: "Purchase 12 5G mobile devices with 128 GB storage and 5000 mAh battery under ₹22,000 each within 5 days.", confidence: 1,
+};
+export const furnitureDemoBrief: BuyingBrief = {
+  id: "demo-furniture-ergonomic", productCategory: "furniture", productDescription: "Ergonomic task chairs for an office expansion", quantity: 6,
+  hardRequirements: [
+    { key: "ergonomic", label: "Ergonomic design", operator: "equals", value: true, isHard: true, sourceText: "ergonomic chair" },
+    { key: "adjustable_height", label: "Adjustable height", operator: "equals", value: true, isHard: true, sourceText: "adjustable height" },
+    { key: "lumbar_support", label: "Lumbar support", operator: "equals", value: true, isHard: true, sourceText: "lumbar support" },
+  ],
+  softPreferences: [], maxUnitPriceInr: 15000, deliveryDeadlineDays: 6, authorizationLimitInr: 15000, sourceText: "Purchase 6 ergonomic adjustable-height office chairs with lumbar support under ₹15,000 each within 6 days.", confidence: 1,
+};
+export const curatedDemoBriefs = { laptop: laptopDemoBrief, mobile: mobileDemoBrief, furniture: furnitureDemoBrief } as const;

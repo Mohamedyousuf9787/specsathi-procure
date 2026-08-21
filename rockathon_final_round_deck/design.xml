@@ -1,0 +1,15 @@
+<design>
+  <size width="1280" height="720"></size>
+  <color name="paper" value="#f6f5f4"/>
+  <color name="surface" value="#ffffff"/>
+  <color name="hairline" value="#e6e6e6"/>
+  <color name="accent" value="#0075de"/>
+  <color name="primary" value="#213183"/>
+  <color name="ink" value="#1a1d26"/>
+  <color name="muted" value="#6b7280"/>
+  <font name="display" family="Inter" size="56"/>
+  <font name="heading" family="Inter" size="32"/>
+  <font name="body" family="Inter" size="18"/>
+  <font name="caption" family="Inter" size="14"/>
+  <font name="mono" family="Roboto Mono" size="14"/>
+</design>
