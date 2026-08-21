@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { parseBuyingBrief } from "./brief-parser";
-import { furnitureDemoBrief, laptopDemoBrief, mobileDemoBrief } from "./generic-procurement";
+import { furnitureDemoBrief, laptopDemoBrief, mobileDemoBrief, mouseDemoBrief } from "./generic-procurement";
 import { genericLocalCatalog, LocalDemoVendorProvider, recordMarketplaceSearchOutcome, resolveGenericApproval, resolveVendorConfirmation, runGenericProcurement, runUnavailableTopVendorScenario } from "./generic-vendor-flow";
 
 const valid = (text: string) => {
@@ -50,6 +50,16 @@ describe("generic local vendor flow", () => {
     expect(session.audit.some((event) => event.type === "OFFERS_COMPARED")).toBe(true);
   });
 
+  it("ranks labelled mouse-model candidates, retains a non-compliant alternative, and holds the selected mouse for confirmation", async () => {
+    const session = await runGenericProcurement(mouseDemoBrief);
+    expect(session.status).toBe("CONFIRMING");
+    expect(session.recommendation.candidates).toHaveLength(3);
+    expect(session.recommendation.selected?.offer.id).toBe("mouse-a-1");
+    expect(session.recommendation.candidates.find((candidate) => candidate.offer.id === "mouse-b-2")?.hardFailures).toContain("Missing or unverified requirement: Mouse model");
+    expect(session.audit.some((event) => event.type === "OFFERS_COMPARED")).toBe(true);
+    expect(resolveVendorConfirmation(session, "accept").status).toBe("PURCHASED");
+  });
+
   it("re-ranks a monitor when the top vendor becomes unavailable", async () => {
     const provider = new LocalDemoVendorProvider(genericLocalCatalog.map((offer) => offer.id === "monitor-a-generic" ? { ...offer, availableQuantity: 0, availability: "unavailable" as const } : offer));
     const session = await runGenericProcurement(valid("Find 5 27 inch QHD HDMI monitors under ₹25,000 each within 7 days."), provider);
@@ -73,6 +83,15 @@ describe("generic local vendor flow", () => {
     expect(event?.type).toBe("MARKETPLACE_FALLBACK");
     expect(event?.detail).toContain("No labelled deterministic Vendor A/B catalog covers");
     expect(event?.timestamp).toMatch(/^\d{4}-\d{2}-\d{2}T/);
+  });
+
+  it("records the count and safe next action for incomplete live marketplace cards", async () => {
+    const session = await runGenericProcurement(mouseDemoBrief);
+    const recorded = recordMarketplaceSearchOutcome(session, { status: "live", listingCount: 8, unverifiedListingCount: 3 });
+    const event = recorded.audit.at(-1);
+    expect(event?.type).toBe("MARKETPLACE_RESULTS_RECEIVED");
+    expect(event?.detail).toContain("3 cards are incomplete");
+    expect(event?.detail).toContain("explicit page or seller verification");
   });
 
   it("returns to approval when generic vendor terms change during confirmation", async () => {

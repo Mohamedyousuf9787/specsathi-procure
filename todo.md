@@ -148,6 +148,14 @@
 - [x] Verify the 10-slide judge deck and desktop/mobile layouts remain complete, readable, and aligned with implemented behavior.
 - [x] Add or update regression coverage for each defect found; then rerun final source-safety, checkpoint, and GitHub-release verification.
 
+## Mouse Comparison and Evidence Repair
+
+- [x] Reproduce and document the empty mouse local-comparison, unverified marketplace, and missing-ranked-evidence states shown by the user.
+- [x] Add a clearly labelled deterministic mouse profile, editable demo fixture, and Vendor A/Vendor B candidate records without presenting them as live listings.
+- [x] Ensure compatible mouse requests produce ranked local candidate evidence, policy state, vendor confirmation, and audit events.
+- [x] Improve marketplace-card guidance so unreported stock and missing concise specifications clearly direct the user to explicit verification without claiming verification prematurely.
+- [ ] Add regression and visual coverage for the repaired mouse path and its marketplace-evidence states, then checkpoint and push the repair to GitHub.
+
 - [x] Inspect available connectors and record the approved provider architecture without exposing credentials.
 - [x] Upgrade the static application to a secure full-stack project and preserve the local demo path.
 - [x] Implement server-side structured NLP extraction with strict schema validation and deterministic post-validation.

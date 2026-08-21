@@ -21,6 +21,17 @@ describe("deterministic generic buying brief parser", () => {
     expect(result.normalizedBrief?.hardRequirements.map((requirement) => requirement.key)).toEqual(expect.arrayContaining(["tyre_size", "vehicle_model", "tubeless"]));
   });
 
+  it("parses an ordinary specific-model mouse request into an editable procurement record", () => {
+    const result = parseBuyingBrief("I want 1 wireless M185 mouse with 1000 DPI under ₹2,000 each within 4 days.");
+    expect(result.status).toBe("valid");
+    expect(result.normalizedBrief?.productCategory).toBe("mouse");
+    expect(result.normalizedBrief?.hardRequirements).toEqual(expect.arrayContaining([
+      expect.objectContaining({ key: "mouse_model", value: "m185" }),
+      expect.objectContaining({ key: "connection", value: "wireless" }),
+      expect.objectContaining({ key: "dpi", value: 1000 }),
+    ]));
+  });
+
   it("asks for a budget before searching an otherwise valid tyre request", () => {
     const result = parseBuyingBrief("I want 1 tyre for Honda City.");
     expect(result.status).toBe("needs_clarification");

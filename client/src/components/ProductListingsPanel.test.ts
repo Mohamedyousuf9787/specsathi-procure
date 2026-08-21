@@ -35,7 +35,19 @@ describe("marketplace product-card summary", () => {
     expect(renderToStaticMarkup(createElement(VendorOfferStatement, { listing: marketplace }))).toContain("Normalized vendor offer statement");
     const panelMarkup = renderToStaticMarkup(createElement(SpecificationPanel, { listing: marketplace, onVerifyFullSpecifications: () => undefined }));
     expect(panelMarkup).toContain("Marketplace result");
-    expect(panelMarkup).toContain("Verify full specifications");
+    expect(panelMarkup).toContain("Verify full page specifications");
+    expect(panelMarkup).toContain("seller identity, exact variant, stock, delivery, and returns");
+  });
+
+  it("explains why incomplete marketplace cards are unverified and provides a bounded verification action", () => {
+    const incomplete = { ...listing("unverified"), availability: null, specificationStatus: "idle" as const, specifications: [] };
+    const statementMarkup = renderToStaticMarkup(createElement(VendorOfferStatement, { listing: incomplete }));
+    const panelMarkup = renderToStaticMarkup(createElement(SpecificationPanel, { listing: incomplete, onVerifyFullSpecifications: () => undefined }));
+    expect(statementMarkup).toContain("did not report a decision-critical field");
+    expect(statementMarkup).toContain("excluded from automatic recommendation");
+    expect(panelMarkup).toContain("No concise specifications were present");
+    expect(panelMarkup).toContain("Verify full page specifications");
+    expect(panelMarkup).toContain("stock, seller identity, delivery, returns, and the exact variant still require seller confirmation");
   });
 
   it("prepares initial cards from marketplace data without starting page verification", () => {

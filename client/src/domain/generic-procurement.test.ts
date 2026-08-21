@@ -9,6 +9,7 @@ import {
   legacyItemToBuyingBrief,
   legacyOfferToVendorOffer,
   mobileDemoBrief,
+  mouseDemoBrief,
   tyreDemoBrief,
 } from "./generic-procurement";
 
@@ -30,16 +31,18 @@ describe("generic procurement compatibility layer", () => {
     expect(offer.attributes.specifications).toContain("adjustable height");
   });
 
-  it("provides laptop, mobile, furniture, and tyre profiles while retaining generic fallback", () => {
+  it("provides laptop, mobile, furniture, tyre, and mouse profiles while retaining generic fallback", () => {
     expect(canonicalCategory("Notebooks")).toBe("laptop");
     expect(canonicalCategory("smartphones")).toBe("mobile");
     expect(canonicalCategory("desks")).toBe("furniture");
     expect(canonicalCategory("tires")).toBe("tyre");
+    expect(canonicalCategory("mice")).toBe("mouse");
     expect(getCategoryProfile("printer").categoryId).toBe("generic");
     expect(laptopDemoBrief.hardRequirements).toHaveLength(3);
     expect(mobileDemoBrief.hardRequirements.map((requirement) => requirement.key)).toEqual(["storage_gb", "network_5g", "battery_mah"]);
     expect(furnitureDemoBrief.hardRequirements.map((requirement) => requirement.key)).toEqual(["ergonomic", "adjustable_height", "lumbar_support"]);
     expect(tyreDemoBrief.hardRequirements.map((requirement) => requirement.key)).toEqual(["tyre_size", "vehicle_model", "tubeless"]);
-    expect(Object.keys(curatedDemoBriefs)).toEqual(["laptop", "mobile", "furniture", "tyre"]);
+    expect(mouseDemoBrief.hardRequirements.map((requirement) => requirement.key)).toEqual(["mouse_model", "connection", "dpi"]);
+    expect(Object.keys(curatedDemoBriefs)).toEqual(["laptop", "mobile", "furniture", "tyre", "mouse"]);
   });
 });

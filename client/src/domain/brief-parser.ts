@@ -38,6 +38,9 @@ const fixedRequirementPatterns: Array<{ pattern: RegExp; requirement: (match: Re
   { pattern: /\b(\d{3}\s*\/\s*\d{2}\s*(?:ZR?|R)\s*\d{2})\b/i, requirement: (match) => ({ key: "tyre_size", label: "Tyre size", operator: "contains", value: match[1].replace(/\s+/g, " ").replace(/\s*\/\s*/g, "/").toUpperCase(), isHard: true, sourceText: match[0] }) },
   { pattern: /\b(?:for|compatible\s+with)\s+([A-Za-z0-9][A-Za-z0-9 -]{1,35}?)(?=\s+(?:with|under|within|each|per|tubeless)\b|[.,]|$)/i, requirement: (match) => ({ key: "vehicle_model", label: "Vehicle model", operator: "contains", value: match[1].trim().toLowerCase(), isHard: true, sourceText: match[0] }) },
   { pattern: /\btubeless\b/i, requirement: (match) => ({ key: "tubeless", label: "Tubeless", operator: "equals", value: true, isHard: true, sourceText: match[0] }) },
+  { pattern: /\b(?:mouse\s+)?(?:model\s*[:\-]?\s*)?(m\d{2,4})\b/i, requirement: (match) => ({ key: "mouse_model", label: "Mouse model", operator: "contains", value: match[1].toLowerCase(), isHard: true, sourceText: match[0] }) },
+  { pattern: /\bwireless\b/i, requirement: (match) => ({ key: "connection", label: "Connection", operator: "contains", value: "wireless", isHard: true, sourceText: match[0] }) },
+  { pattern: /\b(\d{3,5})\s*dpi\b/i, requirement: (match) => ({ key: "dpi", label: "Sensor resolution", operator: "at_least", value: Number(match[1]), unit: "DPI", isHard: true, sourceText: match[0] }) },
 ];
 
 function numberFrom(value: string | undefined) {
@@ -45,12 +48,12 @@ function numberFrom(value: string | undefined) {
 }
 
 function extractQuantity(text: string) {
-  const match = text.match(/\b(?:buy|purchase|order|find|source|get|need|want)\s+(\d+)\b/i) ?? text.match(/\b(\d+)\s+(?:new\s+)?(?:laptops?|chairs?|monitors?|printers?|cameras?|stands?|tyres?|tires?)\b/i);
+  const match = text.match(/\b(?:buy|purchase|order|find|source|get|need|want)\s+(\d+)\b/i) ?? text.match(/\b(\d+)\s+(?:new\s+)?(?:laptops?|chairs?|monitors?|printers?|cameras?|stands?|tyres?|tires?|mice|mouse)\b/i);
   return match ? Number(match[1]) : undefined;
 }
 
 function extractCategory(text: string) {
-  const known = ["laptop", "notebook", "chair", "monitor", "printer", "camera", "stand", "tyre", "tire"];
+  const known = ["laptop", "notebook", "chair", "monitor", "printer", "camera", "stand", "tyre", "tire", "mouse", "mice"];
   const match = known.find((term) => new RegExp(`\\b${term}s?\\b`, "i").test(text));
   if (match) return canonicalCategory(match);
   const generic = text.match(/\b(?:buy|purchase|order|find|source|get|need|want)\s+(?:\d+\s+)?(?:an?|some)?\s*([a-z][a-z -]{2,45}?)(?=\s+(?:with|under|within|for|that|each|per|by|compatible)\b|[.,]|$)/i);

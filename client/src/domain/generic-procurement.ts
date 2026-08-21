@@ -85,6 +85,11 @@ const tyreAttributes: AttributeDefinition[] = [
   { key: "vehicle_model", label: "Vehicle model", type: "text" },
   { key: "tubeless", label: "Tubeless", type: "boolean" },
 ];
+const mouseAttributes: AttributeDefinition[] = [
+  { key: "mouse_model", label: "Mouse model", type: "text" },
+  { key: "connection", label: "Connection", type: "text" },
+  { key: "dpi", label: "Sensor resolution", type: "number", unit: "DPI" },
+];
 
 const profileExplanation = (requirement: Requirement) => `${requirement.label} must ${requirement.operator.replaceAll("_", " ")} ${String(requirement.value)}${requirement.unit ? ` ${requirement.unit}` : ""}.`;
 const profileValidator = (attributes: AttributeDefinition[], name: string) => (requirement: Requirement) => attributes.some(attribute => attribute.key === requirement.key) ? [] : [{ level: "warning" as const, message: `${requirement.label} is not a known ${name} attribute and will be checked as generic text.` }];
@@ -93,8 +98,9 @@ export const laptopProfile: CategoryProfile = { categoryId: "laptop", displayNam
 export const mobileProfile: CategoryProfile = { categoryId: "mobile", displayName: "Mobile device", aliases: ["mobile", "mobiles", "phone", "phones", "smartphone", "smartphones"], knownAttributes: mobileAttributes, validateRequirement: profileValidator(mobileAttributes, "mobile"), explainRequirement: profileExplanation };
 export const furnitureProfile: CategoryProfile = { categoryId: "furniture", displayName: "Office furniture", aliases: ["furniture", "desk", "desks", "table", "tables", "workstation", "workstations"], knownAttributes: furnitureAttributes, validateRequirement: profileValidator(furnitureAttributes, "furniture"), explainRequirement: profileExplanation };
 export const tyreProfile: CategoryProfile = { categoryId: "tyre", displayName: "Tyre", aliases: ["tyre", "tyres", "tire", "tires"], knownAttributes: tyreAttributes, validateRequirement: profileValidator(tyreAttributes, "tyre"), explainRequirement: profileExplanation };
+export const mouseProfile: CategoryProfile = { categoryId: "mouse", displayName: "Computer mouse", aliases: ["mouse", "mice", "computer mouse", "computer mice"], knownAttributes: mouseAttributes, validateRequirement: profileValidator(mouseAttributes, "mouse"), explainRequirement: profileExplanation };
 export const genericProfile: CategoryProfile = { categoryId: "generic", displayName: "Generic product", aliases: [], knownAttributes: [], explainRequirement: requirement => `${requirement.label} is treated as a ${requirement.isHard ? "hard" : "preference"} requirement.` };
-export const categoryProfiles: CategoryProfile[] = [laptopProfile, mobileProfile, furnitureProfile, tyreProfile, genericProfile];
+export const categoryProfiles: CategoryProfile[] = [laptopProfile, mobileProfile, furnitureProfile, tyreProfile, mouseProfile, genericProfile];
 
 export function canonicalCategory(value: string): string {
   const normalized = value.trim().toLowerCase();
@@ -154,4 +160,13 @@ export const tyreDemoBrief: BuyingBrief = {
   ],
   softPreferences: [], maxUnitPriceInr: 8000, deliveryDeadlineDays: 4, authorizationLimitInr: 8000, sourceText: "Purchase 1 tubeless 205/55 R16 tyre for Honda City under ₹8,000 each within 4 days.", confidence: 1,
 };
-export const curatedDemoBriefs = { laptop: laptopDemoBrief, mobile: mobileDemoBrief, furniture: furnitureDemoBrief, tyre: tyreDemoBrief } as const;
+export const mouseDemoBrief: BuyingBrief = {
+  id: "demo-mouse-m185", productCategory: "mouse", productDescription: "Wireless M185-compatible computer mouse", quantity: 1,
+  hardRequirements: [
+    { key: "mouse_model", label: "Mouse model", operator: "contains", value: "m185", isHard: true, sourceText: "M185 model" },
+    { key: "connection", label: "Connection", operator: "contains", value: "wireless", isHard: true, sourceText: "wireless" },
+    { key: "dpi", label: "Sensor resolution", operator: "at_least", value: 1000, unit: "DPI", isHard: true, sourceText: "1000 DPI" },
+  ],
+  softPreferences: [], maxUnitPriceInr: 2000, deliveryDeadlineDays: 4, authorizationLimitInr: 2000, sourceText: "Purchase 1 wireless M185 mouse with at least 1000 DPI under ₹2,000 each within 4 days.", confidence: 1,
+};
+export const curatedDemoBriefs = { laptop: laptopDemoBrief, mobile: mobileDemoBrief, furniture: furnitureDemoBrief, tyre: tyreDemoBrief, mouse: mouseDemoBrief } as const;

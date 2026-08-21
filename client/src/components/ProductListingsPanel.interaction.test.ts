@@ -14,7 +14,7 @@ describe("explicit full specification verification", () => {
     const verify = vi.fn();
     render(createElement(ProductListingsPanel, { state, onVerifyFullSpecifications: verify }));
     expect(verify).not.toHaveBeenCalled();
-    fireEvent.click(screen.getByRole("button", { name: "Verify full specifications" }));
+    fireEvent.click(screen.getByRole("button", { name: "Verify full page specifications" }));
     expect(verify).toHaveBeenCalledTimes(1);
     expect(verify).toHaveBeenCalledWith(expect.objectContaining({ id: "candidate-1", productUrl: "https://example.test/laptop" }));
   });
