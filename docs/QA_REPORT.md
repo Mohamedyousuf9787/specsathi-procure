@@ -35,7 +35,7 @@ The deterministic parser recognizes a focused set of common product and requirem
 | Tavily credential | Passed: bounded server-side authenticated health test; no key appears in source or browser payload. |
 | Live web evidence | Passed: authenticated server query returned normalized external titles, URLs, excerpts, and relevance. |
 | Provider failure | Passed: timeout mock returned local fallback without blocking procurement. |
-| Combined regression | Passed: 86 tests across 27 files, TypeScript, and production build. |
+| Combined regression | Passed: 92 tests across 28 files, TypeScript, and production build. |
 | Privacy audit metadata | Passed: `provider_audit_events` schema exists; unit test verifies metadata bounds and excludes untyped raw brief/query/key fields. |
 | Visual integration review | Passed: the secure-NLP consent disclosure and procurement-control intake render clearly at desktop size. |
 | Procurement audit trail | Passed: authenticated persistence route rejects anonymous writes; authenticated sessions persist bounded actual audit events, while anonymous sessions retain local-only history. |
@@ -85,3 +85,6 @@ The deterministic parser recognizes a focused set of common product and requirem
 | Final hardening verification | Passed: 82 tests across 27 files, TypeScript, and production build. The live Gemini extraction check returned a structured laptop record; live SerpAPI checks returned product cards across the curated categories with truthful fallback retained; an explicit live Firecrawl check returned a sourced laptop Processor field. |
 | Mouse comparison and evidence repair | Passed: a specific-model wireless M185 mouse brief now parses into editable requirements, receives three labelled deterministic Vendor A/Vendor B candidates, ranks a policy-compatible selection, retains a non-compliant alternative as evidence, and pauses at explicit vendor confirmation. Incomplete marketplace cards now explain why they remain unverified and record their count plus next safe action in the audit trail. |
 | Current mouse repair verification | Passed: 86 tests across 27 files, TypeScript, production build, and desktop/mobile review of the new mouse requirement-confirmation route. |
+| Multi-condition reliability matrix | Passed: deterministic coverage now exercises valid model-specific requests, missing budget, non-purchase content, incompatible offers, authority exceptions, vendor counter-offers, supplier unavailability, unsupported categories, marketplace fallback, and incomplete evidence. A material counter-offer now always waits for a renewed explicit confirmation after re-evaluation; it cannot create an automatic simulated purchase. |
+| Visual clarity pass | Passed: secondary vendor evidence, specifications, long policy agreement text, and label explanations are compact disclosures; price, policy state, availability, delivery, ranked candidates, confirmation controls, and the audit thread remain directly visible. Desktop and mobile routes were reviewed. |
+| Current reliability verification | Passed: 92 tests across 28 files, TypeScript, production build, and final source-safety scan. |

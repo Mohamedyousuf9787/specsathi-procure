@@ -156,6 +156,14 @@
 - [x] Improve marketplace-card guidance so unreported stock and missing concise specifications clearly direct the user to explicit verification without claiming verification prematurely.
 - [x] Add regression and visual coverage for the repaired mouse path and its marketplace-evidence states, then checkpoint and push the repair to GitHub.
 
+## Multi-Condition Reliability and Visual Clarity Pass
+
+- [x] Define and document a multi-condition matrix covering valid requests, missing/ambiguous constraints, unsupported categories, incompatible offers, authority exceptions, vendor counter-offers, unavailable suppliers, live-provider success/fallback, incomplete evidence, and audit persistence states.
+- [x] Add deterministic regression coverage for every missing policy, candidate-ranking, fallback, and audit combination identified by the matrix.
+- [x] Simplify the product-card, policy, ranked-evidence, and audit surfaces to reduce visual density while retaining every decision-critical fact and reachable control.
+- [x] Verify desktop and mobile readability for intake, live listings, deterministic comparison, ranked evidence, approval, confirmation, finance handoff, and audit thread.
+- [ ] Run final full-suite, type, build, source-safety, checkpoint, and GitHub synchronization verification.
+
 - [x] Inspect available connectors and record the approved provider architecture without exposing credentials.
 - [x] Upgrade the static application to a secure full-stack project and preserve the local demo path.
 - [x] Implement server-side structured NLP extraction with strict schema validation and deterministic post-validation.

@@ -207,10 +207,8 @@ export function resolveVendorConfirmation(session: GenericProcurementSession, de
       return { ...session, recommendation, status: "PENDING_APPROVAL", audit, approvedException: false };
     }
     const reselected = recommendation.selected.offer;
-    addEvent(audit, { type: "VENDOR_CONFIRMED", actor: "Procurement agent", itemId: session.brief.id, summary: `Counter-offer accepted after re-evaluation: ${reselected.vendorName} at ₹${reselected.unitPriceInr.toLocaleString("en-IN")} per unit.` });
-    const order = orderFor(session.brief, reselected, audit.length + 1);
-    addEvent(audit, { type: "MOCK_PURCHASE_CONFIRMED", actor: "Procurement agent", itemId: session.brief.id, summary: `Simulated purchase confirmed. Order ${order.id} recorded.`, detail: "No real payment was created." });
-    return { ...session, recommendation, status: "PURCHASED", audit, order };
+    addEvent(audit, { type: "VENDOR_CONFIRMATION_REQUESTED", actor: "Procurement agent", itemId: session.brief.id, summary: `Counter-offer re-evaluated. Awaiting explicit acceptance of ${reselected.vendorName} at ₹${reselected.unitPriceInr.toLocaleString("en-IN")} per unit before any simulated purchase.`, detail: "No purchase is created from a material counter-offer until the requester accepts the re-evaluated terms." });
+    return { ...session, recommendation, status: "CONFIRMING", audit, approvedException: false };
   }
   addEvent(audit, { type: "VENDOR_CONFIRMED", actor: "Procurement agent", itemId: session.brief.id, summary: `Final vendor terms accepted: ₹${selected.unitPriceInr.toLocaleString("en-IN")} per unit, delivery in ${selected.deliveryDays ?? "an unverified"} day window.` });
   const order = orderFor(session.brief, selected, audit.length + 1);

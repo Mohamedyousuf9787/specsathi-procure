@@ -32,7 +32,9 @@ describe("marketplace product-card summary", () => {
 
   it("keeps marketplace vendor statements normalized and makes full-page verification an explicit action", () => {
     const marketplace = { ...listing("eligible"), specificationStatus: "sourced" as const, specificationSource: "marketplace" as const, specificationProfile: "laptop" as const, specifications: [{ label: "RAM", value: "16 GB RAM" }] };
-    expect(renderToStaticMarkup(createElement(VendorOfferStatement, { listing: marketplace }))).toContain("Normalized vendor offer statement");
+    const vendorMarkup = renderToStaticMarkup(createElement(VendorOfferStatement, { listing: marketplace }));
+    expect(vendorMarkup).toContain("Vendor evidence");
+    expect(vendorMarkup).toContain("Reported terms");
     const panelMarkup = renderToStaticMarkup(createElement(SpecificationPanel, { listing: marketplace, onVerifyFullSpecifications: () => undefined }));
     expect(panelMarkup).toContain("Marketplace result");
     expect(panelMarkup).toContain("Verify full page specifications");
@@ -65,7 +67,7 @@ describe("marketplace product-card summary", () => {
 
   it("renders the confirmed policy agreement above successful product cards", () => {
     const markup = renderToStaticMarkup(createElement(ProductListingsPanel, { state: { status: "live", listings: [listing("eligible")] }, policyAgreement: "Confirmed category, budget, delivery, and authority boundary." }));
-    expect(markup).toContain("Confirmed policy agreement:");
+    expect(markup).toContain("Confirmed policy agreement recorded");
     expect(markup).toContain("Confirmed category, budget, delivery, and authority boundary.");
   });
 });
