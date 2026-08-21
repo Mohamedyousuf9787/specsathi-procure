@@ -1,22 +1,27 @@
-# QA Report
+# Migration QA Report
 
 ## Release status
 
-**Ready for the local offline demo path.** The P0 workflow is implemented, tests are repeatable, the production build succeeds, provider keys are absent, and desktop/mobile workspace renders were reviewed.
+**Ready for the offline generalization demo.** The application now has a natural-language primary path, a laptop-focused demo, a preserved multi-item compatibility demo, deterministic validation, two-source local vendor search, policy enforcement, approval controls, mock confirmation, simulated order records, and a generic audit trail.
 
-## Preliminary verification
+## Verification summary
 
-The deterministic suite passed six checks: the golden path, explicit approval, rejection without order creation, unavailable-vendor re-ranking, no-match blocking, changed-term re-escalation, and rejection of an impossible direct approval-to-purchase transition. The suite was run five consecutive times successfully. TypeScript checking and the production build passed. A refined credential scan found no configured provider secrets or OpenAI-style keys in tracked project files. The workspace render was reviewed at 1440px and 390px widths; the responsive stack, policy tape, vendor ticket, approval panel, comparison table, and evidence thread remained legible.
+| Check | Result | Evidence |
+|---|---|---|
+| Legacy multi-item regression | Passed | Original six policy tests remain green. |
+| Generic contracts | Passed | Generic brief, requirement, offer, category profile, and compatibility adapters are tested. |
+| Parser and validator | Passed | Laptop, chair, monitor, printer, missing-budget, conflicting-budget, and unrelated-text cases are tested. |
+| Generic vendor flow | Passed | Laptop, approval, chair, monitor, unavailable-monitor re-ranking, unknown printer, rejection, and changed terms are tested. |
+| Repeatability | Passed | The full 21-test suite passed five consecutive runs. |
+| TypeScript | Passed | `pnpm check`. |
+| Production build | Passed | `pnpm build`; static-template chunk-size warning remains non-blocking. |
+| Credential scan | Passed | No configured provider secrets or OpenAI-style keys in tracked project files. |
+| Desktop and mobile visual review | Passed | 1440px and 390px generic intake renders reviewed. |
+
+## Offline and API status
+
+Demo Mode is local-only. LLM is disabled; live search is disabled; Vendor A and Vendor B are simulated local sources. No network call, API key, payment, database, or persistent user account is needed for the demonstrated flow.
 
 ## Known limitations
 
-P0 intentionally accepts the validated golden procurement brief and supports editable policy fields rather than attempting arbitrary language extraction. Optional hosted parsing, live search, transcription, image intake, user accounts, a database, notifications, and payments remain deferred. The build output reports a pre-existing main-chunk size warning from the static template dependency set; it does not prevent local demo use.
-
-## Release recommendation
-
-Use the local application as the primary Grand Finale path. Before presenting, a teammate should run the first three actions in `docs/DEMO_RUNBOOK.md` once on the presentation laptop and keep the generated static screenshot or a backup device available.
-
-## Known limitations
-
-- P0 intentionally has no hosted LLM, live web search, database, authentication, payments, voice, or image parsing.
-- The final release must be verified without network access.
+The deterministic parser recognizes a focused set of common product and requirement patterns. Unrecognized product categories remain valid briefs but block safely if no local catalog exists. Production expansion should add one secure server-side provider for broader language parsing or live search only after preserving the existing local fallback and test matrix.

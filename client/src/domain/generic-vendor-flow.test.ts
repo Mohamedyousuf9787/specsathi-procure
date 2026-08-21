@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { parseBuyingBrief } from "./brief-parser";
 import { laptopDemoBrief } from "./generic-procurement";
-import { resolveGenericApproval, runGenericProcurement } from "./generic-vendor-flow";
+import { genericLocalCatalog, LocalDemoVendorProvider, resolveGenericApproval, runGenericProcurement } from "./generic-vendor-flow";
 
 const valid = (text: string) => {
   const result = parseBuyingBrief(text);
@@ -28,6 +28,13 @@ describe("generic local vendor flow", () => {
   it("auto-purchases a compliant chair and supports a monitor request", async () => {
     expect((await runGenericProcurement(valid("Buy 20 ergonomic chairs with adjustable height under ₹10,000 each within 5 days."))).status).toBe("PURCHASED");
     expect((await runGenericProcurement(valid("Find 5 27 inch QHD HDMI monitors under ₹25,000 each within 7 days."))).status).toBe("PURCHASED");
+  });
+
+  it("re-ranks a monitor when the top vendor becomes unavailable", async () => {
+    const provider = new LocalDemoVendorProvider(genericLocalCatalog.map((offer) => offer.id === "monitor-a-generic" ? { ...offer, availableQuantity: 0, availability: "unavailable" as const } : offer));
+    const session = await runGenericProcurement(valid("Find 5 27 inch QHD HDMI monitors under ₹25,000 each within 7 days."), provider);
+    expect(session.status).toBe("PURCHASED");
+    expect(session.recommendation.selected?.offer.vendorName).toBe("Vendor B");
   });
 
   it("fails an unknown category safely after searching both sources", async () => {

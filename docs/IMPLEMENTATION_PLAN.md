@@ -18,4 +18,4 @@ Deliver a polished, offline-capable procurement-control web application that pro
 
 ## Current phase
 
-**Phase 08 — QA and demo.** The workflow is implemented and visually verified at desktop and mobile sizes. Final test, build, documentation, and offline-readiness checks remain.
+**Generalization migration complete.** The original local multi-item demonstration is preserved; a generic domain, parser, validator, local vendor flow, laptop demo, natural-language intake, category-agnostic workspace, regression matrix, and migration documentation are complete. See `docs/MIGRATION_REPORT.md` and `context/checkpoints/CP-014-generalization-release.md`.

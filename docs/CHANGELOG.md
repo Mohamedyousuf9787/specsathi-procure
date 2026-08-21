@@ -22,3 +22,11 @@
 - Added editable policy fields and procurement-scope feedback for non-procurement intake text.
 - Rehearsed the deterministic suite five consecutive times.
 - Verified TypeScript, the production build, refined credential scan, and desktop/mobile workspace renders.
+
+### Generalization migration
+
+- Added generic procurement contracts, compatibility adapters, laptop profile, and generic fallback profile.
+- Added deterministic generic brief parsing, validation, clarification, conflict detection, and unknown-category safety.
+- Added generic Vendor A/Vendor B provider, comparison, policy, approval, confirmation, simulated order, and audit flow.
+- Made natural-language intake primary; added explicit laptop and preserved multi-item demo shortcuts without product tabs.
+- Added 15 new migration checks, bringing the full suite to 21 tests; rehearsed it five consecutive times.

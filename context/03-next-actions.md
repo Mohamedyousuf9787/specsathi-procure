@@ -12,6 +12,6 @@ related:
 
 # Next Actions
 
-1. Rebuild the entry experience around a generic natural-language brief with laptop and multi-item demo shortcuts.
-2. Render validation, clarification, no-match, approval, purchase, and audit views from the generic session.
-3. Keep the legacy multi-item workflow available as a clearly labeled compatibility demo and verify it after UI changes.
+1. Rehearse the laptop-focused primary demo using `docs/DEMO_RUNBOOK.md`.
+2. Use the chair and printer examples to demonstrate generic support and safe unknown-category blocking.
+3. Keep Demo Mode enabled; add optional hosted parsing or live search only behind a secure server-side boundary with the local fallback intact.

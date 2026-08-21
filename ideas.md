@@ -74,3 +74,10 @@ Use a simple interlocking receipt-and-checkmark symbol: a tall paper slip with o
 - Do not use pill fields; inputs have a 4px radius.
 - Do not repeat the deep indigo band beyond the single top-level identity moment.
 - Every CSS or component file must carry a short top-of-file reminder that this project follows the Calm operational paper direction and its color-role restrictions.
+
+## Style Decisions
+
+- The generic intake must read as a **procurement control record**, never generic SaaS onboarding; visible labels name constraints, evidence, policy boundaries, or audit actions.
+- The deep-indigo identity scene remains a single contained moment and is explicitly framed with receipt, approval, and evidence labels.
+- The receipt-and-check mark is visually primary in the header; the wordmark remains quiet and secondary.
+- Operational hierarchy should come from ledger-like hairlines, concise evidence rows, policy tape, and deterministic language rather than decorative card styling.

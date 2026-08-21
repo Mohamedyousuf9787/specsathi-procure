@@ -1,7 +1,7 @@
 ---
 type: phase
 id: phase-15-regression-and-non-laptop-tests
-status: planned
+status: complete
 created: 2026-08-21
 updated: 2026-08-21
 related:
@@ -11,4 +11,4 @@ related:
 
 # Phase 15 — Regression and Non-Laptop Tests
 
-Verify the preserved multi-item compatibility demo, a new laptop demo, chair and monitor secondary flows, ambiguous and conflicting briefs, unknown-category no-match, approval rejection, changed terms, and offline fallback.
+The 21-test suite now covers preserved multi-item behavior, laptop auto-purchase and approval, chair auto-purchase, monitor auto-purchase and unavailable-vendor re-ranking, unknown printer no-match, missing budget clarification, conflicting budget invalidation, unrelated input rejection, approval rejection, and changed terms. It passed five consecutive rehearsal runs.

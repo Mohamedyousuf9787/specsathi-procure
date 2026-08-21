@@ -1,7 +1,7 @@
 ---
 type: phase
 id: phase-16-final-migration-qa
-status: planned
+status: complete
 created: 2026-08-21
 updated: 2026-08-21
 related:
@@ -10,4 +10,4 @@ related:
 
 # Phase 16 — Final Migration QA
 
-Complete the cross-category test matrix, production build, no-secret scan, offline demo rehearsal, visual review, recovery update, and final migration checkpoint.
+Cross-category regression, repeated rehearsal, TypeScript, production build, refined credential scan, no-provider fallback, desktop visual review, mobile visual review, documentation, recovery instructions, and final migration context are complete. The only non-blocking note is the static-template main-chunk-size build warning.

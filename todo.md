@@ -8,6 +8,6 @@
 - [x] Preserve the golden scenario through a compatibility adapter and keep it offline-first.
 - [x] Implement deterministic parsing and validation for generic category requests, ambiguity, conflicts, and unsupported catalogs.
 - [x] Add local generic vendor routing with at least two sources and controlled no-catalog behavior.
-- [ ] Generalize the intake and confirmation UI without adding fixed product-category tabs.
-- [ ] Add laptop and non-laptop regression tests, then run repeatable offline QA and visual verification.
-- [ ] Update migration documentation, save a release checkpoint, and provide revised demo instructions.
+- [x] Generalize the intake and confirmation UI without adding fixed product-category tabs.
+- [x] Add laptop and non-laptop regression tests, then run repeatable offline QA and visual verification.
+- [x] Update migration documentation, save a release checkpoint, and provide revised demo instructions.

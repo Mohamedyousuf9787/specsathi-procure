@@ -12,4 +12,4 @@ related:
 
 # Active Work
 
-Connect the generic parser and vendor flow to the product UI without reintroducing fixed category tabs or weakening the existing approval and audit experience. The primary risks remain silently converting unknown categories into legacy items, hiding clarification states, treating an over-limit offer as compliant, or creating a mock order before approval.
+No migration implementation is active. The next optional work is a secure server-side provider for broader parsing or live search, but only if it preserves the local deterministic fallback, generic schema, policy tests, and demo runbook.
