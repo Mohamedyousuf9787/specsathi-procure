@@ -162,7 +162,7 @@
 - [x] Add deterministic regression coverage for every missing policy, candidate-ranking, fallback, and audit combination identified by the matrix.
 - [x] Simplify the product-card, policy, ranked-evidence, and audit surfaces to reduce visual density while retaining every decision-critical fact and reachable control.
 - [x] Verify desktop and mobile readability for intake, live listings, deterministic comparison, ranked evidence, approval, confirmation, finance handoff, and audit thread.
-- [ ] Run final full-suite, type, build, source-safety, checkpoint, and GitHub synchronization verification.
+- [x] Run final full-suite, type, build, source-safety, checkpoint, and GitHub synchronization verification.
 
 - [x] Inspect available connectors and record the approved provider architecture without exposing credentials.
 - [x] Upgrade the static application to a secure full-stack project and preserve the local demo path.
