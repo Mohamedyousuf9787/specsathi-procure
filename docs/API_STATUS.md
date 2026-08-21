@@ -7,6 +7,8 @@
 | Secure NLP extraction | Enabled | Server-side strict JSON-schema extraction with opt-in UI consent, Zod validation, alias normalization, and deterministic fallback. | Existing deterministic parser. |
 | Tavily live evidence | Enabled | Server-side external evidence search; returns title, URL, excerpt, and relevance only. | Local Vendor A/Vendor B. |
 | Procurement audit persistence | Enabled for authenticated users | Stores bounded audit event metadata and provider outcomes; anonymous sessions retain local-only audit history. | Local audit thread. |
+| Gemini requirement extraction | Enabled | Server-side Gemini 3.5 Flash Lite extracts ordinary-language purchase needs into an editable structured record. | Deterministic local parser and blocked unsafe-input path. |
+| SerpAPI product listings | Enabled | Server-side Google Shopping results are normalized into in-app marketplace cards with deterministic policy labels. | Local Vendor A/Vendor B path. |
 | Gemini / Groq LLM | Disabled | Optional future natural-language extraction or explanation. | Deterministic parser and editable preview. |
 | Tavily / SerpApi / Brave | Disabled | Optional future web-discovered offers. | Local simulated catalog, clearly labeled. |
 | Web Speech / image parsing | Deferred | P2 intake enhancement. | Text input. |

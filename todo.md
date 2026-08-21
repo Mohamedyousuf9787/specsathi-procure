@@ -2,6 +2,29 @@
 
 ## Real Integration Checklist
 
+## Confirmed Product Listing Upgrade
+
+- [x] Store the user-provided Gemini and SerpAPI credentials securely and validate each server-side provider without exposing keys.
+- [x] Preserve the current real-integration baseline and document the product-listing architecture and data-evidence boundaries.
+- [x] Implement server-side Gemini structured brief extraction with the existing deterministic parser as a fallback.
+- [x] Replace the read-only normalized review with editable category, quantity, budget, delivery, authorization, and requirement controls.
+- [x] Require explicit user confirmation of the edited requirement record before any product search request.
+- [x] Implement server-side SerpAPI shopping search and normalize products into safe in-app listing records.
+- [x] Render comparable product listing cards with image, title, merchant, price, rating, availability, delivery, source link, and evidence completeness.
+- [x] Evaluate product cards deterministically as eligible, approval-needed, blocked, or unverified without treating incomplete marketplace data as verified terms.
+- [x] Display availability and explicitly handle unknown availability on every product card.
+- [x] Implement and test the complete product-card policy states: eligible, approval-needed, blocked, and unverified.
+- [x] Verify the product-listing architecture records and create the product-listing baseline checkpoint before release.
+- [x] Add explicit eligible-listing regression coverage and verify the final product-listing checkpoint records before release.
+- [x] Add tests for simple language, extraction fallback, editable corrections, product normalization, missing fields, rate limits, and listing/policy decisions.
+- [x] Run full API, security, visual, responsive, regression, and context-documentation QA before the final checkpoint.
+- [x] Add automated coverage for editable requirement corrections and the Gemini simple-language extraction path.
+- [x] Run and record a final source and runtime secret-exposure scan for the Gemini and SerpAPI slice.
+- [x] Verify editable confirmation and in-app product listings at desktop and mobile sizes, then read back final QA context records.
+- [x] Add server-procedure coverage for Gemini simple-language extraction with a mocked structured response.
+- [x] Verify live Gemini and SerpAPI runtime responses and server logs contain no provider secret values.
+- [x] Capture desktop and mobile verification for editable confirmation and rendered product listings, then re-read final QA context.
+
 - [x] Inspect available connectors and record the approved provider architecture without exposing credentials.
 - [x] Upgrade the static application to a secure full-stack project and preserve the local demo path.
 - [x] Implement server-side structured NLP extraction with strict schema validation and deterministic post-validation.

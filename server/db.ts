@@ -92,7 +92,7 @@ export async function getUserByOpenId(openId: string) {
 type ProviderAuditInput = {
   userId?: number;
   eventType: "nlp.extraction" | "live_search.evidence";
-  provider: "built-in-llm" | "tavily" | "local";
+  provider: "built-in-llm" | "gemini" | "tavily" | "serpapi" | "local";
   outcome: "success" | "partial" | "fallback";
   summary: string;
   metadata: { inputLength?: number; category?: string; issueCount?: number; resultCount?: number };

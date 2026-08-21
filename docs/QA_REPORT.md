@@ -30,13 +30,21 @@ The deterministic parser recognizes a focused set of common product and requirem
 
 | Check | Result |
 |---|---|
-| Server-side NLP | Passed: strict-schema `gpt-5-mini` extraction returned a normalized laptop brief through tRPC. |
+| Server-side NLP | Passed: strict-schema Gemini 3.5 Flash Lite extraction returned a normalized laptop brief through tRPC. |
 | Consent and fallback | Passed: UI requires opt-in; unselected or failed NLP uses the deterministic parser and exposes a retry control. |
 | Tavily credential | Passed: bounded server-side authenticated health test; no key appears in source or browser payload. |
 | Live web evidence | Passed: authenticated server query returned normalized external titles, URLs, excerpts, and relevance. |
 | Provider failure | Passed: timeout mock returned local fallback without blocking procurement. |
-| Combined regression | Passed: 35 tests, TypeScript, and production build. |
+| Combined regression | Passed: 41 tests across 16 files, TypeScript, and production build. |
 | Privacy audit metadata | Passed: `provider_audit_events` schema exists; unit test verifies metadata bounds and excludes untyped raw brief/query/key fields. |
 | Visual integration review | Passed: the secure-NLP consent disclosure and procurement-control intake render clearly at desktop size. |
 | Procurement audit trail | Passed: authenticated persistence route rejects anonymous writes; authenticated sessions persist bounded actual audit events, while anonymous sessions retain local-only history. |
 | Injection and rate limits | Passed: instruction-override text is blocked before model extraction; mocked 429 tests prove both the complete NLP procedure and Tavily search fall back safely to deterministic local behavior. |
+| Gemini ordinary-language extraction | Passed: the configured Gemini 3.5 Flash Lite route returned a structured laptop requirement record through local tRPC smoke testing. |
+| SerpAPI product listings | Passed: a live Google Shopping query returned normalized in-app product data; tests cover complete, over-budget, approval-needed, and unverified mappings. |
+| Editable confirmation gate | Passed: structured fields remain user-editable and the only product-search mutation is called from the explicit confirmation action. |
+| Product-listing secret scan | Passed: application and documentation sources contain no committed Gemini or SerpAPI values. |
+| Responsive procurement entry | Passed: desktop and 390px mobile renders preserve a readable ordinary-language request, secure-NLP consent, and explanation of the confirmation flow. |
+| Gemini ordinary-language adapter | Passed: mocked structured response for a plain-language laptop request normalizes category, quantity, price ceiling, deadline, RAM, and storage into the procurement contract. |
+| Runtime provider secrecy | Passed: live Gemini and SerpAPI procedure payloads and recent server logs contain no provider-key identifiers or credential-shaped strings. |
+| Responsive confirmation and listings | Passed: 1280px and 390px captures show the editable confirmation form, its explicit search boundary, and the rendered Eligible, Approval needed, Blocked, and Unverified card states. |
