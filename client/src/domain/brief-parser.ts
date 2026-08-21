@@ -21,7 +21,7 @@ export type ValidationResult = {
 };
 
 const unrelatedPattern = /^(?:what|why|who|when|where|how|tell me|explain|hello|hi)\b/i;
-const procurementVerbPattern = /\b(?:buy|purchase|order|find|source|get|need)\b/i;
+const procurementVerbPattern = /\b(?:buy|purchase|order|find|source|get|need|want)\b/i;
 const promptInjectionPattern = /\b(?:ignore|disregard|override)\s+(?:all\s+)?(?:previous|prior|system|developer|instructions?|rules?)\b|\b(?:reveal|show)\s+(?:the\s+)?(?:system|developer)\s+(?:prompt|message|instructions?)\b|\bbypass\s+(?:policy|approval|authorization|guardrail)/i;
 
 const fixedRequirementPatterns: Array<{ pattern: RegExp; requirement: (match: RegExpMatchArray) => Requirement }> = [
@@ -34,6 +34,9 @@ const fixedRequirementPatterns: Array<{ pattern: RegExp; requirement: (match: Re
   { pattern: /\badjustable height\b/i, requirement: (match) => ({ key: "adjustable_height", label: "Adjustable height", operator: "contains", value: "adjustable height", isHard: true, sourceText: match[0] }) },
   { pattern: /\bqhd\b/i, requirement: (match) => ({ key: "resolution", label: "QHD resolution", operator: "contains", value: "qhd", isHard: true, sourceText: match[0] }) },
   { pattern: /\bhdmi\b/i, requirement: (match) => ({ key: "hdmi", label: "HDMI", operator: "equals", value: true, isHard: true, sourceText: match[0] }) },
+  { pattern: /\b(\d{3}\s*\/\s*\d{2}\s*(?:ZR?|R)\s*\d{2})\b/i, requirement: (match) => ({ key: "tyre_size", label: "Tyre size", operator: "contains", value: match[1].replace(/\s+/g, " ").replace(/\s*\/\s*/g, "/").toUpperCase(), isHard: true, sourceText: match[0] }) },
+  { pattern: /\b(?:for|compatible\s+with)\s+([A-Za-z0-9][A-Za-z0-9 -]{1,35}?)(?=\s+(?:with|under|within|each|per|tubeless)\b|[.,]|$)/i, requirement: (match) => ({ key: "vehicle_model", label: "Vehicle model", operator: "contains", value: match[1].trim().toLowerCase(), isHard: true, sourceText: match[0] }) },
+  { pattern: /\btubeless\b/i, requirement: (match) => ({ key: "tubeless", label: "Tubeless", operator: "equals", value: true, isHard: true, sourceText: match[0] }) },
 ];
 
 function numberFrom(value: string | undefined) {
@@ -41,15 +44,15 @@ function numberFrom(value: string | undefined) {
 }
 
 function extractQuantity(text: string) {
-  const match = text.match(/\b(?:buy|purchase|order|find|source|get|need)\s+(\d+)\b/i) ?? text.match(/\b(\d+)\s+(?:new\s+)?(?:laptops?|chairs?|monitors?|printers?|cameras?|stands?)\b/i);
+  const match = text.match(/\b(?:buy|purchase|order|find|source|get|need|want)\s+(\d+)\b/i) ?? text.match(/\b(\d+)\s+(?:new\s+)?(?:laptops?|chairs?|monitors?|printers?|cameras?|stands?|tyres?|tires?)\b/i);
   return match ? Number(match[1]) : undefined;
 }
 
 function extractCategory(text: string) {
-  const known = ["laptop", "notebook", "chair", "monitor", "printer", "camera", "stand"];
+  const known = ["laptop", "notebook", "chair", "monitor", "printer", "camera", "stand", "tyre", "tire"];
   const match = known.find((term) => new RegExp(`\\b${term}s?\\b`, "i").test(text));
   if (match) return canonicalCategory(match);
-  const generic = text.match(/\b(?:buy|purchase|order|find|source|get|need)\s+(?:\d+\s+)?(?:an?|some)?\s*([a-z][a-z -]{2,45}?)(?=\s+(?:with|under|within|for|that|each|per|by)\b|[.,]|$)/i);
+  const generic = text.match(/\b(?:buy|purchase|order|find|source|get|need|want)\s+(?:\d+\s+)?(?:an?|some)?\s*([a-z][a-z -]{2,45}?)(?=\s+(?:with|under|within|for|that|each|per|by|compatible)\b|[.,]|$)/i);
   return generic?.[1]?.trim() ? canonicalCategory(generic[1].trim()) : undefined;
 }
 

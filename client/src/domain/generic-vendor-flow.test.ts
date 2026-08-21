@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { parseBuyingBrief } from "./brief-parser";
 import { furnitureDemoBrief, laptopDemoBrief, mobileDemoBrief } from "./generic-procurement";
-import { genericLocalCatalog, LocalDemoVendorProvider, resolveGenericApproval, resolveVendorConfirmation, runGenericProcurement, runUnavailableTopVendorScenario } from "./generic-vendor-flow";
+import { genericLocalCatalog, LocalDemoVendorProvider, recordMarketplaceSearchOutcome, resolveGenericApproval, resolveVendorConfirmation, runGenericProcurement, runUnavailableTopVendorScenario } from "./generic-vendor-flow";
 
 const valid = (text: string) => {
   const result = parseBuyingBrief(text);
@@ -42,6 +42,14 @@ describe("generic local vendor flow", () => {
     expect(furniture.recommendation.selected?.offer.id).toBe("furniture-a-1");
   });
 
+  it("ranks labelled tyre/model candidates and holds the selected tyre at vendor confirmation", async () => {
+    const session = await runGenericProcurement(valid("I want 1 tubeless 205/55 R16 tyre for Honda City under ₹8,000 each within 4 days."));
+    expect(session.status).toBe("CONFIRMING");
+    expect(session.recommendation.candidates).toHaveLength(3);
+    expect(session.recommendation.selected?.offer.id).toBe("tyre-a-1");
+    expect(session.audit.some((event) => event.type === "OFFERS_COMPARED")).toBe(true);
+  });
+
   it("re-ranks a monitor when the top vendor becomes unavailable", async () => {
     const provider = new LocalDemoVendorProvider(genericLocalCatalog.map((offer) => offer.id === "monitor-a-generic" ? { ...offer, availableQuantity: 0, availability: "unavailable" as const } : offer));
     const session = await runGenericProcurement(valid("Find 5 27 inch QHD HDMI monitors under ₹25,000 each within 7 days."), provider);
@@ -54,6 +62,17 @@ describe("generic local vendor flow", () => {
     expect(session.status).toBe("BLOCKED");
     expect(session.order).toBeUndefined();
     expect(session.audit.filter((event) => event.type === "VENDOR_SEARCHED")).toHaveLength(2);
+    expect(session.audit.some((event) => event.type === "LOCAL_CATALOG_UNAVAILABLE")).toBe(true);
+    expect(session.recommendation.reason).toContain("No labelled deterministic Vendor A/B catalog");
+  });
+
+  it("records marketplace fallback provenance without falsely claiming local coverage for unsupported categories", async () => {
+    const session = await runGenericProcurement(valid("Find 5 office printers with duplex printing under ₹75,000 total."));
+    const recorded = recordMarketplaceSearchOutcome(session, { status: "fallback", listingCount: 0, message: "Product listing search is unavailable." });
+    const event = recorded.audit.at(-1);
+    expect(event?.type).toBe("MARKETPLACE_FALLBACK");
+    expect(event?.detail).toContain("No labelled deterministic Vendor A/B catalog covers");
+    expect(event?.timestamp).toMatch(/^\d{4}-\d{2}-\d{2}T/);
   });
 
   it("returns to approval when generic vendor terms change during confirmation", async () => {

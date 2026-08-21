@@ -6,6 +6,7 @@ const shoppingResultSchema = z.object({
   position: z.number().optional(), title: z.string().default("Untitled product"), source: z.string().optional(), price: z.string().optional(), extracted_price: z.number().optional(), rating: z.number().optional(), reviews: z.number().optional(), thumbnail: z.string().url().optional(), product_link: z.string().url().optional(), link: z.string().url().optional(), delivery: z.string().optional(), availability: z.string().optional(), extensions: z.array(z.string()).optional(),
 });
 const shoppingResponseSchema = z.object({ shopping_results: z.array(shoppingResultSchema).default([]) });
+const PRODUCT_SEARCH_TIMEOUT_MS = 25_000;
 
 export type ProductListing = { id: string; title: string; merchant: string | null; priceText: string | null; priceInr: number | null; rating: number | null; reviews: number | null; imageUrl: string | null; productUrl: string | null; delivery: string | null; availability: string | null; completeness: "complete" | "unverified"; policy: "eligible" | "approval_needed" | "blocked" | "unverified"; specificationProfile: "laptop" | "motorcycle" | "generic"; specifications: Array<{ label: string; value: string }> };
 
@@ -58,7 +59,7 @@ export const productsRouter = router({
     try {
       const url = new URL("https://serpapi.com/search.json");
       url.search = new URLSearchParams({ engine: "google_shopping", q: input.query, gl: "in", hl: "en", api_key: apiKey }).toString();
-      const response = await fetch(url, { signal: AbortSignal.timeout(15_000) });
+      const response = await fetch(url, { signal: AbortSignal.timeout(PRODUCT_SEARCH_TIMEOUT_MS) });
       if (response.status === 429) return { status: "fallback" as const, listings: [] as ProductListing[], message: "Product listing search is rate-limited. Local Vendor A and Vendor B remain active." };
       if (!response.ok) throw new Error(`SerpAPI returned ${response.status}`);
       const listings = normalizeShoppingResults(shoppingResponseSchema.parse(await response.json()), input.maxUnitPriceInr, input.authorizationLimitInr, input.category);

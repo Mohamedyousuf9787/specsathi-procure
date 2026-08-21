@@ -121,6 +121,21 @@
 
 - [x] Verify every project source, test, documentation, and presentation-source file is tracked and synchronized to the user’s GitHub repository.
 
+## Urgent Procurement-Flow Repair
+
+- [x] Reproduce the tyre-specific-model and unsupported-category request failures across live search, deterministic comparison, policy controls, candidate evidence, and audit events.
+- [x] Add safe, clearly labelled local comparison coverage for tyre/model requests without representing deterministic values as live marketplace evidence.
+- [x] Ensure live marketplace failures leave a usable, truthful fallback state rather than an empty policy-controlled workspace.
+- [x] Ensure all-candidates ranked evidence always explains zero-result and fallback states, and renders candidate rows when a deterministic fallback is available.
+- [x] Correct audit events so they precisely record live-provider outcome, fallback provenance, catalog coverage, policy state, and next safe action.
+- [ ] Add regression and visual coverage for the repaired tyre request and unsupported-category behavior, then checkpoint and push the correction to GitHub.
+
+## Complete Context Delivery
+
+- [x] Store the urgent repair diagnosis, implementation rationale, verification results, and source inventory in repository documentation.
+- [x] Create a downloadable safe complete-context ZIP with project source, tests, documentation, configuration, and presentation source while excluding secrets, dependencies, runtime logs, build artifacts, and Git internals.
+- [ ] Save a final checkpoint and push all completed repair source and context records to the user’s GitHub repository.
+
 - [x] Inspect available connectors and record the approved provider architecture without exposing credentials.
 - [x] Upgrade the static application to a secure full-stack project and preserve the local demo path.
 - [x] Implement server-side structured NLP extraction with strict schema validation and deterministic post-validation.

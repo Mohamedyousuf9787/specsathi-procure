@@ -41,8 +41,8 @@ import {
 import GenericProcurementWorkspace, { type LiveEvidenceState } from "@/components/GenericProcurementWorkspace";
 import EditableRequirementReview, { buildPolicyAgreementStatement, type PolicyAgreement } from "@/components/EditableRequirementReview";
 import { parseBuyingBrief, type ValidationResult } from "@/domain/brief-parser";
-import { furnitureDemoBrief, laptopDemoBrief, mobileDemoBrief, type BuyingBrief } from "@/domain/generic-procurement";
-import { runGenericProcurement, runUnavailableTopVendorScenario, type GenericProcurementSession } from "@/domain/generic-vendor-flow";
+import { furnitureDemoBrief, laptopDemoBrief, mobileDemoBrief, tyreDemoBrief, type BuyingBrief } from "@/domain/generic-procurement";
+import { recordMarketplaceSearchOutcome, runGenericProcurement, runUnavailableTopVendorScenario, type GenericProcurementSession } from "@/domain/generic-vendor-flow";
 import { resolveLaptopChallengeFallback } from "@/domain/laptop-challenge-templates";
 import { resolveProductSearchFailure, resolveProductSearchSuccess } from "@/domain/product-search-outcome";
 import { trpc } from "@/lib/trpc";
@@ -323,11 +323,13 @@ export default function Home() {
       const outcome = resolveProductSearchSuccess(lastConfirmedBriefRef.current, result);
       const initialState = getInitialProductSearchState<ProductListing>(outcome.listings);
       setProductListings({ status: outcome.status, message: outcome.message, listings: initialState.listings });
+      setGenericSession(current => !current || current.brief.id !== lastConfirmedBriefRef.current?.id ? current : recordMarketplaceSearchOutcome(current, { status: outcome.status, listingCount: outcome.listings.length, message: outcome.message }));
     },
     onError: () => {
       const outcome = resolveProductSearchFailure(lastConfirmedBriefRef.current);
       const initialState = getInitialProductSearchState<ProductListing>(outcome.listings);
       setProductListings({ status: outcome.status, message: outcome.message, listings: initialState.listings });
+      setGenericSession(current => !current || current.brief.id !== lastConfirmedBriefRef.current?.id ? current : recordMarketplaceSearchOutcome(current, { status: outcome.status, listingCount: outcome.listings.length, message: outcome.message }));
     },
   });
   const auditPersistenceMutation = trpc.audit.persistSession.useMutation({ onSuccess: () => setAuditPersistence("persisted"), onError: () => setAuditPersistence("unavailable") });
@@ -445,6 +447,7 @@ export default function Home() {
     const demo = new URLSearchParams(window.location.search).get("demo");
     if (demo === "laptop-challenge") void runLaptopChallengeDemo();
     if (demo === "multi-item") loadMultiDemo();
+    if (demo === "tyre") loadCuratedDemo(tyreDemoBrief);
   }, []);
   const loadMultiDemo = () => {
     setLegacySession(runDemo());

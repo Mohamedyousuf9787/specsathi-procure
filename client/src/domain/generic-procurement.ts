@@ -80,6 +80,11 @@ const furnitureAttributes: AttributeDefinition[] = [
   { key: "adjustable_height", label: "Adjustable height", type: "boolean" },
   { key: "lumbar_support", label: "Lumbar support", type: "boolean" },
 ];
+const tyreAttributes: AttributeDefinition[] = [
+  { key: "tyre_size", label: "Tyre size", type: "text" },
+  { key: "vehicle_model", label: "Vehicle model", type: "text" },
+  { key: "tubeless", label: "Tubeless", type: "boolean" },
+];
 
 const profileExplanation = (requirement: Requirement) => `${requirement.label} must ${requirement.operator.replaceAll("_", " ")} ${String(requirement.value)}${requirement.unit ? ` ${requirement.unit}` : ""}.`;
 const profileValidator = (attributes: AttributeDefinition[], name: string) => (requirement: Requirement) => attributes.some(attribute => attribute.key === requirement.key) ? [] : [{ level: "warning" as const, message: `${requirement.label} is not a known ${name} attribute and will be checked as generic text.` }];
@@ -87,8 +92,9 @@ const profileValidator = (attributes: AttributeDefinition[], name: string) => (r
 export const laptopProfile: CategoryProfile = { categoryId: "laptop", displayName: "Laptop", aliases: ["laptop", "laptops", "notebook", "notebooks", "computer", "computers"], knownAttributes: laptopAttributes, validateRequirement: profileValidator(laptopAttributes, "laptop"), explainRequirement: profileExplanation };
 export const mobileProfile: CategoryProfile = { categoryId: "mobile", displayName: "Mobile device", aliases: ["mobile", "mobiles", "phone", "phones", "smartphone", "smartphones"], knownAttributes: mobileAttributes, validateRequirement: profileValidator(mobileAttributes, "mobile"), explainRequirement: profileExplanation };
 export const furnitureProfile: CategoryProfile = { categoryId: "furniture", displayName: "Office furniture", aliases: ["furniture", "desk", "desks", "table", "tables", "workstation", "workstations"], knownAttributes: furnitureAttributes, validateRequirement: profileValidator(furnitureAttributes, "furniture"), explainRequirement: profileExplanation };
+export const tyreProfile: CategoryProfile = { categoryId: "tyre", displayName: "Tyre", aliases: ["tyre", "tyres", "tire", "tires"], knownAttributes: tyreAttributes, validateRequirement: profileValidator(tyreAttributes, "tyre"), explainRequirement: profileExplanation };
 export const genericProfile: CategoryProfile = { categoryId: "generic", displayName: "Generic product", aliases: [], knownAttributes: [], explainRequirement: requirement => `${requirement.label} is treated as a ${requirement.isHard ? "hard" : "preference"} requirement.` };
-export const categoryProfiles: CategoryProfile[] = [laptopProfile, mobileProfile, furnitureProfile, genericProfile];
+export const categoryProfiles: CategoryProfile[] = [laptopProfile, mobileProfile, furnitureProfile, tyreProfile, genericProfile];
 
 export function canonicalCategory(value: string): string {
   const normalized = value.trim().toLowerCase();
@@ -139,4 +145,13 @@ export const furnitureDemoBrief: BuyingBrief = {
   ],
   softPreferences: [], maxUnitPriceInr: 15000, deliveryDeadlineDays: 6, authorizationLimitInr: 15000, sourceText: "Purchase 6 ergonomic adjustable-height office chairs with lumbar support under ₹15,000 each within 6 days.", confidence: 1,
 };
-export const curatedDemoBriefs = { laptop: laptopDemoBrief, mobile: mobileDemoBrief, furniture: furnitureDemoBrief } as const;
+export const tyreDemoBrief: BuyingBrief = {
+  id: "demo-tyre-city-205-55-r16", productCategory: "tyre", productDescription: "Tubeless tyre for a City 205/55 R16 fitment", quantity: 1,
+  hardRequirements: [
+    { key: "tyre_size", label: "Tyre size", operator: "contains", value: "205/55 R16", isHard: true, sourceText: "205/55 R16" },
+    { key: "vehicle_model", label: "Vehicle model", operator: "contains", value: "city", isHard: true, sourceText: "Honda City" },
+    { key: "tubeless", label: "Tubeless", operator: "equals", value: true, isHard: true, sourceText: "tubeless" },
+  ],
+  softPreferences: [], maxUnitPriceInr: 8000, deliveryDeadlineDays: 4, authorizationLimitInr: 8000, sourceText: "Purchase 1 tubeless 205/55 R16 tyre for Honda City under ₹8,000 each within 4 days.", confidence: 1,
+};
+export const curatedDemoBriefs = { laptop: laptopDemoBrief, mobile: mobileDemoBrief, furniture: furnitureDemoBrief, tyre: tyreDemoBrief } as const;

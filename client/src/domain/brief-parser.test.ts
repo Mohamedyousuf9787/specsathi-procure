@@ -14,6 +14,19 @@ describe("deterministic generic buying brief parser", () => {
     expect(parseBuyingBrief("Find 5 27 inch QHD HDMI monitors under ₹25,000 each.").normalizedBrief?.productCategory).toBe("monitor");
   });
 
+  it("parses ordinary tyre/model wording into a controlled tyre brief", () => {
+    const result = parseBuyingBrief("I want 1 tubeless 205/55 R16 tyre for Honda City under ₹8,000 each within 4 days.");
+    expect(result.status).toBe("valid");
+    expect(result.normalizedBrief?.productCategory).toBe("tyre");
+    expect(result.normalizedBrief?.hardRequirements.map((requirement) => requirement.key)).toEqual(expect.arrayContaining(["tyre_size", "vehicle_model", "tubeless"]));
+  });
+
+  it("asks for a budget before searching an otherwise valid tyre request", () => {
+    const result = parseBuyingBrief("I want 1 tyre for Honda City.");
+    expect(result.status).toBe("needs_clarification");
+    expect(result.missingFields).toContain("budget or authorization limit");
+  });
+
   it("accepts an unknown product category for later no-catalog handling", () => {
     const result = parseBuyingBrief("Find 5 office printers with duplex printing under ₹75,000 total.");
     expect(result.status).toBe("valid");

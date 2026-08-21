@@ -1,7 +1,9 @@
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
-import { getRecordedPolicyAgreement, getSupportingSourcesDisclosure, SupportingEvidenceDisclosure } from "./GenericProcurementWorkspace";
+import GenericProcurementWorkspace, { getRecordedPolicyAgreement, getSupportingSourcesDisclosure, SupportingEvidenceDisclosure } from "./GenericProcurementWorkspace";
+import { parseBuyingBrief } from "@/domain/brief-parser";
+import { runGenericProcurement } from "@/domain/generic-vendor-flow";
 
 describe("supporting sources disclosure", () => {
   it("keeps web evidence absent until present and renders supporting links closed by default", () => {
@@ -18,5 +20,23 @@ describe("supporting sources disclosure", () => {
   it("returns the requester policy agreement for the primary product-result surface", () => {
     const session = { audit: [{ type: "POLICY_AGREEMENT", summary: "Policy agreement recorded", detail: "Confirmed category, budget, delivery, and authority boundary." }] } as never;
     expect(getRecordedPolicyAgreement(session)).toBe("Confirmed category, budget, delivery, and authority boundary.");
+  });
+
+  it("explains an unsupported local category as a policy hold instead of rendering an empty comparison table", async () => {
+    const parsed = parseBuyingBrief("Find 5 office printers with duplex printing under ₹75,000 total.");
+    if (parsed.status !== "valid" || !parsed.normalizedBrief) throw new Error("Expected a normalized unsupported printer brief");
+    const session = await runGenericProcurement(parsed.normalizedBrief);
+    const markup = renderToStaticMarkup(createElement(GenericProcurementWorkspace, {
+      session,
+      onSessionChange: () => undefined,
+      onNewBrief: () => undefined,
+      onLoadMultiDemo: () => undefined,
+      liveEvidence: { status: "fallback", results: [], message: "Live search unavailable" },
+      productListings: { status: "fallback", listings: [], message: "Product listing search unavailable" },
+      auditPersistence: "local",
+    }));
+    expect(markup).toContain("Policy is correctly paused — no local offer is available.");
+    expect(markup).toContain("No local candidates were fabricated.");
+    expect(markup).toContain("No labelled deterministic Vendor A/B catalog covers printer");
   });
 });

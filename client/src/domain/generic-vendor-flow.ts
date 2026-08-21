@@ -57,6 +57,9 @@ const localOffers: VendorOffer[] = [
   { id: "furniture-a-1", vendorId: "vendor-a", vendorName: "Vendor A", productCategory: "furniture", productName: "Axis Ergonomic Task Chair", description: "Ergonomic task chair with adjustable height and lumbar support", attributes: { ergonomic: true, adjustable_height: true, lumbar_support: true }, unitPriceInr: 14200, availableQuantity: 8, availability: "in_stock", deliveryDays: 4, sellerRating: 4.8, returnDays: 14, returnPolicy: "14 days", sourceType: "simulated", sourceReference: "furniture-a-1" },
   { id: "furniture-b-1", vendorId: "vendor-b", vendorName: "Vendor B", productCategory: "furniture", productName: "Form Support Chair", description: "Ergonomic task chair with adjustable height and lumbar support", attributes: { ergonomic: true, adjustable_height: true, lumbar_support: true }, unitPriceInr: 14800, availableQuantity: 10, availability: "in_stock", deliveryDays: 5, sellerRating: 4.5, returnDays: 10, returnPolicy: "10 days", sourceType: "simulated", sourceReference: "furniture-b-1" },
   { id: "furniture-b-2", vendorId: "vendor-b", vendorName: "Vendor B", productCategory: "furniture", productName: "Form Visitor Chair", description: "Fixed-height office visitor chair", attributes: { ergonomic: false, adjustable_height: false, lumbar_support: false }, unitPriceInr: 7600, availableQuantity: 16, availability: "in_stock", deliveryDays: 3, sellerRating: 4.2, returnDays: 7, returnPolicy: "7 days", sourceType: "simulated", sourceReference: "furniture-b-2" },
+  { id: "tyre-a-1", vendorId: "vendor-a", vendorName: "Vendor A", productCategory: "tyre", productName: "RoadGrip City 205/55 R16", description: "Tubeless 205/55 R16 tyre compatible with Honda City", attributes: { tyre_size: "205/55 R16", vehicle_model: "honda city", tubeless: true }, unitPriceInr: 7600, availableQuantity: 12, availability: "in_stock", deliveryDays: 3, sellerRating: 4.7, returnDays: 14, returnPolicy: "14 days", sourceType: "simulated", sourceReference: "tyre-a-1" },
+  { id: "tyre-b-1", vendorId: "vendor-b", vendorName: "Vendor B", productCategory: "tyre", productName: "TerrainPro City 205/55 R16", description: "Tubeless 205/55 R16 tyre compatible with Honda City", attributes: { tyre_size: "205/55 R16", vehicle_model: "honda city", tubeless: true }, unitPriceInr: 7900, availableQuantity: 8, availability: "in_stock", deliveryDays: 4, sellerRating: 4.5, returnDays: 10, returnPolicy: "10 days", sourceType: "simulated", sourceReference: "tyre-b-1" },
+  { id: "tyre-b-2", vendorId: "vendor-b", vendorName: "Vendor B", productCategory: "tyre", productName: "TerrainPro Sedan 195/65 R15", description: "Tubeless 195/65 R15 tyre compatible with compact sedans", attributes: { tyre_size: "195/65 R15", vehicle_model: "compact sedan", tubeless: true }, unitPriceInr: 6500, availableQuantity: 18, availability: "in_stock", deliveryDays: 2, sellerRating: 4.4, returnDays: 7, returnPolicy: "7 days", sourceType: "simulated", sourceReference: "tyre-b-2" },
   { id: "chair-a-generic", vendorId: "vendor-a", vendorName: "Vendor A", productCategory: "chair", productName: "Ergo Frame Chair", description: "Ergonomic office chair with adjustable height and lumbar support", attributes: { ergonomic: true, adjustable_height: true, lumbar_support: true }, unitPriceInr: 9700, availableQuantity: 30, availability: "in_stock", deliveryDays: 3, sellerRating: 4.7, returnDays: 14, returnPolicy: "14 days", sourceType: "simulated", sourceReference: "chair-a-generic" },
   { id: "chair-b-generic", vendorId: "vendor-b", vendorName: "Vendor B", productCategory: "chair", productName: "Posture Desk Chair", description: "Ergonomic chair with adjustable height", attributes: { ergonomic: true, adjustable_height: true }, unitPriceInr: 8900, availableQuantity: 28, availability: "in_stock", deliveryDays: 5, sellerRating: 4.2, returnDays: 7, returnPolicy: "7 days", sourceType: "simulated", sourceReference: "chair-b-generic" },
   { id: "monitor-a-generic", vendorId: "vendor-a", vendorName: "Vendor A", productCategory: "monitor", productName: "Canvas QHD 27", description: "27 inch QHD monitor with HDMI", attributes: { display_inches: 27, resolution: "qhd", hdmi: true }, unitPriceInr: 23200, availableQuantity: 11, availability: "in_stock", deliveryDays: 5, sellerRating: 4.6, returnDays: 7, returnPolicy: "7 days", sourceType: "simulated", sourceReference: "monitor-a-generic" },
@@ -124,7 +127,7 @@ export function evaluateGenericOffer(brief: BuyingBrief, offer: VendorOffer): Ge
 export function recommendGenericOffer(brief: BuyingBrief, offers: VendorOffer[]): GenericRecommendation {
   const candidates = offers.map((offer) => evaluateGenericOffer(brief, offer)).sort((a, b) => b.score - a.score);
   const selected = candidates.find((candidate) => candidate.eligible);
-  if (!selected) return { brief, candidates, decision: "BLOCKED", reason: offers.length ? "No offer can be verified against the requested quantity, requirements, budget, delivery, and availability constraints." : `No local simulated catalog is available for “${brief.productCategory}”.` };
+  if (!selected) return { brief, candidates, decision: "BLOCKED", reason: offers.length ? "No offer can be verified against the requested quantity, requirements, budget, delivery, and availability constraints." : `No labelled deterministic Vendor A/B catalog is available for “${brief.productCategory}”. Marketplace cards may still be retried, but no local recommendation will be invented.` };
   if (selected.requiresApproval) {
     const overage = selected.offer.unitPriceInr - (brief.authorizationLimitInr ?? 0);
     return { brief, candidates, selected, decision: "PENDING_APPROVAL", reason: `${selected.offer.vendorName} is the highest eligible fit, but exceeds the authorization limit by ₹${overage.toLocaleString("en-IN")} per unit.` };
@@ -133,7 +136,19 @@ export function recommendGenericOffer(brief: BuyingBrief, offers: VendorOffer[])
 }
 
 function addEvent(audit: AuditEvent[], event: Omit<AuditEvent, "id" | "timestamp">) {
-  audit.push({ ...event, id: `generic-audit-${audit.length + 1}`, timestamp: `2026-08-21T11:${String(audit.length + 1).padStart(2, "0")}:00+05:30` });
+  audit.push({ ...event, id: `generic-audit-${audit.length + 1}`, timestamp: new Date().toISOString() });
+}
+
+export function recordMarketplaceSearchOutcome(session: GenericProcurementSession, outcome: { status: "live" | "fallback"; listingCount: number; message?: string }): GenericProcurementSession {
+  const audit = [...session.audit];
+  const localCandidateCount = session.recommendation.candidates.length;
+  if (outcome.status === "live") {
+    addEvent(audit, { type: "MARKETPLACE_RESULTS_RECEIVED", actor: "Procurement agent", itemId: session.brief.id, summary: `Marketplace search returned ${outcome.listingCount} product card${outcome.listingCount === 1 ? "" : "s"}.`, detail: "Marketplace cards remain evidence records; local Vendor A/B policy comparison is separate." });
+  } else {
+    const localState = localCandidateCount > 0 ? `${localCandidateCount} labelled deterministic Vendor A/B candidate${localCandidateCount === 1 ? " remains" : "s remain"} available for local comparison.` : `No labelled deterministic Vendor A/B catalog covers “${session.brief.productCategory}”, so no local recommendation was created.`;
+    addEvent(audit, { type: "MARKETPLACE_FALLBACK", actor: "Procurement agent", itemId: session.brief.id, summary: "Marketplace product cards were unavailable; the live-search fallback was recorded.", detail: `${localState} ${outcome.message ?? ""}`.trim() });
+  }
+  return { ...session, audit };
 }
 
 function orderFor(brief: BuyingBrief, offer: VendorOffer, sequence: number): GenericMockOrder {
@@ -149,6 +164,7 @@ export async function runGenericProcurement(brief: BuyingBrief, provider: Vendor
   const recommendation = recommendGenericOffer(brief, offers);
   addEvent(audit, { type: "OFFERS_COMPARED", actor: "Procurement agent", itemId: brief.id, summary: `Compared ${recommendation.candidates.length} normalized ${brief.productCategory} offers across requirement fit, price, delivery, seller reliability, and returns.` });
   if (!recommendation.selected) {
+    if (offers.length === 0) addEvent(audit, { type: "LOCAL_CATALOG_UNAVAILABLE", actor: "Procurement agent", itemId: brief.id, summary: `No labelled deterministic Vendor A/B catalog covers “${brief.productCategory}”.`, detail: "The workflow remains blocked until a live marketplace retry returns verifiable cards or a supported local catalog is added." });
     addEvent(audit, { type: "WORKFLOW_BLOCKED", actor: "Procurement agent", itemId: brief.id, summary: recommendation.reason });
     return { brief, query, status: "BLOCKED", recommendation, audit, approvedException: false };
   }

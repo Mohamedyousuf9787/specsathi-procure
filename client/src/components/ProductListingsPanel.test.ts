@@ -12,7 +12,9 @@ describe("marketplace product-card summary", () => {
 
   it("keeps empty and provider-fallback guidance distinct instead of substituting web links", () => {
     expect(getProductSearchGuidance("live", 0)).toMatchObject({ tone: "empty", title: "No marketplace product cards matched this confirmed request." });
-    expect(getProductSearchGuidance("fallback", 0)).toMatchObject({ tone: "fallback", title: "Marketplace cards are temporarily unavailable." });
+    expect(getProductSearchGuidance("fallback", 0, 3, "tyre")).toMatchObject({ tone: "fallback", title: "Marketplace cards are temporarily unavailable." });
+    expect(getProductSearchGuidance("fallback", 0, 3, "tyre")?.copy).toContain("3 labelled deterministic Vendor A/B candidates");
+    expect(getProductSearchGuidance("fallback", 0, 0, "keyboard")?.copy).toContain("No labelled deterministic Vendor A/B catalog covers keyboard");
     expect(getProductSearchGuidance("live", 1)).toBeNull();
   });
 
