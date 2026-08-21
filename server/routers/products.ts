@@ -10,7 +10,7 @@ const PRODUCT_SEARCH_TIMEOUT_MS = 25_000;
 const PRODUCT_SEARCH_CACHE_TTL_MS = 60_000;
 const PRODUCT_SEARCH_CACHE_MAX_ENTRIES = 50;
 
-export type ProductListing = { id: string; title: string; merchant: string | null; priceText: string | null; priceInr: number | null; rating: number | null; reviews: number | null; imageUrl: string | null; productUrl: string | null; delivery: string | null; availability: string | null; completeness: "complete" | "unverified"; policy: "eligible" | "approval_needed" | "blocked" | "unverified"; specificationProfile: "laptop" | "motorcycle" | "generic"; specifications: Array<{ label: string; value: string }> };
+export type ProductListing = { id: string; title: string; merchant: string | null; priceText: string | null; priceInr: number | null; rating: number | null; reviews: number | null; imageUrl: string | null; productUrl: string | null; delivery: string | null; availability: string | null; completeness: "complete" | "partial" | "unverified"; policy: "eligible" | "approval_needed" | "blocked" | "unverified"; specificationProfile: "laptop" | "motorcycle" | "generic"; specifications: Array<{ label: string; value: string }> };
 type ProductSearchResponse = { status: "live" | "fallback"; listings: ProductListing[]; message: string };
 type ProductSearchInput = { query: string; category: string; maxUnitPriceInr?: number; authorizationLimitInr?: number };
 
@@ -68,9 +68,10 @@ export function normalizeShoppingResults(payload: z.infer<typeof shoppingRespons
     const merchant = item.source ?? null;
     const productUrl = item.product_link ?? item.link ?? null;
     const availability = item.availability?.trim() || null;
-    const completeness = priceInr && merchant && productUrl && availability ? "complete" : "unverified" as const;
+    const hasCoreListingTerms = priceInr !== null && Boolean(merchant && productUrl);
+    const completeness = !hasCoreListingTerms ? "unverified" as const : availability ? "complete" as const : "partial" as const;
     const unavailable = Boolean(availability && /out of stock|unavailable|sold out/i.test(availability));
-    const policy = completeness === "unverified" ? "unverified" as const : unavailable || (maxUnitPriceInr && priceInr !== null && priceInr > maxUnitPriceInr) ? "blocked" as const : authorizationLimitInr && priceInr !== null && priceInr > authorizationLimitInr ? "approval_needed" as const : "eligible" as const;
+    const policy = completeness !== "complete" ? "unverified" as const : unavailable || (maxUnitPriceInr && priceInr !== null && priceInr > maxUnitPriceInr) ? "blocked" as const : authorizationLimitInr && priceInr !== null && priceInr > authorizationLimitInr ? "approval_needed" as const : "eligible" as const;
     const fastSpecifications = normalizeFastMarketplaceSpecifications(category, item.title, item.extensions);
     return { id: `serp-${item.position ?? index + 1}-${item.title.slice(0, 36).replace(/[^a-z0-9]/gi, "-").toLowerCase()}`, title: item.title, merchant, priceText: item.price ?? null, priceInr, rating: item.rating ?? null, reviews: item.reviews ?? null, imageUrl: item.thumbnail ?? null, productUrl, delivery: item.delivery ?? null, availability, completeness, policy, ...fastSpecifications };
   });

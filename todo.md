@@ -235,3 +235,9 @@
 - [x] Add a client-side PDF export for final finance/audit handoff records alongside the existing JSON and CSV exports.
 - [x] Create and validate a reusable skill for the Specanic-style hackathon stabilization and verification workflow.
 - [x] Run final regressions, provider smoke checks, offline rehearsal, TypeScript, production build, runtime, responsive UI, checkpoint, and GitHub synchronization.
+
+## Product Evidence State Repair
+
+- [x] Diagnose the live-product-card evidence state that renders “Unknown / Needs verification” and reproduce the reported condition.
+- [x] Fix confirmed false-positive evidence incompleteness without masking truly incomplete marketplace listings.
+- [x] Add focused regression coverage and verify product-card, TypeScript, build, runtime, checkpoint, and GitHub synchronization.

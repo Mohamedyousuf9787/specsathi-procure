@@ -45,11 +45,22 @@ describe("marketplace product-card summary", () => {
     const incomplete = { ...listing("unverified"), availability: null, specificationStatus: "idle" as const, specifications: [] };
     const statementMarkup = renderToStaticMarkup(createElement(VendorOfferStatement, { listing: incomplete }));
     const panelMarkup = renderToStaticMarkup(createElement(SpecificationPanel, { listing: incomplete, onVerifyFullSpecifications: () => undefined }));
-    expect(statementMarkup).toContain("did not report a decision-critical field");
+    expect(statementMarkup).toContain("did not report core merchant, price, or product-page evidence");
     expect(statementMarkup).toContain("excluded from automatic recommendation");
     expect(panelMarkup).toContain("No concise specifications were present");
     expect(panelMarkup).toContain("Verify full page specifications");
     expect(panelMarkup).toContain("stock, seller identity, delivery, returns, and the exact variant still require seller confirmation");
+  });
+
+  it("labels marketplace records with merchant, price, and a product page as partial rather than unknown while retaining the verification boundary", () => {
+    const partial = { ...listing("unverified"), completeness: "partial" as const, availability: null, delivery: null, specificationStatus: "idle" as const, specifications: [] };
+    const statementMarkup = renderToStaticMarkup(createElement(VendorOfferStatement, { listing: partial }));
+    const cardMarkup = renderToStaticMarkup(createElement(ProductListingsPanel, { state: { status: "live", listings: [partial] }, onVerifyFullSpecifications: () => undefined }));
+    expect(statementMarkup).toContain("Terms reported · verify stock");
+    expect(statementMarkup).toContain("merchant, price, and a product page");
+    expect(cardMarkup).toContain("Not reported by marketplace");
+    expect(cardMarkup).toContain("Terms present · verify stock");
+    expect(cardMarkup).toContain("Unverified");
   });
 
   it("prepares initial cards from marketplace data without starting page verification", () => {

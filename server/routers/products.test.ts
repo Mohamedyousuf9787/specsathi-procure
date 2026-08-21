@@ -13,6 +13,10 @@ describe("shopping product normalization", () => {
     expect(listings[0]).toMatchObject({ merchant: "Example Store", priceInr: 44999, completeness: "complete", policy: "blocked", availability: "In stock" });
     expect(listings[1]).toMatchObject({ completeness: "unverified", priceInr: null, policy: "unverified" });
   });
+  it("labels merchant, price, and product-page records as partial when marketplace stock is absent without making them eligible", () => {
+    const [listing] = normalizeShoppingResults({ shopping_results: [{ title: "Business laptop", source: "Store", price: "₹39,000", extracted_price: 39000, product_link: "https://example.com/product" }] }, 45000, 40000);
+    expect(listing).toMatchObject({ completeness: "partial", availability: null, policy: "unverified" });
+  });
   it("maps a complete listing above authority but within the ceiling to approval needed", () => {
     const [listing] = normalizeShoppingResults({ shopping_results: [{ title: "Business laptop", source: "Store", price: "₹44,000", extracted_price: 44000, product_link: "https://example.com/product", availability: "In stock" }] }, 45000, 40000);
     expect(listing?.policy).toBe("approval_needed");
