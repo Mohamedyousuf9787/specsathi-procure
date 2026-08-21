@@ -117,6 +117,10 @@
 - [x] Write and generate a concise final-round judge presentation within the 12-slide plan limit.
 - [x] Run final test, build, visual, source-safety, checkpoint, and GitHub synchronization verification for the complete release.
 
+## GitHub Source Verification Follow-up
+
+- [x] Verify every project source, test, documentation, and presentation-source file is tracked and synchronized to the user’s GitHub repository.
+
 - [x] Inspect available connectors and record the approved provider architecture without exposing credentials.
 - [x] Upgrade the static application to a secure full-stack project and preserve the local demo path.
 - [x] Implement server-side structured NLP extraction with strict schema validation and deterministic post-validation.
