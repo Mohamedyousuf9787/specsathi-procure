@@ -164,6 +164,14 @@
 - [x] Verify desktop and mobile readability for intake, live listings, deterministic comparison, ranked evidence, approval, confirmation, finance handoff, and audit thread.
 - [x] Run final full-suite, type, build, source-safety, checkpoint, and GitHub synchronization verification.
 
+## GPU Zero-Card and Local-Comparison Repair
+
+- [x] Reproduce and document the GPU zero-live-card flow, unsupported local catalog hold, ranked-evidence absence, policy state, and audit events shown by the user.
+- [x] Add a clearly labelled GPU category profile, editable demo fixture, and deterministic Vendor A/Vendor B offers without representing them as marketplace cards.
+- [x] Parse common GPU requirements and ensure compatible GPU requests produce ranked candidates, explicit policy state, vendor confirmation, and audit evidence.
+- [x] Improve the zero-card fallback message so the active deterministic GPU comparison is named directly and the next safe action is clear.
+- [ ] Add regression and visual coverage for the repaired GPU path, then checkpoint and push the repair to GitHub.
+
 - [x] Inspect available connectors and record the approved provider architecture without exposing credentials.
 - [x] Upgrade the static application to a secure full-stack project and preserve the local demo path.
 - [x] Implement server-side structured NLP extraction with strict schema validation and deterministic post-validation.

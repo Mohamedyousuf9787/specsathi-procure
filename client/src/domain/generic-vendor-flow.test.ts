@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { parseBuyingBrief } from "./brief-parser";
-import { furnitureDemoBrief, laptopDemoBrief, mobileDemoBrief, mouseDemoBrief } from "./generic-procurement";
+import { furnitureDemoBrief, gpuDemoBrief, laptopDemoBrief, mobileDemoBrief, mouseDemoBrief } from "./generic-procurement";
 import { genericLocalCatalog, LocalDemoVendorProvider, recordMarketplaceSearchOutcome, resolveGenericApproval, resolveVendorConfirmation, runGenericProcurement, runUnavailableTopVendorScenario } from "./generic-vendor-flow";
 
 const valid = (text: string) => {
@@ -58,6 +58,16 @@ describe("generic local vendor flow", () => {
     expect(session.recommendation.candidates.find((candidate) => candidate.offer.id === "mouse-b-2")?.hardFailures).toContain("Missing or unverified requirement: Mouse model");
     expect(session.audit.some((event) => event.type === "OFFERS_COMPARED")).toBe(true);
     expect(resolveVendorConfirmation(session, "accept").status).toBe("PURCHASED");
+  });
+
+  it("ranks labelled GPU candidates for a zero-marketplace-card fallback and holds the compatible offer for confirmation", async () => {
+    const session = await runGenericProcurement(gpuDemoBrief);
+    expect(session.status).toBe("CONFIRMING");
+    expect(session.recommendation.candidates).toHaveLength(3);
+    expect(session.recommendation.selected?.offer.id).toBe("gpu-a-1");
+    expect(session.recommendation.candidates.find((candidate) => candidate.offer.id === "gpu-b-2")?.hardFailures).toContain("Missing or unverified requirement: GPU model");
+    const recorded = recordMarketplaceSearchOutcome(session, { status: "fallback", listingCount: 0, message: "No cards returned" });
+    expect(recorded.audit.at(-1)?.detail).toContain("3 labelled deterministic Vendor A/B candidates remain available");
   });
 
   it("re-ranks a monitor when the top vendor becomes unavailable", async () => {

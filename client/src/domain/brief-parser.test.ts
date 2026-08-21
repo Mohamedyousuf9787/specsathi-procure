@@ -32,6 +32,16 @@ describe("deterministic generic buying brief parser", () => {
     ]));
   });
 
+  it("parses a graphics-card request into an editable GPU record", () => {
+    const result = parseBuyingBrief("Purchase 5 RTX 4060 graphics cards with 8 GB VRAM under ₹20,000 each within 10 days.");
+    expect(result.status).toBe("valid");
+    expect(result.normalizedBrief?.productCategory).toBe("gpu");
+    expect(result.normalizedBrief?.hardRequirements).toEqual(expect.arrayContaining([
+      expect.objectContaining({ key: "gpu_model", value: "rtx 4060" }),
+      expect.objectContaining({ key: "vram_gb", value: 8 }),
+    ]));
+  });
+
   it("asks for a budget before searching an otherwise valid tyre request", () => {
     const result = parseBuyingBrief("I want 1 tyre for Honda City.");
     expect(result.status).toBe("needs_clarification");

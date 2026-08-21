@@ -35,7 +35,7 @@ The deterministic parser recognizes a focused set of common product and requirem
 | Tavily credential | Passed: bounded server-side authenticated health test; no key appears in source or browser payload. |
 | Live web evidence | Passed: authenticated server query returned normalized external titles, URLs, excerpts, and relevance. |
 | Provider failure | Passed: timeout mock returned local fallback without blocking procurement. |
-| Combined regression | Passed: 92 tests across 28 files, TypeScript, and production build. |
+| Combined regression | Passed: 95 tests across 28 files, TypeScript, and production build. |
 | Privacy audit metadata | Passed: `provider_audit_events` schema exists; unit test verifies metadata bounds and excludes untyped raw brief/query/key fields. |
 | Visual integration review | Passed: the secure-NLP consent disclosure and procurement-control intake render clearly at desktop size. |
 | Procurement audit trail | Passed: authenticated persistence route rejects anonymous writes; authenticated sessions persist bounded actual audit events, while anonymous sessions retain local-only history. |
@@ -88,3 +88,5 @@ The deterministic parser recognizes a focused set of common product and requirem
 | Multi-condition reliability matrix | Passed: deterministic coverage now exercises valid model-specific requests, missing budget, non-purchase content, incompatible offers, authority exceptions, vendor counter-offers, supplier unavailability, unsupported categories, marketplace fallback, and incomplete evidence. A material counter-offer now always waits for a renewed explicit confirmation after re-evaluation; it cannot create an automatic simulated purchase. |
 | Visual clarity pass | Passed: secondary vendor evidence, specifications, long policy agreement text, and label explanations are compact disclosures; price, policy state, availability, delivery, ranked candidates, confirmation controls, and the audit thread remain directly visible. Desktop and mobile routes were reviewed. |
 | Current reliability verification | Passed: 92 tests across 28 files, TypeScript, production build, and final source-safety scan. |
+| GPU zero-card repair | Passed: GPU is now a supported labelled deterministic category. A five-unit RTX 4060 and 8 GB VRAM request parses into an editable record; three Vendor A/Vendor B GPU candidates are retained and ranked; a zero-card marketplace failure names the active local comparison rather than pausing in an empty catalog state. |
+| Current GPU repair verification | Passed: 95 tests across 28 files, TypeScript, production build, full requester-policy-agreement fallback interaction, desktop/mobile GPU confirmation screenshots, and source-safety scan. |

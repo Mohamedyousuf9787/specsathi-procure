@@ -41,6 +41,22 @@ describe("normal laptop product-search fallback", () => {
     expect(screen.getByText(/deterministic Vendor A\/B laptop challenge templates/)).toBeTruthy();
   });
 
+  it("renders labelled GPU ranked evidence after the requester agrees to policy and the live GPU search returns no cards", async () => {
+    productMutate.mockClear();
+    render(createElement(Home));
+    fireEvent.change(screen.getByLabelText("Buying brief"), { target: { value: "Purchase 5 RTX 4060 graphics cards with 8 GB VRAM under ₹20,000 each within 10 days." } });
+    fireEvent.click(screen.getByRole("button", { name: "Inspect policy record" }));
+    await screen.findByText("Make the request record yours.");
+    fireEvent.click(screen.getByLabelText(/Policy agreement required/));
+    fireEvent.click(screen.getByRole("button", { name: /Agree & find products/ }));
+    await waitFor(() => expect(productMutate).toHaveBeenCalledTimes(1));
+    await act(async () => productHandlers.onError?.());
+    expect((await screen.findAllByText("Forge RTX 4060 8 GB")).length).toBeGreaterThanOrEqual(2);
+    expect(screen.getByText("3 compared")).toBeTruthy();
+    expect(screen.getByText("Marketplace cards are temporarily unavailable.")).toBeTruthy();
+    expect(screen.getByText(/3 labelled deterministic Vendor A\/B candidates are available below/)).toBeTruthy();
+  });
+
   it("renders a verified live marketplace card when the normal product search succeeds", async () => {
     productMutate.mockClear();
     render(createElement(Home));
