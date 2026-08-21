@@ -12,4 +12,4 @@ related:
 
 # Active Work
 
-No migration implementation is active. The next optional work is a secure server-side provider for broader parsing or live search, but only if it preserves the local deterministic fallback, generic schema, policy tests, and demo runbook.
+No real-integration implementation is active. Secure NLP, authenticated live evidence, authenticated procurement audit persistence, and the privacy-preserving anonymous fallback are enabled and tested. Any future payment or order execution must remain separately authorized and cannot reuse provider evidence as a purchasing instruction.

@@ -22,6 +22,7 @@ export type ValidationResult = {
 
 const unrelatedPattern = /^(?:what|why|who|when|where|how|tell me|explain|hello|hi)\b/i;
 const procurementVerbPattern = /\b(?:buy|purchase|order|find|source|get|need)\b/i;
+const promptInjectionPattern = /\b(?:ignore|disregard|override)\s+(?:all\s+)?(?:previous|prior|system|developer|instructions?|rules?)\b|\b(?:reveal|show)\s+(?:the\s+)?(?:system|developer)\s+(?:prompt|message|instructions?)\b|\bbypass\s+(?:policy|approval|authorization|guardrail)/i;
 
 const fixedRequirementPatterns: Array<{ pattern: RegExp; requirement: (match: RegExpMatchArray) => Requirement }> = [
   { pattern: /\b(\d+)\s*GB\s*RAM\b/i, requirement: (match) => ({ key: "ram_gb", label: "RAM", operator: "at_least", value: Number(match[1]), unit: "GB", isHard: true, sourceText: match[0] }) },
@@ -61,6 +62,15 @@ function extractRequirements(text: string) {
 
 export function parseBuyingBrief(sourceText: string): ValidationResult {
   const text = sourceText.trim();
+  if (promptInjectionPattern.test(text)) {
+    return {
+      status: "invalid",
+      missingFields: ["safe procurement intent"],
+      conflicts: [{ field: "unsafe_instruction", message: "The brief contains instruction-override text and was not processed." }],
+      warnings: ["Procurement controls cannot be disabled from within a buying brief."],
+      clarifyingQuestions: ["Please submit a plain buying request without instructions to override system, policy, approval, or authorization controls."],
+    };
+  }
   if (!text || unrelatedPattern.test(text) || !procurementVerbPattern.test(text)) {
     return {
       status: "invalid",

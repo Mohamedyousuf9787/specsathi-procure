@@ -12,6 +12,6 @@ related:
 
 # Next Actions
 
-1. Rehearse the laptop-focused primary demo using `docs/DEMO_RUNBOOK.md`.
-2. Use the chair and printer examples to demonstrate generic support and safe unknown-category blocking.
-3. Keep Demo Mode enabled; add optional hosted parsing or live search only behind a secure server-side boundary with the local fallback intact.
+1. Rehearse the opt-in NLP and live-evidence workflow with the laptop brief, then show the evidence disclaimer.
+2. Rehearse the deterministic fallback by leaving NLP consent unchecked or temporarily using the provider-failure demo path in tests.
+3. Keep payments simulated and provider outputs outside the authorization decision path; add persistence only through a privacy-reviewed authenticated schema.

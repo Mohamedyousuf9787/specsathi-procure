@@ -25,3 +25,18 @@ Demo Mode is local-only. LLM is disabled; live search is disabled; Vendor A and 
 ## Known limitations
 
 The deterministic parser recognizes a focused set of common product and requirement patterns. Unrecognized product categories remain valid briefs but block safely if no local catalog exists. Production expansion should add one secure server-side provider for broader language parsing or live search only after preserving the existing local fallback and test matrix.
+
+## Real-integration verification
+
+| Check | Result |
+|---|---|
+| Server-side NLP | Passed: strict-schema `gpt-5-mini` extraction returned a normalized laptop brief through tRPC. |
+| Consent and fallback | Passed: UI requires opt-in; unselected or failed NLP uses the deterministic parser and exposes a retry control. |
+| Tavily credential | Passed: bounded server-side authenticated health test; no key appears in source or browser payload. |
+| Live web evidence | Passed: authenticated server query returned normalized external titles, URLs, excerpts, and relevance. |
+| Provider failure | Passed: timeout mock returned local fallback without blocking procurement. |
+| Combined regression | Passed: 35 tests, TypeScript, and production build. |
+| Privacy audit metadata | Passed: `provider_audit_events` schema exists; unit test verifies metadata bounds and excludes untyped raw brief/query/key fields. |
+| Visual integration review | Passed: the secure-NLP consent disclosure and procurement-control intake render clearly at desktop size. |
+| Procurement audit trail | Passed: authenticated persistence route rejects anonymous writes; authenticated sessions persist bounded actual audit events, while anonymous sessions retain local-only history. |
+| Injection and rate limits | Passed: instruction-override text is blocked before model extraction; mocked 429 tests prove both the complete NLP procedure and Tavily search fall back safely to deterministic local behavior. |
