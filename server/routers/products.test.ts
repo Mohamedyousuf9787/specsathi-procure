@@ -32,6 +32,15 @@ describe("shopping product normalization", () => {
     expect(normalizeFastMarketplaceSpecifications("motorcycle", "City motorcycle 199.5 cc 35 kmpl", ["Fuel tank: 13.4 litres", "Dual channel ABS"])) .toMatchObject({ specificationProfile: "motorcycle", specifications: expect.arrayContaining([expect.objectContaining({ label: "Engine", value: "199.5 cc" }), expect.objectContaining({ label: "Mileage", value: "35 kmpl" }), expect.objectContaining({ label: "Fuel tank", value: "13.4 litres" })]) });
   });
 
+  it("shows source-grounded immediate details for mobile, GPU, tyre, mouse, printer, and otherwise title-only marketplace records", () => {
+    expect(normalizeFastMarketplaceSpecifications("mobile phone", "Phone 8 GB RAM 256 GB Storage 5000 mAh 5G").specifications).toEqual(expect.arrayContaining([expect.objectContaining({ label: "RAM", value: "8 GB RAM" }), expect.objectContaining({ label: "Battery", value: "5000 mAh" }), expect.objectContaining({ label: "Network", value: "5G" })]));
+    expect(normalizeFastMarketplaceSpecifications("gpu", "NVIDIA GeForce RTX 4060 8 GB GDDR6").specifications).toEqual(expect.arrayContaining([expect.objectContaining({ label: "Graphics model", value: "NVIDIA GeForce RTX 4060" }), expect.objectContaining({ label: "VRAM", value: "8 GB GDDR6" })]));
+    expect(normalizeFastMarketplaceSpecifications("tyre", "Road tyre 195/65 R15 radial").specifications).toEqual(expect.arrayContaining([expect.objectContaining({ label: "Tyre size", value: "195/65 R15" }), expect.objectContaining({ label: "Construction", value: "radial" })]));
+    expect(normalizeFastMarketplaceSpecifications("mouse", "Wireless mouse 2.4 GHz 1600 DPI").specifications).toEqual(expect.arrayContaining([expect.objectContaining({ label: "Connectivity", value: "Wireless" }), expect.objectContaining({ label: "Sensitivity", value: "1600 DPI" })]));
+    expect(normalizeFastMarketplaceSpecifications("printer", "Office printer duplex 30 ppm").specifications).toEqual(expect.arrayContaining([expect.objectContaining({ label: "Print mode", value: "duplex" }), expect.objectContaining({ label: "Print speed", value: "30 ppm" })]));
+    expect(normalizeFastMarketplaceSpecifications("furniture", "Ergonomic office chair").specifications).toEqual([{ label: "Listed model", value: "Ergonomic office chair" }]);
+  });
+
   it("deduplicates concurrent identical live searches and serves the immediate repeat from the bounded cache", async () => {
     vi.stubEnv("SERPAPI_API_KEY", "test-key");
     const fetchMock = vi.fn(async () => new Response(JSON.stringify({ shopping_results: [{ title: "Business laptop", source: "Store", price: "₹39,000", extracted_price: 39000, product_link: "https://example.com/product", availability: "In stock" }] }), { status: 200 }));

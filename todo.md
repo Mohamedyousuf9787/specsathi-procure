@@ -241,3 +241,9 @@
 - [x] Diagnose the live-product-card evidence state that renders “Unknown / Needs verification” and reproduce the reported condition.
 - [x] Fix confirmed false-positive evidence incompleteness without masking truly incomplete marketplace listings.
 - [x] Add focused regression coverage and verify product-card, TypeScript, build, runtime, checkpoint, and GitHub synchronization.
+
+## Marketplace Specification Display Repair
+
+- [x] Diagnose why marketplace-card specification fields are absent despite title, extension, or page-verification evidence being available.
+- [x] Fix concise marketplace and verified-page specification display without inventing unavailable values or weakening seller-term verification.
+- [x] Add regression coverage and verify product cards, TypeScript, build, runtime, checkpoint, and GitHub synchronization.

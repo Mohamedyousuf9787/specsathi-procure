@@ -37,6 +37,7 @@ describe("marketplace product-card summary", () => {
     expect(vendorMarkup).toContain("Reported terms");
     const panelMarkup = renderToStaticMarkup(createElement(SpecificationPanel, { listing: marketplace, onVerifyFullSpecifications: () => undefined }));
     expect(panelMarkup).toContain("Marketplace result");
+    expect(panelMarkup).toContain("open=\"\"");
     expect(panelMarkup).toContain("Verify full page specifications");
     expect(panelMarkup).toContain("seller identity, exact variant, stock, delivery, and returns");
   });

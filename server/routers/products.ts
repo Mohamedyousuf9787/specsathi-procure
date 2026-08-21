@@ -44,6 +44,7 @@ const addFast = (target: Array<{ label: string; value: string }>, label: string,
 export function normalizeFastMarketplaceSpecifications(category: string, title: string, extensions: string[] = []) {
   const profile = fastProfile(category, title);
   const text = `${title} ${extensions.join(" ")}`.replace(/\s+/g, " ");
+  const categoryText = category.toLowerCase();
   const specifications: Array<{ label: string; value: string }> = [];
   if (profile === "laptop") {
     addFast(specifications, "RAM", captureFastValue(text, /(\d+(?:\.\d+)?\s*GB(?:\s*(?:DDR[345]|LPDDR[45]))?(?:\s*RAM)?)/i));
@@ -56,9 +57,27 @@ export function normalizeFastMarketplaceSpecifications(category: string, title: 
     addFast(specifications, "Mileage", captureFastValue(text, /(\d+(?:\.\d+)?\s*(?:kmpl|km\/l|km per litre))/i));
     addFast(specifications, "Fuel tank", captureFastValue(text, /(?:fuel tank|tank capacity)\s*[:\-]?\s*(\d+(?:\.\d+)?\s*(?:litres?|l))/i));
     addFast(specifications, "Brakes", captureFastValue(text, /((?:dual|single)?\s*(?:channel\s*)?ABS|disc brakes?)/i));
+  } else if (/mobile|phone|smartphone|iphone|android/.test(categoryText)) {
+    addFast(specifications, "RAM", captureFastValue(text, /(\d+(?:\.\d+)?\s*GB(?:\s*(?:LPDDR[45]|DDR[45]))?\s*RAM)/i));
+    addFast(specifications, "Storage", captureFastValue(text, /(\d+(?:\.\d+)?\s*(?:GB|TB)\s*(?:storage|ROM)?)/i));
+    addFast(specifications, "Battery", captureFastValue(text, /(\d{3,5}\s*mAh)/i));
+    addFast(specifications, "Network", captureFastValue(text, /(\b5G\b)/i));
+  } else if (/gpu|graphics card|video card|graphics/.test(categoryText)) {
+    addFast(specifications, "Graphics model", captureFastValue(text, /((?:NVIDIA\s+)?(?:GeForce\s+)?RTX\s*\d{3,4}(?:\s*(?:Ti|Super))?|Radeon\s+RX\s*\d{3,4}|Intel\s+Arc\s*[A-Za-z0-9\-]*)/i));
+    addFast(specifications, "VRAM", captureFastValue(text, /(\d+(?:\.\d+)?\s*GB\s*GDDR[456X]?)/i));
+  } else if (/tyre|tire/.test(categoryText)) {
+    addFast(specifications, "Tyre size", captureFastValue(text, /(\d{2,3}\/\d{2}\s*R?\s*\d{2})/i));
+    addFast(specifications, "Construction", captureFastValue(text, /(tubeless|radial|bias)/i));
+  } else if (/mouse|mice/.test(categoryText)) {
+    addFast(specifications, "Connectivity", captureFastValue(text, /(Bluetooth|2\.4\s*GHz|wired|wireless)/i));
+    addFast(specifications, "Sensitivity", captureFastValue(text, /(\d{3,5}\s*DPI)/i));
+  } else if (/printer/.test(categoryText)) {
+    addFast(specifications, "Print mode", captureFastValue(text, /(duplex|single-sided|colour|color|monochrome)/i));
+    addFast(specifications, "Print speed", captureFastValue(text, /(\d+(?:\.\d+)?\s*ppm)/i));
   } else {
     addFast(specifications, "Capacity", captureFastValue(text, /(\d+(?:\.\d+)?\s*(?:GB|TB|ml|litres?|L|kg))/i));
   }
+  if (!specifications.length && title.trim() && title.trim().toLowerCase() !== "untitled product") addFast(specifications, "Listed model", title.trim());
   return { specificationProfile: profile, specifications: specifications.slice(0, 4) };
 }
 
