@@ -41,6 +41,7 @@ import {
 import type { LiveEvidenceState } from "@/components/GenericProcurementWorkspace";
 import EditableRequirementReview, { buildPolicyAgreementStatement, type PolicyAgreement } from "@/components/EditableRequirementReview";
 import { parseBuyingBrief, type ValidationResult } from "@/domain/brief-parser";
+import { inferRequestedProductCategory } from "@/domain/requested-product-category";
 import { furnitureDemoBrief, gpuDemoBrief, laptopDemoBrief, mobileDemoBrief, mouseDemoBrief, tyreDemoBrief, type BuyingBrief } from "@/domain/generic-procurement";
 import { recordMarketplaceSearchOutcome, runGenericProcurement, runUnavailableTopVendorScenario, type GenericProcurementSession } from "@/domain/generic-vendor-flow";
 import { resolveLaptopChallengeFallback } from "@/domain/laptop-challenge-templates";
@@ -351,7 +352,11 @@ export default function Home() {
   const specificationSearch = trpc.specifications.enrich.useMutation({
     onSuccess: (result) => setProductListings(current => ({ ...current, listings: current.listings.map(listing => {
       const enriched = result.results.find(item => item.id === listing.id);
-      return enriched ? { ...listing, specificationStatus: enriched.status, specificationSource: "page", specificationProfile: enriched.profile, specifications: enriched.specifications } : listing;
+      if (!enriched) return listing;
+      if (enriched.status !== "sourced" || !enriched.specifications.length) return listing.specifications?.length ? { ...listing, specificationStatus: "sourced", specificationSource: listing.specificationSource ?? "marketplace" } : { ...listing, specificationStatus: "unavailable", specificationSource: "page", specifications: [] };
+      const pageLabels = new Set(enriched.specifications.map(specification => specification.label));
+      const mergedSpecifications = [...enriched.specifications, ...(listing.specifications ?? []).filter(specification => !pageLabels.has(specification.label))];
+      return { ...listing, specificationStatus: "sourced", specificationSource: "page", specificationProfile: enriched.profile, specifications: mergedSpecifications };
     }) })),
     onError: (_error, variables) => setProductListings(current => ({ ...current, listings: current.listings.map(listing => variables.products.some(product => product.id === listing.id) ? { ...listing, specificationStatus: "unavailable" } : listing) })),
   });
@@ -404,12 +409,13 @@ export default function Home() {
         setView("intake");
         return;
       }
+      const productCategory = inferRequestedProductCategory(`${brief} ${result.candidate.productDescription ?? ""}`) ?? result.candidate.productCategory;
       setValidation({
         status: "valid",
         normalizedBrief: {
-          id: `nlp-${result.candidate.productCategory.replace(/\s+/g, "-")}-${result.candidate.quantity}`,
-          productCategory: result.candidate.productCategory,
-          productDescription: result.candidate.productDescription ?? result.candidate.productCategory,
+          id: `nlp-${productCategory.replace(/\s+/g, "-")}-${result.candidate.quantity}`,
+          productCategory,
+          productDescription: result.candidate.productDescription ?? productCategory,
           quantity: result.candidate.quantity,
           hardRequirements: result.candidate.hardRequirements.map((requirement) => ({ ...requirement, unit: requirement.unit ?? undefined, isHard: true })),
           softPreferences: result.candidate.softPreferences.map((requirement) => ({ ...requirement, unit: requirement.unit ?? undefined, operator: "preferred" as const, isHard: false })),

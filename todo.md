@@ -247,3 +247,18 @@
 - [x] Diagnose why marketplace-card specification fields are absent despite title, extension, or page-verification evidence being available.
 - [x] Fix concise marketplace and verified-page specification display without inventing unavailable values or weakening seller-term verification.
 - [x] Add regression coverage and verify product cards, TypeScript, build, runtime, checkpoint, and GitHub synchronization.
+
+## Supplied Change-Request Review
+
+- [x] Extract and classify the newly supplied instructions against verified Specanic controls and implementation constraints.
+- [x] Apply compatible requested changes only, with regression coverage for every affected behavior.
+- [x] Verify affected flows, TypeScript, build, runtime, checkpoint, and GitHub synchronization.
+
+## Live Page-Specification Quality Repair
+
+- [x] Reject low-specificity or boilerplate page-extraction values that are not valid procurement specifications.
+- [x] Preserve useful marketplace specifications when page verification returns unavailable or low-quality fields, while keeping source labels truthful.
+- [x] Re-test the real browser page-verification flow and full affected regressions before checkpointing.
+- [x] Prevent secure NLP category extraction from misclassifying a requested product’s preference (for example, a smartphone camera) as the product category.
+- [x] Ensure the editable-review UI applies the requested-product category guard even if a stale or inconsistent provider response reaches the client.
+- [x] Normalize mobile RAM and storage requirement aliases before deterministic local-candidate matching so valid Vendor A/B evidence is not falsely blocked.

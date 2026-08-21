@@ -42,6 +42,20 @@ describe("generic local vendor flow", () => {
     expect(furniture.recommendation.selected?.offer.id).toBe("furniture-a-1");
   });
 
+  it("keeps qualified mobile Vendor A and Vendor B offers eligible when secure NLP normalizes RAM and storage aliases", async () => {
+    const mobile = await runGenericProcurement({
+      ...mobileDemoBrief,
+      requirements: [
+        { label: "RAM", key: "ram_gb", operator: "at_least", value: 8, unit: "GB" },
+        { label: "Storage", key: "storage_gb", operator: "at_least", value: 128, unit: "GB" },
+      ],
+    });
+    expect(mobile.status).toBe("CONFIRMING");
+    expect(mobile.recommendation.selected?.offer.id).toBe("mobile-a-1");
+    expect(mobile.recommendation.selected?.scoreBreakdown.requirements).toBe(30);
+    expect(mobile.recommendation.candidates.filter((candidate) => candidate.hardFailures.length === 0)).toHaveLength(2);
+  });
+
   it("ranks labelled tyre/model candidates and holds the selected tyre at vendor confirmation", async () => {
     const session = await runGenericProcurement(valid("I want 1 tubeless 205/55 R16 tyre for Honda City under ₹8,000 each within 4 days."));
     expect(session.status).toBe("CONFIRMING");

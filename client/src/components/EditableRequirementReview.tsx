@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import React from "react";
 import { ArrowRight, Plus, ShieldCheck, Trash2 } from "lucide-react";
 import type { BuyingBrief, Requirement } from "@/domain/generic-procurement";
+import { inferRequestedProductCategory } from "@/domain/requested-product-category";
 
 type EditableRequirement = Pick<Requirement, "key" | "label" | "value" | "unit" | "operator" | "isHard">;
 
@@ -26,7 +27,8 @@ export function buildPolicyAgreementStatement(brief: BuyingBrief) {
 }
 
 export default function EditableRequirementReview({ brief, onConfirm, onBack, searching }: { brief: BuyingBrief; onConfirm: (brief: BuyingBrief, agreement: PolicyAgreement) => void; onBack: () => void; searching: boolean }) {
-  const [category, setCategory] = useState(brief.productCategory);
+  const correctedCategory = inferRequestedProductCategory(`${brief.sourceText} ${brief.productDescription}`) ?? brief.productCategory;
+  const [category, setCategory] = useState(correctedCategory);
   const [quantity, setQuantity] = useState(String(brief.quantity));
   const [unitBudget, setUnitBudget] = useState(brief.maxUnitPriceInr ? String(brief.maxUnitPriceInr) : "");
   const [totalBudget, setTotalBudget] = useState(brief.maxTotalPriceInr ? String(brief.maxTotalPriceInr) : "");
@@ -35,7 +37,7 @@ export default function EditableRequirementReview({ brief, onConfirm, onBack, se
   const [requirements, setRequirements] = useState<EditableRequirement[]>(brief.hardRequirements);
   const [policyAgreement, setPolicyAgreement] = useState(false);
 
-  useEffect(() => { setCategory(brief.productCategory); setQuantity(String(brief.quantity)); setUnitBudget(brief.maxUnitPriceInr ? String(brief.maxUnitPriceInr) : ""); setTotalBudget(brief.maxTotalPriceInr ? String(brief.maxTotalPriceInr) : ""); setDeliveryDays(brief.deliveryDeadlineDays ? String(brief.deliveryDeadlineDays) : ""); setAuthorization(brief.authorizationLimitInr ? String(brief.authorizationLimitInr) : ""); setRequirements(brief.hardRequirements); setPolicyAgreement(false); }, [brief]);
+  useEffect(() => { setCategory(correctedCategory); setQuantity(String(brief.quantity)); setUnitBudget(brief.maxUnitPriceInr ? String(brief.maxUnitPriceInr) : ""); setTotalBudget(brief.maxTotalPriceInr ? String(brief.maxTotalPriceInr) : ""); setDeliveryDays(brief.deliveryDeadlineDays ? String(brief.deliveryDeadlineDays) : ""); setAuthorization(brief.authorizationLimitInr ? String(brief.authorizationLimitInr) : ""); setRequirements(brief.hardRequirements); setPolicyAgreement(false); }, [brief, correctedCategory]);
 
   const updateRequirement = (index: number, patch: Partial<EditableRequirement>) => setRequirements(current => current.map((requirement, itemIndex) => itemIndex === index ? { ...requirement, ...patch } : requirement));
   const confirm = () => { const confirmed = buildConfirmedBrief(brief, { category, quantity, unitBudget, totalBudget, deliveryDays, authorization, requirements }); if (confirmed && policyAgreement) onConfirm(confirmed, { statement: buildPolicyAgreementStatement(confirmed), agreedAt: Date.now() }); };

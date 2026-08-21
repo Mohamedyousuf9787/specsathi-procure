@@ -29,6 +29,12 @@ describe("category-aware product specification normalization", () => {
     expect(specificationFieldContracts.motorcycle.map(field => field.label)).toEqual(expect.arrayContaining(["Engine", "Mileage", "Fuel tank", "Brakes"]));
   });
 
+  it("rejects low-specificity page boilerplate instead of presenting it as verified hardware evidence", () => {
+    const specifications = normalizeSourcedSpecifications("laptop", "ASUS Vivobook 15 Core i5 13th Gen 13420H Laptop", "Processor: to its vibrant display. RAM: 16 GB. Storage: 512GB SSD. Graphics: Processor Intel GPU Drive Type Solid State Drive Number of Cores Octa. Display: Yes Refresh Rate 60Hz Available Ports HDMI. Operating System: Windows OS Processor Brand Intel CPU Graphics Processor.");
+    expect(specifications).toEqual(expect.arrayContaining([expect.objectContaining({ label: "RAM", value: "16 GB" }), expect.objectContaining({ label: "Storage", value: "512GB SSD" })]));
+    expect(specifications.map(specification => specification.label)).not.toEqual(expect.arrayContaining(["Processor", "Graphics", "Display", "Operating system"]));
+  });
+
   it("uses the fallback key only after a retryable primary failure", async () => {
     vi.stubEnv("FIRECRAWL_API_KEY", "primary-test-key");
     vi.stubEnv("FIRECRAWL_FALLBACK_API_KEY", "fallback-test-key");

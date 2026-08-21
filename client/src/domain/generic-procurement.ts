@@ -71,6 +71,7 @@ const laptopAttributes: AttributeDefinition[] = [
   { key: "display_inches", label: "Display", type: "number", unit: "inch" },
 ];
 const mobileAttributes: AttributeDefinition[] = [
+  { key: "ram_gb", label: "RAM", type: "number", unit: "GB" },
   { key: "storage_gb", label: "Storage", type: "number", unit: "GB" },
   { key: "network_5g", label: "5G", type: "boolean" },
   { key: "battery_mah", label: "Battery", type: "number", unit: "mAh" },

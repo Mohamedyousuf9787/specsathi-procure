@@ -34,8 +34,19 @@ export function getSpecificationProfile(category: string, title = ""): Specifica
 export function normalizeSourcedSpecifications(profile: SpecificationProfile, title: string, markdown: string, product?: z.infer<typeof firecrawlProductSchema>): Array<z.infer<typeof specificationSchema>> {
   const source = `${title}\n${product?.title ?? ""}\n${product?.brand ?? ""}\n${product?.category ?? ""}\n${product?.description ?? ""}\n${markdown}`.replace(/\s+/g, " ");
   const specifications: Array<z.infer<typeof specificationSchema>> = [];
+  const isUseful = (label: string, rawValue: string) => {
+    const value = rawValue.replace(/\s+/g, " ").trim();
+    if (!value || value.length > 80 || /\b(?:to its|drive type|available ports|processor brand|cpu graphics|yes refresh)\b/i.test(value)) return false;
+    if (label === "Processor") return /\b(?:intel\s+(?:core|ultra|pentium|celeron)|amd\s+ryzen|apple\s+m\d|snapdragon|mediatek)\b/i.test(value);
+    if (label === "RAM") return /\b\d+(?:\.\d+)?\s*gb\b/i.test(value);
+    if (label === "Storage") return /\b\d+(?:\.\d+)?\s*(?:gb|tb)\s*(?:ssd|hdd|nvme)\b/i.test(value);
+    if (label === "Graphics") return /\b(?:nvidia|geforce|rtx\s*\d|radeon\s+rx|intel\s+(?:arc|iris|uhd|hd\s+graphics))\b/i.test(value);
+    if (label === "Display") return /\b(?:\d{2}(?:\.\d+)?\s*(?:inch|in)|fhd|qhd|uhd|oled|ips)\b/i.test(value);
+    if (label === "Operating system") return /\b(?:windows(?:\s+\d{1,2})?|macos|chromeos|linux)\b/i.test(value) && !/\b(?:processor|graphics|drive|ports)\b/i.test(value);
+    return true;
+  };
   const add = (label: string, value: string | string[] | null) => {
-    const candidates = (Array.isArray(value) ? value : [value]).filter((candidate): candidate is string => Boolean(candidate)).filter((candidate, index, values) => values.indexOf(candidate) === index);
+    const candidates = (Array.isArray(value) ? value : [value]).filter((candidate): candidate is string => Boolean(candidate)).map(candidate => candidate.replace(/\s+/g, " ").trim()).filter(candidate => isUseful(label, candidate)).filter((candidate, index, values) => values.indexOf(candidate) === index);
     if (candidates.length) specifications.push({ label, value: candidates[0], ...(candidates.length > 1 ? { conflict: true } : {}) });
   };
   if (product?.brand) add("Brand", product.brand.trim());

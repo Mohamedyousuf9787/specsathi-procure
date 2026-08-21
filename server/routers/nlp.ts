@@ -18,14 +18,27 @@ export const extractionSchema = z.object({
 
 export type NlpExtraction = z.infer<typeof extractionSchema>;
 
-export function normalizeExtraction(candidate: NlpExtraction): NlpExtraction {
-  const rawCategory = candidate.productCategory.trim().toLowerCase();
+const inferRequestedCategory = (sourceText?: string) => {
+  const text = sourceText?.toLowerCase() ?? "";
+  if (/\b(?:android\s+)?smartphones?|mobile\s+phones?|iphone|android\s+phone\b/.test(text)) return "mobile";
+  if (/\b(?:laptops?|notebooks?|ultrabooks?|macbooks?)\b/.test(text)) return "laptop";
+  if (/\b(?:office\s+)?chairs?\b/.test(text)) return "chair";
+  if (/\b(?:tyres?|tires?)\b/.test(text)) return "tyre";
+  if (/\b(?:graphics\s+cards?|video\s+cards?|gpus?)\b/.test(text)) return "gpu";
+  if (/\bportable\s+printers?\b/.test(text)) return "portable printer";
+  if (/\b(?:printers?)\b/.test(text)) return "printer";
+  if (/\b(?:mice|mouse)\b/.test(text)) return "mouse";
+  return null;
+};
+
+export function normalizeExtraction(candidate: NlpExtraction, sourceText?: string): NlpExtraction {
+  const rawCategory = inferRequestedCategory(sourceText) ?? candidate.productCategory.trim().toLowerCase();
   const productCategory = ["laptop", "laptops", "notebook", "notebooks"].includes(rawCategory) ? "laptop" : ["chair", "chairs", "office chair", "office chairs"].includes(rawCategory) ? "chair" : ["monitor", "monitors", "display", "displays"].includes(rawCategory) ? "monitor" : rawCategory.replace(/\s+/g, "-");
   const hardRequirements = candidate.hardRequirements
     .filter((requirement) => !["unit_price", "unit_price_inr", "max_unit_price", "max_unit_price_inr", "budget", "total_price", "total_price_inr"].includes(requirement.key))
     .map((requirement) => {
-      if (productCategory === "laptop" && requirement.key === "ram") return { ...requirement, key: "ram_gb", operator: "at_least" as const };
-      if (productCategory === "laptop" && ["storage", "storage_capacity"].includes(requirement.key)) return { ...requirement, key: "storage_gb", operator: "at_least" as const };
+      if (["laptop", "mobile"].includes(productCategory) && requirement.key === "ram") return { ...requirement, key: "ram_gb", operator: "at_least" as const };
+      if (["laptop", "mobile"].includes(productCategory) && ["storage", "storage_capacity"].includes(requirement.key)) return { ...requirement, key: "storage_gb", operator: "at_least" as const };
       if (productCategory === "laptop" && requirement.key === "storage_type") return { ...requirement, key: "storage_type", operator: "contains" as const };
       return requirement;
     });
@@ -84,7 +97,7 @@ export async function extractWithGemini(text: string): Promise<NlpExtraction> {
   if (!response.ok) throw new Error(`Gemini returned ${response.status}`);
   const payload = await response.json() as { candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }> };
   const content = payload.candidates?.[0]?.content?.parts?.[0]?.text;
-  return normalizeExtraction(extractionSchema.parse(JSON.parse(content ?? "{}")));
+  return normalizeExtraction(extractionSchema.parse(JSON.parse(content ?? "{}")), text);
 }
 
 export const nlpRouter = router({
