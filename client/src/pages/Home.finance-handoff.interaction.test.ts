@@ -15,6 +15,9 @@ describe("multi-item finance handoff panel", () => {
     render(createElement(FinanceHandoffHarness));
     expect(screen.getByText("One batch. One auditable package.")).toBeTruthy();
     expect(screen.getByText("Draft")).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Export JSON" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Export CSV" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Export PDF" })).toBeTruthy();
     fireEvent.click(screen.getByRole("button", { name: "Record simulated handoff" }));
     expect(screen.getByText("Recorded")).toBeTruthy();
     expect(screen.getByRole("button", { name: "Finance handoff recorded" })).toBeTruthy();

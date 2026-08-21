@@ -227,3 +227,11 @@
 - [x] Reproduce and verify every current behavior or defect claimed by the supplied checklists.
 - [x] Fix confirmed defects only, preserving all working procurement, provider, policy, authorization, audit, and export behavior.
 - [x] Run and record full deterministic tests, provider smoke checks, TypeScript, production build, runtime, responsive UI, source safety, checkpoint, and GitHub synchronization.
+
+## Offline Rehearsal, Performance, PDF Export, and Reusable Skill
+
+- [x] Rehearse the complete deterministic procurement demo with optional provider keys unavailable and record each fallback boundary.
+- [x] Apply targeted lazy loading to reduce the primary Vite bundle without changing existing procurement behavior or UI structure.
+- [x] Add a client-side PDF export for final finance/audit handoff records alongside the existing JSON and CSV exports.
+- [x] Create and validate a reusable skill for the Specanic-style hackathon stabilization and verification workflow.
+- [x] Run final regressions, provider smoke checks, offline rehearsal, TypeScript, production build, runtime, responsive UI, checkpoint, and GitHub synchronization.

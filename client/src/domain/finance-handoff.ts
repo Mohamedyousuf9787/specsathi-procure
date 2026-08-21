@@ -61,6 +61,6 @@ export function serializeFinanceHandoffJson(handoff: FinanceHandoff) {
   return JSON.stringify(handoff, null, 2);
 }
 
-export function getFinanceHandoffFilename(handoff: FinanceHandoff, extension: "json" | "csv") {
+export function getFinanceHandoffFilename(handoff: FinanceHandoff, extension: "json" | "csv" | "pdf") {
   return `${handoff.handoffId.toLowerCase()}-audit.${extension}`;
 }
