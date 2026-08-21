@@ -35,7 +35,7 @@ The deterministic parser recognizes a focused set of common product and requirem
 | Tavily credential | Passed: bounded server-side authenticated health test; no key appears in source or browser payload. |
 | Live web evidence | Passed: authenticated server query returned normalized external titles, URLs, excerpts, and relevance. |
 | Provider failure | Passed: timeout mock returned local fallback without blocking procurement. |
-| Combined regression | Passed: 53 tests across 20 files, TypeScript, and production build. |
+| Combined regression | Passed: 59 tests across 21 files, TypeScript, and production build. |
 | Privacy audit metadata | Passed: `provider_audit_events` schema exists; unit test verifies metadata bounds and excludes untyped raw brief/query/key fields. |
 | Visual integration review | Passed: the secure-NLP consent disclosure and procurement-control intake render clearly at desktop size. |
 | Procurement audit trail | Passed: authenticated persistence route rejects anonymous writes; authenticated sessions persist bounded actual audit events, while anonymous sessions retain local-only history. |
@@ -58,3 +58,8 @@ The deterministic parser recognizes a focused set of common product and requirem
 | Specification conflict boundary | Passed: contradictory sourced RAM values are marked as conflicts in the normalized record and rendered as Conflicting source values without changing any product policy state. |
 | Firecrawl retry boundary | Passed: a mocked 429 primary request invokes the fallback credential; a mocked non-retryable 400 primary response does not invoke fallback. |
 | Category field contracts | Passed: explicit laptop, motorcycle, and generic profile field contracts define exactly which source-bound values can be shown. |
+| Fast marketplace details | Passed: category-aware immediate details are derived only from bounded product title and marketplace extension fields; URL-like and long prose values are rejected. |
+| Policy agreement boundary | Passed: the requester must acknowledge the confirmed constraint record before search; the agreement explicitly rules out an order, payment authorization, and verified-offer interpretation. |
+| Vendor statement and on-demand verification | Passed: rendered marketplace cards include a normalized vendor offer statement and an explicit per-card full-specification action; no full-page extraction is invoked by initial product-search handling. |
+| Streamlined responsive review | Passed: desktop and 390px mobile captures confirm policy agreement, fast marketplace details, vendor statement, and optional verification hierarchy. |
+| Initial-card latency boundary | Passed: a DOM interaction regression verifies rendering initial marketplace cards does not invoke page verification, while clicking Verify full specifications invokes the per-card verification callback exactly once. |

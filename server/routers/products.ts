@@ -3,13 +3,41 @@ import { recordProviderAudit } from "../db";
 import { publicProcedure, router } from "../_core/trpc";
 
 const shoppingResultSchema = z.object({
-  position: z.number().optional(), title: z.string().default("Untitled product"), source: z.string().optional(), price: z.string().optional(), extracted_price: z.number().optional(), rating: z.number().optional(), reviews: z.number().optional(), thumbnail: z.string().url().optional(), product_link: z.string().url().optional(), link: z.string().url().optional(), delivery: z.string().optional(), availability: z.string().optional(),
+  position: z.number().optional(), title: z.string().default("Untitled product"), source: z.string().optional(), price: z.string().optional(), extracted_price: z.number().optional(), rating: z.number().optional(), reviews: z.number().optional(), thumbnail: z.string().url().optional(), product_link: z.string().url().optional(), link: z.string().url().optional(), delivery: z.string().optional(), availability: z.string().optional(), extensions: z.array(z.string()).optional(),
 });
 const shoppingResponseSchema = z.object({ shopping_results: z.array(shoppingResultSchema).default([]) });
 
-export type ProductListing = { id: string; title: string; merchant: string | null; priceText: string | null; priceInr: number | null; rating: number | null; reviews: number | null; imageUrl: string | null; productUrl: string | null; delivery: string | null; availability: string | null; completeness: "complete" | "unverified"; policy: "eligible" | "approval_needed" | "blocked" | "unverified" };
+export type ProductListing = { id: string; title: string; merchant: string | null; priceText: string | null; priceInr: number | null; rating: number | null; reviews: number | null; imageUrl: string | null; productUrl: string | null; delivery: string | null; availability: string | null; completeness: "complete" | "unverified"; policy: "eligible" | "approval_needed" | "blocked" | "unverified"; specificationProfile: "laptop" | "motorcycle" | "generic"; specifications: Array<{ label: string; value: string }> };
 
-export function normalizeShoppingResults(payload: z.infer<typeof shoppingResponseSchema>, maxUnitPriceInr?: number, authorizationLimitInr?: number): ProductListing[] {
+const captureFastValue = (text: string, expression: RegExp) => {
+  const value = text.match(expression)?.[1]?.replace(/\s+/g, " ").trim();
+  return value && value.length <= 72 && !/https?:|www\./i.test(value) ? value : null;
+};
+const fastProfile = (category: string, title: string): ProductListing["specificationProfile"] => /laptop|notebook|ultrabook|macbook/i.test(`${category} ${title}`) ? "laptop" : /motorcycle|motorbike|motor bike|bike\b|scooter/i.test(`${category} ${title}`) ? "motorcycle" : "generic";
+const addFast = (target: Array<{ label: string; value: string }>, label: string, value: string | null) => { if (value && !target.some(specification => specification.label === label)) target.push({ label, value }); };
+
+export function normalizeFastMarketplaceSpecifications(category: string, title: string, extensions: string[] = []) {
+  const profile = fastProfile(category, title);
+  const text = `${title} ${extensions.join(" ")}`.replace(/\s+/g, " ");
+  const specifications: Array<{ label: string; value: string }> = [];
+  if (profile === "laptop") {
+    addFast(specifications, "RAM", captureFastValue(text, /(\d+(?:\.\d+)?\s*GB(?:\s*(?:DDR[345]|LPDDR[45]))?(?:\s*RAM)?)/i));
+    addFast(specifications, "Storage", captureFastValue(text, /(\d+(?:\.\d+)?\s*(?:GB|TB)\s*(?:SSD|HDD|NVMe))/i));
+    addFast(specifications, "Processor", captureFastValue(text, /((?:Intel\s+(?:Core|Ultra)\s+[A-Za-z0-9\-]+|AMD\s+Ryzen\s+[A-Za-z0-9\-]+|Apple\s+M\d(?:\s*(?:Pro|Max))?))/i));
+    addFast(specifications, "Graphics", captureFastValue(text, /((?:NVIDIA\s+)?(?:GeForce\s+)?RTX\s*\d{3,4}(?:\s*(?:Ti|Super))?|Radeon\s+RX\s*\d{3,4}|Intel\s+(?:Arc|Iris)\s*[A-Za-z0-9\-]*)/i));
+    addFast(specifications, "Display", captureFastValue(text, /(\d{2}(?:\.\d+)?\s*(?:inch|in)\s*(?:FHD|QHD|UHD|OLED|IPS)?)/i));
+  } else if (profile === "motorcycle") {
+    addFast(specifications, "Engine", captureFastValue(text, /(\d+(?:\.\d+)?\s*cc)/i));
+    addFast(specifications, "Mileage", captureFastValue(text, /(\d+(?:\.\d+)?\s*(?:kmpl|km\/l|km per litre))/i));
+    addFast(specifications, "Fuel tank", captureFastValue(text, /(?:fuel tank|tank capacity)\s*[:\-]?\s*(\d+(?:\.\d+)?\s*(?:litres?|l))/i));
+    addFast(specifications, "Brakes", captureFastValue(text, /((?:dual|single)?\s*(?:channel\s*)?ABS|disc brakes?)/i));
+  } else {
+    addFast(specifications, "Capacity", captureFastValue(text, /(\d+(?:\.\d+)?\s*(?:GB|TB|ml|litres?|L|kg))/i));
+  }
+  return { specificationProfile: profile, specifications: specifications.slice(0, 4) };
+}
+
+export function normalizeShoppingResults(payload: z.infer<typeof shoppingResponseSchema>, maxUnitPriceInr?: number, authorizationLimitInr?: number, category = ""): ProductListing[] {
   return payload.shopping_results.slice(0, 12).map((item, index) => {
     const priceInr = typeof item.extracted_price === "number" && item.extracted_price > 0 ? Math.round(item.extracted_price) : null;
     const merchant = item.source ?? null;
@@ -18,7 +46,8 @@ export function normalizeShoppingResults(payload: z.infer<typeof shoppingRespons
     const completeness = priceInr && merchant && productUrl && availability ? "complete" : "unverified" as const;
     const unavailable = Boolean(availability && /out of stock|unavailable|sold out/i.test(availability));
     const policy = completeness === "unverified" ? "unverified" as const : unavailable || (maxUnitPriceInr && priceInr !== null && priceInr > maxUnitPriceInr) ? "blocked" as const : authorizationLimitInr && priceInr !== null && priceInr > authorizationLimitInr ? "approval_needed" as const : "eligible" as const;
-    return { id: `serp-${item.position ?? index + 1}-${item.title.slice(0, 36).replace(/[^a-z0-9]/gi, "-").toLowerCase()}`, title: item.title, merchant, priceText: item.price ?? null, priceInr, rating: item.rating ?? null, reviews: item.reviews ?? null, imageUrl: item.thumbnail ?? null, productUrl, delivery: item.delivery ?? null, availability, completeness, policy };
+    const fastSpecifications = normalizeFastMarketplaceSpecifications(category, item.title, item.extensions);
+    return { id: `serp-${item.position ?? index + 1}-${item.title.slice(0, 36).replace(/[^a-z0-9]/gi, "-").toLowerCase()}`, title: item.title, merchant, priceText: item.price ?? null, priceInr, rating: item.rating ?? null, reviews: item.reviews ?? null, imageUrl: item.thumbnail ?? null, productUrl, delivery: item.delivery ?? null, availability, completeness, policy, ...fastSpecifications };
   });
 }
 
@@ -32,7 +61,7 @@ export const productsRouter = router({
       const response = await fetch(url, { signal: AbortSignal.timeout(15_000) });
       if (response.status === 429) return { status: "fallback" as const, listings: [] as ProductListing[], message: "Product listing search is rate-limited. Local Vendor A and Vendor B remain active." };
       if (!response.ok) throw new Error(`SerpAPI returned ${response.status}`);
-      const listings = normalizeShoppingResults(shoppingResponseSchema.parse(await response.json()), input.maxUnitPriceInr, input.authorizationLimitInr);
+      const listings = normalizeShoppingResults(shoppingResponseSchema.parse(await response.json()), input.maxUnitPriceInr, input.authorizationLimitInr, input.category);
       await recordProviderAudit({ userId: ctx.user?.id, eventType: "live_search.evidence", provider: "serpapi", outcome: "success", summary: "Shopping product listings were retrieved.", metadata: { inputLength: input.query.length, resultCount: listings.length } });
       return { status: "live" as const, listings, message: "Live product listings are marketplace records. Price, stock, delivery, and returns still require confirmation before they become eligible offers." };
     } catch (error) {

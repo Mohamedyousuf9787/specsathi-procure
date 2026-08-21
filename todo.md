@@ -52,6 +52,21 @@
 - [x] Re-read final specification QA and checkpoint context before saving the enrichment release checkpoint.
 - [x] Verify the saved specification documentation, QA report, and CP-019 context record match the final profile, conflict, failover, and 53-test implementation.
 - [x] Read back the finalized specification QA and CP-019 records immediately before saving the enrichment release checkpoint.
+- [x] Audit malformed or link-like specification values and the end-to-end product-search latency path.
+- [x] Replace blocking dynamic product-page enrichment with a faster specification strategy while keeping source evidence explicit.
+- [x] Define and implement an explicit requester policy-agreement statement before a procurement decision boundary.
+- [x] Define and implement a vendor statement that records normalized offer terms, evidence completeness, and verification status.
+- [x] Add clear user-facing explanations for policy agreement, vendor statements, and simulated purchase boundaries.
+- [x] Add regression, latency, and responsive QA for fast specifications and the new procurement-control statements.
+- [x] Define and test a fast card-specification contract using only safe marketplace result fields.
+- [x] Add a required requester policy-agreement acknowledgement before product search and record it in the local audit trail.
+- [x] Render a normalized vendor offer statement on each marketplace card with clear evidence completeness and outstanding verification needs.
+- [x] Change full product-page specification extraction to an explicit per-card verification action that never blocks initial search results.
+- [x] Add clear loading, success, unavailable, and conflict states for on-demand full-specification verification.
+- [x] Add and record a regression proving initial marketplace search does not invoke Firecrawl specification extraction automatically.
+- [x] Read back final streamlined QA and CP-020 context records before saving the release checkpoint.
+- [x] Add a flow-level regression proving initial product-search success does not invoke Firecrawl enrichment.
+- [x] Add a flow-level regression proving Firecrawl enrichment starts only after the requester triggers per-card full verification.
 - [x] Add rendered-component coverage proving the supporting-sources disclosure is closed by default and secondary.
 - [x] Re-read the final QA report and card-first checkpoint record after the final rendered-coverage update.
 
