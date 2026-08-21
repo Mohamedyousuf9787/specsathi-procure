@@ -35,7 +35,7 @@ The deterministic parser recognizes a focused set of common product and requirem
 | Tavily credential | Passed: bounded server-side authenticated health test; no key appears in source or browser payload. |
 | Live web evidence | Passed: authenticated server query returned normalized external titles, URLs, excerpts, and relevance. |
 | Provider failure | Passed: timeout mock returned local fallback without blocking procurement. |
-| Combined regression | Passed: 68 tests across 24 files, TypeScript, and production build. |
+| Combined regression | Passed: 69 tests across 24 files, TypeScript, and production build. |
 | Privacy audit metadata | Passed: `provider_audit_events` schema exists; unit test verifies metadata bounds and excludes untyped raw brief/query/key fields. |
 | Visual integration review | Passed: the secure-NLP consent disclosure and procurement-control intake render clearly at desktop size. |
 | Procurement audit trail | Passed: authenticated persistence route rejects anonymous writes; authenticated sessions persist bounded actual audit events, while anonymous sessions retain local-only history. |
@@ -68,3 +68,5 @@ The deterministic parser recognizes a focused set of common product and requirem
 | Laptop policy-agreement surface | Passed: the recorded requester agreement is retrieved from the procurement audit and rendered above successful product cards, alongside per-card normalized vendor statements and explicit template provenance. |
 | Laptop challenge responsive review | Passed: the real user-facing Laptop demo action now exercises the same production provider-error fallback resolver, captured at desktop and 390px mobile widths with pre-built vendor cards, policy agreement, demo provenance, best-fit selection, and vendor statement. |
 | Normal requester fallback flow | Passed: a DOM interaction test completes the ordinary Home brief, explicit policy agreement, product-search initiation, simulated provider error, and deterministic Vendor A/B card rendering without using the dedicated demo route. |
+| Real-time versus fallback mode | Passed: the normal laptop path renders a successful live marketplace card when the provider succeeds; deterministic Vendor A/B cards render only through explicit fallback behavior. SerpAPI account health confirmed a free plan with 239 of 250 monthly searches remaining and a successful Google Shopping response. |
+| Post-fix runtime verification | Passed: a direct `products.search` procedure call returned `status: live` with live laptop marketplace titles. Recent runtime logs contain no new product-search failure or fallback event; older unrelated NLP and development-server messages remain historical observations. |

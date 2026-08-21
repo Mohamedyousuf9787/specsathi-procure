@@ -1,9 +1,9 @@
 /** @vitest-environment jsdom */
 import { createElement } from "react";
-import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { act, cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
-const productHandlers: { onError?: () => void } = {};
+const productHandlers: { onError?: () => void; onSuccess?: (result: unknown) => void } = {};
 const productMutate = vi.fn();
 
 vi.mock("@/lib/trpc", () => ({
@@ -20,6 +20,12 @@ vi.mock("@/_core/hooks/useAuth", () => ({ useAuth: () => ({ user: null }) }));
 import Home from "./Home";
 
 describe("normal laptop product-search fallback", () => {
+  afterEach(() => {
+    cleanup();
+    productHandlers.onError = undefined;
+    productHandlers.onSuccess = undefined;
+  });
+
   it("renders deterministic Vendor A/B cards after the requester agrees to policy and the live product search fails", async () => {
     productMutate.mockClear();
     render(createElement(Home));
@@ -33,5 +39,19 @@ describe("normal laptop product-search fallback", () => {
     expect(await screen.findByText("BEST MATCH FOR YOUR CONFIRMED REQUIREMENTS")).toBeTruthy();
     expect(screen.getAllByText("Atlas Business 14").length).toBeGreaterThanOrEqual(2);
     expect(screen.getByText(/deterministic Vendor A\/B laptop challenge templates/)).toBeTruthy();
+  });
+
+  it("renders a verified live marketplace card when the normal product search succeeds", async () => {
+    productMutate.mockClear();
+    render(createElement(Home));
+    fireEvent.change(screen.getByLabelText("Buying brief"), { target: { value: "Purchase 10 laptops with 16 GB RAM and 512 GB SSD under ₹45,000 each within 5 days." } });
+    fireEvent.click(screen.getByRole("button", { name: "Inspect policy record" }));
+    await screen.findByText("Make the request record yours.");
+    fireEvent.click(screen.getByLabelText(/Policy agreement required/));
+    fireEvent.click(screen.getByRole("button", { name: /Agree & find products/ }));
+    await waitFor(() => expect(productMutate).toHaveBeenCalledTimes(1));
+    await act(async () => productHandlers.onSuccess?.({ status: "live", message: "Live marketplace response.", listings: [{ id: "live-1", title: "Live Business Laptop", merchant: "Live merchant", priceText: "₹42,000", rating: null, reviews: null, imageUrl: null, productUrl: "https://example.test/live", delivery: "Within 5 days", availability: "In stock", completeness: "complete", policy: "eligible", specificationProfile: "laptop", specifications: [{ label: "RAM", value: "16 GB RAM" }] }] }));
+    expect(await screen.findByText("Live Business Laptop")).toBeTruthy();
+    expect(screen.queryByText("BEST MATCH FOR YOUR CONFIRMED REQUIREMENTS")).toBeNull();
   });
 });
