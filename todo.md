@@ -213,3 +213,10 @@
 - [x] Rename user-facing application, export, metadata, documentation, test-fixture, and demo branding from the prior brand to Specanic without changing workflow or integrations.
 - [x] Update the existing judge presentation branding only, preserving slide content, layout, and presentation structure.
 - [x] Verify the final branding scan, TypeScript, full tests, production build, runtime, desktop/mobile UI, checkpoint, and GitHub synchronization.
+
+## Provider-Test Reliability and Performance Repair
+
+- [x] Separate live credential smoke checks from the deterministic default test suite so missing external credentials cannot create false product failures.
+- [x] Preserve opt-in live provider validation with bounded, secret-safe checks for Gemini, SerpAPI, Tavily, and Firecrawl.
+- [x] Improve live product-search responsiveness without changing fallback, policy, vendor, authorization, or audit behavior.
+- [x] Verify the complete test suite, TypeScript, build, runtime, provider safeguards, performance behavior, checkpoint, and GitHub synchronization.

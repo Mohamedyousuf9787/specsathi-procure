@@ -15,5 +15,6 @@ export default defineConfig({
   test: {
     environment: "node",
     include: ["server/**/*.test.ts", "server/**/*.spec.ts", "client/src/**/*.test.ts", "client/src/**/*.spec.ts"],
+    exclude: ["server/routers/live-search-secret.test.ts", "server/routers/product-provider-secret.test.ts", "server/routers/specExtraction.firecrawl.test.ts"],
   },
 });

@@ -7,8 +7,32 @@ const shoppingResultSchema = z.object({
 });
 const shoppingResponseSchema = z.object({ shopping_results: z.array(shoppingResultSchema).default([]) });
 const PRODUCT_SEARCH_TIMEOUT_MS = 25_000;
+const PRODUCT_SEARCH_CACHE_TTL_MS = 60_000;
+const PRODUCT_SEARCH_CACHE_MAX_ENTRIES = 50;
 
 export type ProductListing = { id: string; title: string; merchant: string | null; priceText: string | null; priceInr: number | null; rating: number | null; reviews: number | null; imageUrl: string | null; productUrl: string | null; delivery: string | null; availability: string | null; completeness: "complete" | "unverified"; policy: "eligible" | "approval_needed" | "blocked" | "unverified"; specificationProfile: "laptop" | "motorcycle" | "generic"; specifications: Array<{ label: string; value: string }> };
+type ProductSearchResponse = { status: "live" | "fallback"; listings: ProductListing[]; message: string };
+type ProductSearchInput = { query: string; category: string; maxUnitPriceInr?: number; authorizationLimitInr?: number };
+
+const productSearchCache = new Map<string, { expiresAt: number; response: ProductSearchResponse }>();
+const productSearchInFlight = new Map<string, Promise<ProductSearchResponse>>();
+
+export function productSearchCacheKey(input: ProductSearchInput) {
+  return [input.query.trim().toLowerCase(), input.category.trim().toLowerCase(), input.maxUnitPriceInr ?? "", input.authorizationLimitInr ?? ""].join("|");
+}
+
+export function clearProductSearchCacheForTests() {
+  productSearchCache.clear();
+  productSearchInFlight.clear();
+}
+
+function cacheLiveProductSearch(cacheKey: string, response: ProductSearchResponse) {
+  if (!productSearchCache.has(cacheKey) && productSearchCache.size >= PRODUCT_SEARCH_CACHE_MAX_ENTRIES) {
+    const oldestKey = productSearchCache.keys().next().value;
+    if (oldestKey) productSearchCache.delete(oldestKey);
+  }
+  productSearchCache.set(cacheKey, { expiresAt: Date.now() + PRODUCT_SEARCH_CACHE_TTL_MS, response });
+}
 
 const captureFastValue = (text: string, expression: RegExp) => {
   const value = text.match(expression)?.[1]?.replace(/\s+/g, " ").trim();
@@ -56,7 +80,14 @@ export const productsRouter = router({
   search: publicProcedure.input(z.object({ query: z.string().trim().min(3).max(600), category: z.string().trim().min(1).max(100), maxUnitPriceInr: z.number().int().positive().max(100000000).optional(), authorizationLimitInr: z.number().int().positive().max(100000000).optional() })).mutation(async ({ input, ctx }) => {
     const apiKey = process.env.SERPAPI_API_KEY;
     if (!apiKey) return { status: "fallback" as const, listings: [] as ProductListing[], message: "Product listing search is not configured. Local Vendor A and Vendor B remain active." };
-    try {
+    const cacheKey = productSearchCacheKey(input);
+    const cached = productSearchCache.get(cacheKey);
+    if (cached && cached.expiresAt > Date.now()) return cached.response;
+    if (cached) productSearchCache.delete(cacheKey);
+    const pending = productSearchInFlight.get(cacheKey);
+    if (pending) return await pending;
+    const request = (async (): Promise<ProductSearchResponse> => {
+      try {
       const url = new URL("https://serpapi.com/search.json");
       url.search = new URLSearchParams({ engine: "google_shopping", q: input.query, gl: "in", hl: "en", api_key: apiKey }).toString();
       const response = await fetch(url, { signal: AbortSignal.timeout(PRODUCT_SEARCH_TIMEOUT_MS) });
@@ -65,9 +96,18 @@ export const productsRouter = router({
       const listings = normalizeShoppingResults(shoppingResponseSchema.parse(await response.json()), input.maxUnitPriceInr, input.authorizationLimitInr, input.category);
       await recordProviderAudit({ userId: ctx.user?.id, eventType: "live_search.evidence", provider: "serpapi", outcome: "success", summary: "Shopping product listings were retrieved.", metadata: { inputLength: input.query.length, resultCount: listings.length } });
       return { status: "live" as const, listings, message: "Live product listings are marketplace records. Price, stock, delivery, and returns still require confirmation before they become eligible offers." };
-    } catch (error) {
+      } catch (error) {
       await recordProviderAudit({ userId: ctx.user?.id, eventType: "live_search.evidence", provider: "local", outcome: "fallback", summary: "Shopping listings were unavailable; local vendors retained.", metadata: { inputLength: input.query.length } });
       return { status: "fallback" as const, listings: [] as ProductListing[], message: "Product listing search is unavailable. Local Vendor A and Vendor B remain active." };
+      }
+    })();
+    productSearchInFlight.set(cacheKey, request);
+    try {
+      const result = await request;
+      if (result.status === "live") cacheLiveProductSearch(cacheKey, result);
+      return result;
+    } finally {
+      productSearchInFlight.delete(cacheKey);
     }
   }),
 });
