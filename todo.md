@@ -262,3 +262,11 @@
 - [x] Prevent secure NLP category extraction from misclassifying a requested product’s preference (for example, a smartphone camera) as the product category.
 - [x] Ensure the editable-review UI applies the requested-product category guard even if a stale or inconsistent provider response reaches the client.
 - [x] Normalize mobile RAM and storage requirement aliases before deterministic local-candidate matching so valid Vendor A/B evidence is not falsely blocked.
+
+## Independent Overall-Specification Audit
+
+- [x] Define independent end-to-end procurement, policy-boundary, fallback, audit-export, and evidence-quality cases beyond the existing regressions.
+- [x] Execute the independent cases across deterministic domain logic, rendered workflow, live provider boundaries, and responsive browser behavior.
+- [x] Repair only confirmed overall-specification defects and add regressions for every repaired control path.
+- [x] Re-run the full suite, TypeScript, production build, source-safety, and runtime checks; record an honest final gap assessment.
+- [x] Upgrade or safely override confirmed high-severity production dependency advisories, then rerun compatibility and security validation.
