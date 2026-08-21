@@ -26,7 +26,7 @@ import {
   UserRoundCheck,
   XCircle,
 } from "lucide-react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   type AuditEvent,
   type DemoVariant,
@@ -38,10 +38,12 @@ import {
   runDemo,
 } from "@/domain/procurement";
 import GenericProcurementWorkspace, { type LiveEvidenceState } from "@/components/GenericProcurementWorkspace";
-import EditableRequirementReview, { type PolicyAgreement } from "@/components/EditableRequirementReview";
+import EditableRequirementReview, { buildPolicyAgreementStatement, type PolicyAgreement } from "@/components/EditableRequirementReview";
 import { parseBuyingBrief, type ValidationResult } from "@/domain/brief-parser";
-import { laptopDemoBrief } from "@/domain/generic-procurement";
+import { laptopDemoBrief, type BuyingBrief } from "@/domain/generic-procurement";
 import { runGenericProcurement, type GenericProcurementSession } from "@/domain/generic-vendor-flow";
+import { resolveLaptopChallengeFallback } from "@/domain/laptop-challenge-templates";
+import { resolveProductSearchFailure, resolveProductSearchSuccess } from "@/domain/product-search-outcome";
 import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getExplicitFullVerificationRequest, getInitialProductSearchState, type ProductListing, type ProductListingViewState } from "@/components/ProductListingsPanel";
@@ -287,6 +289,7 @@ export default function Home() {
   const { user: authenticatedUser } = useAuth();
   const [auditPersistence, setAuditPersistence] = useState<"local" | "saving" | "persisted" | "unavailable">("local");
   const persistedAuditKeys = useRef(new Set<string>());
+  const lastConfirmedBriefRef = useRef<BuyingBrief | null>(null);
   const liveSearch = trpc.liveSearch.searchEvidence.useMutation({ onSuccess: (result) => setLiveEvidence({ status: result.status, message: result.message, results: result.results }), onError: () => setLiveEvidence({ status: "fallback", message: "Live search could not be reached. Local Vendor A and Vendor B remain active.", results: [] }) });
   const specificationSearch = trpc.specifications.enrich.useMutation({
     onSuccess: (result) => setProductListings(current => ({ ...current, listings: current.listings.map(listing => {
@@ -297,10 +300,15 @@ export default function Home() {
   });
   const productSearch = trpc.products.search.useMutation({
     onSuccess: (result, variables) => {
-      const initialState = getInitialProductSearchState(result.listings);
-      setProductListings({ status: result.status, message: result.message, listings: initialState.listings });
+      const outcome = resolveProductSearchSuccess(lastConfirmedBriefRef.current, result);
+      const initialState = getInitialProductSearchState<ProductListing>(outcome.listings);
+      setProductListings({ status: outcome.status, message: outcome.message, listings: initialState.listings });
     },
-    onError: () => setProductListings({ status: "fallback", message: "Product listing search could not be reached. Local Vendor A and Vendor B remain active.", listings: [] }),
+    onError: () => {
+      const outcome = resolveProductSearchFailure(lastConfirmedBriefRef.current);
+      const initialState = getInitialProductSearchState<ProductListing>(outcome.listings);
+      setProductListings({ status: outcome.status, message: outcome.message, listings: initialState.listings });
+    },
   });
   const auditPersistenceMutation = trpc.audit.persistSession.useMutation({ onSuccess: () => setAuditPersistence("persisted"), onError: () => setAuditPersistence("unavailable") });
   useEffect(() => {
@@ -388,16 +396,28 @@ export default function Home() {
     nlpExtraction.mutate({ text: brief });
   };
   const loadLaptopDemo = () => {
-    setBrief(laptopDemoBrief.sourceText);
-    setValidation({ status: "valid", normalizedBrief: laptopDemoBrief, missingFields: [], conflicts: [], warnings: [], clarifyingQuestions: [] });
-    setView("editable-review");
+    void runLaptopChallengeDemo();
   };
+  const runLaptopChallengeDemo = async () => {
+    const agreement: PolicyAgreement = { statement: `Demonstration policy agreement. ${buildPolicyAgreementStatement(laptopDemoBrief)}`, agreedAt: Date.now() };
+    lastConfirmedBriefRef.current = laptopDemoBrief;
+    const session = await runGenericProcurement(laptopDemoBrief);
+    const fallback = resolveProductSearchFailure(laptopDemoBrief);
+    setGenericSession({ ...session, audit: [...session.audit, { id: `challenge-policy-agreement-${agreement.agreedAt}`, type: "POLICY_AGREEMENT", actor: "Requester", itemId: laptopDemoBrief.id, summary: "Demonstration policy agreement recorded before laptop challenge comparison.", detail: agreement.statement, timestamp: new Date(agreement.agreedAt).toISOString() }] });
+    setProductListings(fallback);
+    setLiveEvidence({ status: "idle", results: [] });
+    setView("generic-workspace");
+  };
+  useEffect(() => {
+    if (new URLSearchParams(window.location.search).get("demo") === "laptop-challenge") void runLaptopChallengeDemo();
+  }, []);
   const loadMultiDemo = () => {
     setLegacySession(runDemo());
     setView("legacy-workspace");
   };
   const startProcurement = async (confirmedBrief = validation?.normalizedBrief, policyAgreement?: PolicyAgreement) => {
     if (!confirmedBrief) return;
+    lastConfirmedBriefRef.current = confirmedBrief;
     setValidation(current => current ? { ...current, normalizedBrief: confirmedBrief } : current);
     const session = await runGenericProcurement(confirmedBrief);
     setGenericSession(policyAgreement ? { ...session, audit: [...session.audit, { id: `policy-agreement-${policyAgreement.agreedAt}`, type: "POLICY_AGREEMENT" as const, actor: "Requester", itemId: confirmedBrief.id, summary: "Policy agreement recorded before marketplace comparison.", detail: policyAgreement.statement, timestamp: new Date(policyAgreement.agreedAt).toISOString() }] } : session);

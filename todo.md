@@ -69,6 +69,20 @@
 - [x] Add a flow-level regression proving Firecrawl enrichment starts only after the requester triggers per-card full verification.
 - [x] Add rendered-component coverage proving the supporting-sources disclosure is closed by default and secondary.
 - [x] Re-read the final QA report and card-first checkpoint record after the final rendered-coverage update.
+- [x] Diagnose why the laptop product-card path falls into error/fallback despite local Vendor A/B messaging.
+- [x] Define deterministic pre-built laptop marketplace-card and vendor templates for the challenge scenario without presenting them as live marketplace data.
+- [x] Add a clear best-fit recommendation that compares the pre-built laptop templates against confirmed hard requirements and policy limits.
+- [x] Ensure successful laptop cards show the policy agreement, normalized vendor statement, and explicit demo/evidence status.
+- [x] Add regression and desktop/mobile verification for the reliable laptop challenge journey.
+- [x] Re-read final laptop challenge QA records before saving the reliable demo checkpoint.
+- [x] Surface the confirmed policy-agreement summary in the laptop challenge product-result area and add regression coverage.
+- [x] Add an integration regression proving the actual laptop fallback helper returns deterministic Vendor A/B cards for unavailable or empty live results.
+- [x] Verify the laptop challenge cards through the real fallback route at desktop and mobile sizes without a development-only fixture.
+- [x] Add Home-flow integration coverage for both provider-error and empty-live-result laptop fallback paths.
+- [x] Capture desktop and mobile visual verification through a genuine live-search fallback trigger rather than the dedicated demo route.
+- [x] Re-read final laptop challenge QA and CP-020 records immediately before saving the reliable demo checkpoint.
+- [x] Add a normal Home user-flow interaction test proving product-search failure displays deterministic laptop cards after explicit policy agreement.
+- [x] Re-read the final QA and CP-020 records after the normal-flow test and save the reliable laptop challenge checkpoint.
 
 - [x] Inspect available connectors and record the approved provider architecture without exposing credentials.
 - [x] Upgrade the static application to a secure full-stack project and preserve the local demo path.

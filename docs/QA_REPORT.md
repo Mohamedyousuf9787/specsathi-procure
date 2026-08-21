@@ -35,7 +35,7 @@ The deterministic parser recognizes a focused set of common product and requirem
 | Tavily credential | Passed: bounded server-side authenticated health test; no key appears in source or browser payload. |
 | Live web evidence | Passed: authenticated server query returned normalized external titles, URLs, excerpts, and relevance. |
 | Provider failure | Passed: timeout mock returned local fallback without blocking procurement. |
-| Combined regression | Passed: 59 tests across 21 files, TypeScript, and production build. |
+| Combined regression | Passed: 68 tests across 24 files, TypeScript, and production build. |
 | Privacy audit metadata | Passed: `provider_audit_events` schema exists; unit test verifies metadata bounds and excludes untyped raw brief/query/key fields. |
 | Visual integration review | Passed: the secure-NLP consent disclosure and procurement-control intake render clearly at desktop size. |
 | Procurement audit trail | Passed: authenticated persistence route rejects anonymous writes; authenticated sessions persist bounded actual audit events, while anonymous sessions retain local-only history. |
@@ -63,3 +63,8 @@ The deterministic parser recognizes a focused set of common product and requirem
 | Vendor statement and on-demand verification | Passed: rendered marketplace cards include a normalized vendor offer statement and an explicit per-card full-specification action; no full-page extraction is invoked by initial product-search handling. |
 | Streamlined responsive review | Passed: desktop and 390px mobile captures confirm policy agreement, fast marketplace details, vendor statement, and optional verification hierarchy. |
 | Initial-card latency boundary | Passed: a DOM interaction regression verifies rendering initial marketplace cards does not invoke page verification, while clicking Verify full specifications invokes the per-card verification callback exactly once. |
+| Reliable laptop challenge fallback | Passed: the Home product-search outcome flow resolves both provider-error and empty-live-result laptop paths into four clearly labelled deterministic Vendor A/B template cards rather than an empty error card. |
+| Laptop best-fit recommendation | Passed: deterministic evaluation selects one eligible best match, exposes its score, and retains mismatched templates as explicit blocked alternatives. |
+| Laptop policy-agreement surface | Passed: the recorded requester agreement is retrieved from the procurement audit and rendered above successful product cards, alongside per-card normalized vendor statements and explicit template provenance. |
+| Laptop challenge responsive review | Passed: the real user-facing Laptop demo action now exercises the same production provider-error fallback resolver, captured at desktop and 390px mobile widths with pre-built vendor cards, policy agreement, demo provenance, best-fit selection, and vendor statement. |
+| Normal requester fallback flow | Passed: a DOM interaction test completes the ordinary Home brief, explicit policy agreement, product-search initiation, simulated provider error, and deterministic Vendor A/B card rendering without using the dedicated demo route. |

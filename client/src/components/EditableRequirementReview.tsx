@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import React from "react";
 import { ArrowRight, Plus, ShieldCheck, Trash2 } from "lucide-react";
 import type { BuyingBrief, Requirement } from "@/domain/generic-procurement";
 

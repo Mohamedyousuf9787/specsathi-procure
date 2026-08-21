@@ -1,7 +1,7 @@
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
-import { getExplicitFullVerificationRequest, getInitialProductSearchState, getProductSearchGuidance, prepareInitialMarketplaceListings, SpecificationPanel, summarizeProductListings, VendorOfferStatement, type ProductListing } from "./ProductListingsPanel";
+import ProductListingsPanel, { getExplicitFullVerificationRequest, getInitialProductSearchState, getProductSearchGuidance, prepareInitialMarketplaceListings, SpecificationPanel, summarizeProductListings, VendorOfferStatement, type ProductListing } from "./ProductListingsPanel";
 
 const listing = (policy: ProductListing["policy"]): ProductListing => ({ id: policy, title: "Example product", merchant: "Example merchant", priceText: "₹1,000", rating: null, reviews: null, imageUrl: null, productUrl: "https://example.test/product", delivery: "3 days", availability: "In stock", completeness: policy === "unverified" ? "unverified" : "complete", policy });
 
@@ -47,5 +47,11 @@ describe("marketplace product-card summary", () => {
     expect(getInitialProductSearchState([candidate]).verificationRequest).toBeNull();
     expect(getExplicitFullVerificationRequest("laptop", candidate)).toEqual({ category: "laptop", products: [{ id: candidate.id, title: candidate.title, productUrl: "https://example.test/product" }] });
     expect(getExplicitFullVerificationRequest("laptop", { ...candidate, productUrl: null })).toBeNull();
+  });
+
+  it("renders the confirmed policy agreement above successful product cards", () => {
+    const markup = renderToStaticMarkup(createElement(ProductListingsPanel, { state: { status: "live", listings: [listing("eligible")] }, policyAgreement: "Confirmed category, budget, delivery, and authority boundary." }));
+    expect(markup).toContain("Confirmed policy agreement:");
+    expect(markup).toContain("Confirmed category, budget, delivery, and authority boundary.");
   });
 });
