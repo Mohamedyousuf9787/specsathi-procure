@@ -220,3 +220,10 @@
 - [x] Preserve opt-in live provider validation with bounded, secret-safe checks for Gemini, SerpAPI, Tavily, and Firecrawl.
 - [x] Improve live product-search responsiveness without changing fallback, policy, vendor, authorization, or audit behavior.
 - [x] Verify the complete test suite, TypeScript, build, runtime, provider safeguards, performance behavior, checkpoint, and GitHub synchronization.
+
+## Supplied Verification Checklist Audit
+
+- [x] Consolidate the four supplied checklists into a non-duplicated implementation and verification matrix.
+- [x] Reproduce and verify every current behavior or defect claimed by the supplied checklists.
+- [x] Fix confirmed defects only, preserving all working procurement, provider, policy, authorization, audit, and export behavior.
+- [x] Run and record full deterministic tests, provider smoke checks, TypeScript, production build, runtime, responsive UI, source safety, checkpoint, and GitHub synchronization.
