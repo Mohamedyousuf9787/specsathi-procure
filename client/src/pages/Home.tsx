@@ -56,7 +56,7 @@ import ProcurementInfoPanel from "@/components/ProcurementInfoPanel";
 const GenericProcurementWorkspace = lazy(() => import("@/components/GenericProcurementWorkspace"));
 
 const BRAND_MARK = "/manus-storage/specanic-mark_c2fb1e15.png";
-const NIGHT_DESK = "/manus-storage/specanic-night-desk_453cc6e6.png";
+const NIGHT_DESK = "/assets/specanic-night-desk.png";
 const EVIDENCE_TILE = "/manus-storage/specanic-evidence-tile_0e62362b.png";
 type ProductListingState = ProductListingViewState;
 const goldenBrief =
