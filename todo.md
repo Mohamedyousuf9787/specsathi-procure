@@ -24,6 +24,23 @@
 - [x] Add server-procedure coverage for Gemini simple-language extraction with a mocked structured response.
 - [x] Verify live Gemini and SerpAPI runtime responses and server logs contain no provider secret values.
 - [x] Capture desktop and mobile verification for editable confirmation and rendered product listings, then re-read final QA context.
+- [x] Diagnose why the current live listing experience is perceived as web links rather than usable in-app product cards.
+- [x] Evaluate and document a genuinely free product-data source and in-app listing approach, including evidence and rate-limit boundaries.
+- [x] Replace the current listing presentation with the selected free in-app product-card flow while retaining deterministic policy labels and offline fallback.
+- [x] Evaluate an automatic product-discovery approach that avoids manual Google Sheet maintenance and an eBay developer account.
+- [x] Make automatic in-app product cards visually primary while retaining web links only as secondary supporting evidence.
+- [x] Redesign the procurement workspace around a product-card-first results header, summary, and clear policy legend.
+- [x] Move live web links into a collapsed supporting-evidence disclosure that does not compete with marketplace product cards.
+- [x] Add explicit no-results, provider-fallback, and product-card loading states that explain the next safe action.
+- [x] Add regression coverage and desktop/mobile visual verification for the card-first product-results journey.
+- [x] Document the automatic card-first approach, its marketplace-evidence boundary, and provider/rate-limit fallback behavior in the repository.
+- [x] Display a visible product-policy legend explaining Eligible, Approval needed, Blocked, and Unverified.
+- [x] Add regression coverage for the product-card no-results/fallback language and supporting-source secondary treatment.
+- [x] Re-read the final QA and card-first context records before saving the release checkpoint.
+- [x] Add regression coverage that proves supporting sources remain a secondary collapsed disclosure, then rerun the suite.
+- [x] Read back the finalized QA report and card-first checkpoint record after the last updates.
+- [x] Add rendered-component coverage proving the supporting-sources disclosure is closed by default and secondary.
+- [x] Re-read the final QA report and card-first checkpoint record after the final rendered-coverage update.
 
 - [x] Inspect available connectors and record the approved provider architecture without exposing credentials.
 - [x] Upgrade the static application to a secure full-stack project and preserve the local demo path.
