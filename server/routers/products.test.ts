@@ -55,3 +55,14 @@ describe("shopping product normalization", () => {
     expect(third).toEqual(first);
   });
 });
+
+it("keeps missing live requirement evidence unknown instead of marking the listing eligible", () => {
+  const [listing] = normalizeShoppingResults({ shopping_results: [{ title: "Business laptop 8 GB RAM", source: "Store", price: "₹39,000", extracted_price: 39000, product_link: "https://example.com/product", availability: "In stock" }] }, 45000, 40000, "laptop", [{ key: "ram_gb", label: "RAM", operator: "at_least", value: 16, unit: "GB" }, { key: "storage_gb", label: "SSD storage", operator: "at_least", value: 512, unit: "GB" }]);
+  expect(listing?.requirementMatches).toEqual(expect.arrayContaining([expect.objectContaining({ label: "RAM", status: "FAIL" }), expect.objectContaining({ label: "SSD storage", status: "UNKNOWN" })]));
+  expect(listing?.policy).toBe("unverified");
+});
+
+it("detects category-specific fast profiles without showing laptop fields for furniture", () => {
+  expect(normalizeFastMarketplaceSpecifications("furniture", "Mesh office chair adjustable height lumbar support").specificationProfile).toBe("furniture");
+  expect(normalizeFastMarketplaceSpecifications("furniture", "Mesh office chair adjustable height lumbar support").specifications.map(specification => specification.label)).not.toContain("RAM");
+});

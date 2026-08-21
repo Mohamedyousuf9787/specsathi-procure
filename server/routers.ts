@@ -7,6 +7,7 @@ import { liveSearchRouter } from "./routers/liveSearch";
 import { auditRouter } from "./routers/audit";
 import { productsRouter } from "./routers/products";
 import { specificationsRouter } from "./routers/specifications";
+import { statusRouter } from "./routers/status";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -26,6 +27,7 @@ export const appRouter = router({
   audit: auditRouter,
   products: productsRouter,
   specifications: specificationsRouter,
+  status: statusRouter,
 
   // TODO: add feature routers here, e.g.
   // todo: router({

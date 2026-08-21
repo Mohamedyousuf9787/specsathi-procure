@@ -10,6 +10,8 @@ export interface VendorSearchProvider {
   search(input: { brief: BuyingBrief; query: string }): Promise<VendorOffer[]>;
 }
 
+export type RequirementMatchStatus = "PASS" | "PARTIAL" | "FAIL" | "UNKNOWN";
+export type RequirementMatch = { key: string; label: string; requested: string; actual: string; status: RequirementMatchStatus };
 export type GenericOfferEvaluation = {
   offer: VendorOffer;
   score: number;
@@ -17,6 +19,7 @@ export type GenericOfferEvaluation = {
   eligible: boolean;
   requiresApproval: boolean;
   scoreBreakdown: Record<string, number>;
+  requirementMatches: RequirementMatch[];
 };
 
 export type GenericRecommendation = {
@@ -95,29 +98,39 @@ export function buildVendorQuery(brief: BuyingBrief) {
   return `category: ${brief.productCategory}; quantity: ${brief.quantity}; requirements: ${requirements}; budget: ${budget}; availability: online purchase`;
 }
 
-function requirementMatches(offer: VendorOffer, requirement: Requirement) {
+function evaluateRequirement(offer: VendorOffer, requirement: Requirement): RequirementMatch {
   const value = requirement.key === "return_days" ? offer.returnDays : offer.attributes[requirement.key];
+  const requested = `${String(requirement.value)}${requirement.unit ? ` ${requirement.unit}` : ""}`;
   const description = `${offer.description ?? ""} ${offer.productName}`.toLowerCase();
-  if (value === undefined) return requirement.operator === "contains" && description.includes(String(requirement.value).toLowerCase());
-  if (requirement.operator === "equals") return String(value).toLowerCase() === String(requirement.value).toLowerCase();
-  if (requirement.operator === "at_least") return Number(value) >= Number(requirement.value);
-  if (requirement.operator === "at_most" || requirement.operator === "within_days") return Number(value) <= Number(requirement.value);
-  if (requirement.operator === "contains") return typeof value === "boolean" ? value : String(value).toLowerCase().includes(String(requirement.value).toLowerCase());
-  return true;
+  if (value === undefined || value === null || value === "") return { key: requirement.key, label: requirement.label, requested, actual: "Unavailable", status: "UNKNOWN" };
+  const actual = `${String(value)}${requirement.unit ? ` ${requirement.unit}` : ""}`;
+  let status: RequirementMatchStatus = "FAIL";
+  if (requirement.operator === "equals") status = typeof value === "boolean" ? value === requirement.value ? "PASS" : "FAIL" : String(value).toLowerCase().trim() === String(requirement.value).toLowerCase().trim() ? "PASS" : "FAIL";
+  else if (requirement.operator === "at_least") status = Number.isFinite(Number(value)) && Number(value) >= Number(requirement.value) ? "PASS" : "FAIL";
+  else if (requirement.operator === "at_most" || requirement.operator === "within_days") status = Number.isFinite(Number(value)) && Number(value) <= Number(requirement.value) ? "PASS" : "FAIL";
+  else if (requirement.operator === "contains") status = typeof value === "boolean" ? value === true && (requirement.value === true || description.includes(String(requirement.value).toLowerCase()) || description.includes(requirement.label.toLowerCase())) ? "PASS" : "FAIL" : String(value).toLowerCase().includes(String(requirement.value).toLowerCase()) ? "PASS" : "FAIL";
+  return { key: requirement.key, label: requirement.label, requested, actual, status };
 }
 
 export function evaluateGenericOffer(brief: BuyingBrief, offer: VendorOffer): GenericOfferEvaluation {
+  const requirementMatches = brief.hardRequirements.map(requirement => evaluateRequirement(offer, requirement));
+  const returnRequirementDays = brief.returnPolicyRequirement?.match(/\d+/)?.[0] ? Number(brief.returnPolicyRequirement.match(/\d+/)?.[0]) : undefined;
   const hardFailures = [
-    offer.availability === "unavailable" && "Vendor reported this offer unavailable",
+    (offer.availability === "unavailable" || offer.availableQuantity <= 0) && "Vendor reported this offer unavailable",
     offer.availableQuantity < brief.quantity && `Only ${offer.availableQuantity} units available for a request of ${brief.quantity}`,
-    ...brief.hardRequirements.filter((requirement) => !requirementMatches(offer, requirement)).map((requirement) => `Missing or unverified requirement: ${requirement.label}`),
+    ...requirementMatches.filter(match => match.status !== "PASS").map(match => `Missing or unverified requirement: ${match.label}`),
+    brief.deliveryDeadlineDays && !offer.deliveryDays && "Delivery time is not reported for the requested deadline",
     brief.deliveryDeadlineDays && offer.deliveryDays && offer.deliveryDays > brief.deliveryDeadlineDays && `Delivery is ${offer.deliveryDays} days; deadline is ${brief.deliveryDeadlineDays} days`,
+    returnRequirementDays && !offer.returnDays && "Return window is not reported for the requested policy",
+    returnRequirementDays && offer.returnDays && offer.returnDays < returnRequirementDays && `Return window is ${offer.returnDays} days; requirement is at least ${returnRequirementDays} days`,
+    brief.sellerRequirement && !`${offer.vendorName} ${offer.description ?? ""}`.toLowerCase().includes(brief.sellerRequirement.toLowerCase()) && `Seller requirement is not verified: ${brief.sellerRequirement}`,
     brief.maxUnitPriceInr && offer.unitPriceInr > brief.maxUnitPriceInr && `Unit price exceeds the stated budget of ₹${brief.maxUnitPriceInr.toLocaleString("en-IN")}`,
     brief.maxTotalPriceInr && offer.unitPriceInr * brief.quantity > brief.maxTotalPriceInr && `Batch total exceeds the stated budget of ₹${brief.maxTotalPriceInr.toLocaleString("en-IN")}`,
   ].filter(Boolean) as string[];
-  const totalRequirements = Math.max(1, brief.hardRequirements.length);
-  const matchedRequirements = brief.hardRequirements.filter((requirement) => requirementMatches(offer, requirement)).length;
-  const requirementFit = Math.round((matchedRequirements / totalRequirements) * 30);
+  const totalRequirements = Math.max(1, requirementMatches.length);
+  const matchedRequirements = requirementMatches.filter(match => match.status === "PASS").length;
+  const partialRequirements = requirementMatches.filter(match => match.status === "PARTIAL").length;
+  const requirementFit = Math.round(((matchedRequirements + partialRequirements * 0.5) / totalRequirements) * 30);
   const referencePrice = brief.maxUnitPriceInr ?? (brief.maxTotalPriceInr ? Math.floor(brief.maxTotalPriceInr / brief.quantity) : offer.unitPriceInr);
   const priceValue = Math.max(0, Math.round((1 - Math.max(0, offer.unitPriceInr - referencePrice) / Math.max(1, referencePrice)) * 25));
   const delivery = brief.deliveryDeadlineDays && offer.deliveryDays ? Math.max(0, Math.round((1 - Math.max(0, offer.deliveryDays - 1) / brief.deliveryDeadlineDays) * 20)) : 16;
@@ -130,6 +143,7 @@ export function evaluateGenericOffer(brief: BuyingBrief, offer: VendorOffer): Ge
     requiresApproval: Boolean(brief.authorizationLimitInr && offer.unitPriceInr > brief.authorizationLimitInr),
     score: requirementFit + priceValue + delivery + reliability + returns,
     scoreBreakdown: { requirements: requirementFit, priceValue, delivery, reliability, returns },
+    requirementMatches,
   };
 }
 

@@ -7,10 +7,16 @@ const productInputSchema = z.object({ id: z.string().trim().min(1).max(180), tit
 const firecrawlProductSchema = z.object({ title: z.string().optional(), brand: z.string().optional(), category: z.string().optional(), description: z.string().optional() }).passthrough();
 const firecrawlResponseSchema = z.object({ success: z.boolean().optional(), data: z.object({ markdown: z.string().optional(), product: firecrawlProductSchema.optional() }).passthrough().optional() }).passthrough();
 
-export type SpecificationProfile = "laptop" | "motorcycle" | "generic";
+export type SpecificationProfile = "laptop" | "mobile" | "tyre" | "furniture" | "gpu" | "mouse" | "printer" | "motorcycle" | "generic";
 export type EnrichedProductSpecifications = { id: string; profile: SpecificationProfile; status: "sourced" | "unavailable"; specifications: Array<z.infer<typeof specificationSchema>>; sourceUrl: string };
 export const specificationFieldContracts: Record<SpecificationProfile, Array<{ label: string; sourceDefinition: string }>> = {
   laptop: [{ label: "Processor", sourceDefinition: "CPU or processor model" }, { label: "RAM", sourceDefinition: "Installed memory capacity and generation" }, { label: "Storage", sourceDefinition: "Installed SSD, HDD, or NVMe capacity" }, { label: "Graphics", sourceDefinition: "Named GPU or integrated graphics model" }, { label: "Display", sourceDefinition: "Screen size, panel, or resolution" }, { label: "Operating system", sourceDefinition: "Named operating system" }],
+  mobile: [{ label: "Processor", sourceDefinition: "Mobile processor or chipset" }, { label: "RAM", sourceDefinition: "Installed memory capacity" }, { label: "Storage", sourceDefinition: "Internal storage capacity" }, { label: "Display", sourceDefinition: "Screen size, panel, or resolution" }, { label: "Camera", sourceDefinition: "Camera configuration" }, { label: "Battery", sourceDefinition: "Battery capacity" }, { label: "Network", sourceDefinition: "Network generation" }, { label: "Warranty", sourceDefinition: "Declared warranty" }],
+  tyre: [{ label: "Size", sourceDefinition: "Tyre size and fitment" }, { label: "Construction", sourceDefinition: "Radial, tubeless, or bias construction" }, { label: "Load index", sourceDefinition: "Load index" }, { label: "Speed rating", sourceDefinition: "Speed rating" }, { label: "Warranty", sourceDefinition: "Declared warranty" }],
+  furniture: [{ label: "Material", sourceDefinition: "Declared material" }, { label: "Dimensions", sourceDefinition: "Declared dimensions" }, { label: "Weight capacity", sourceDefinition: "Declared weight capacity" }, { label: "Adjustability", sourceDefinition: "Height, armrest, or backrest adjustability" }, { label: "Support", sourceDefinition: "Lumbar or ergonomic support" }, { label: "Warranty", sourceDefinition: "Declared warranty" }],
+  gpu: [{ label: "GPU model", sourceDefinition: "Named graphics processor" }, { label: "VRAM", sourceDefinition: "Graphics memory capacity" }, { label: "Memory type", sourceDefinition: "Graphics memory type" }, { label: "Form factor", sourceDefinition: "Card dimensions or slot format" }, { label: "Warranty", sourceDefinition: "Declared warranty" }],
+  mouse: [{ label: "Connection", sourceDefinition: "Wireless or wired connection" }, { label: "Sensitivity", sourceDefinition: "Sensor resolution" }, { label: "Buttons", sourceDefinition: "Button count" }, { label: "Compatibility", sourceDefinition: "Supported operating systems or devices" }, { label: "Warranty", sourceDefinition: "Declared warranty" }],
+  printer: [{ label: "Print mode", sourceDefinition: "Duplex, color, or monochrome mode" }, { label: "Print speed", sourceDefinition: "Pages per minute" }, { label: "Connectivity", sourceDefinition: "USB, Wi-Fi, or network connectivity" }, { label: "Paper size", sourceDefinition: "Supported paper sizes" }, { label: "Warranty", sourceDefinition: "Declared warranty" }],
   motorcycle: [{ label: "Engine", sourceDefinition: "Engine displacement" }, { label: "Mileage", sourceDefinition: "Claimed mileage or fuel efficiency" }, { label: "Fuel tank", sourceDefinition: "Fuel-tank capacity" }, { label: "Power", sourceDefinition: "Claimed maximum power" }, { label: "Torque", sourceDefinition: "Claimed maximum torque" }, { label: "Transmission", sourceDefinition: "Gearbox or transmission" }, { label: "Brakes", sourceDefinition: "Brake and ABS configuration" }, { label: "Kerb weight", sourceDefinition: "Kerb or curb weight" }],
   generic: [{ label: "Model", sourceDefinition: "Named product model" }, { label: "Capacity", sourceDefinition: "Declared capacity" }, { label: "Dimensions", sourceDefinition: "Declared dimensions" }, { label: "Material", sourceDefinition: "Declared material" }, { label: "Warranty", sourceDefinition: "Declared warranty" }],
 };
@@ -27,6 +33,12 @@ const captureAll = (text: string, expression: RegExp) => Array.from(text.matchAl
 export function getSpecificationProfile(category: string, title = ""): SpecificationProfile {
   const text = `${category} ${title}`.toLowerCase();
   if (/laptop|notebook|ultrabook|macbook/.test(text)) return "laptop";
+  if (/mobile|phone|smartphone|iphone|android/.test(text)) return "mobile";
+  if (/tyre|tire/.test(text)) return "tyre";
+  if (/^furniture\b|\b(?:chair|desk|table|cabinet)\b/.test(category.toLowerCase()) && !/^office\s+chair\b/i.test(category.trim())) return "furniture";
+  if (/gpu|graphics card|video card|graphics/.test(text)) return "gpu";
+  if (/mouse|mice/.test(text)) return "mouse";
+  if (/printer|scanner|copier/.test(text)) return "printer";
   if (/motorcycle|motorbike|motor bike|bike\b|scooter/.test(text)) return "motorcycle";
   return "generic";
 }
@@ -57,6 +69,46 @@ export function normalizeSourcedSpecifications(profile: SpecificationProfile, ti
     add("Graphics", capture(source, /(?:graphics|gpu)\s*[:\-]?\s*([^,;|.]{3,70})/i) ?? capture(source, /((?:nvidia\s+)?(?:geforce\s+)?rtx\s*\d{3,4}(?:\s*(?:ti|super))?|radeon\s+rx\s*\d{3,4}|intel\s+(?:arc|iris)\s*[^,;|.]{0,28})/i));
     add("Display", capture(source, /(?:display|screen)\s*[:\-]?\s*([^,;|.]{3,80})/i) ?? capture(source, /(\d{2}(?:\.\d+)?\s*(?:inch|in)\s*(?:fhd|qhd|uhd|oled|ips)?[^,;|.]{0,36})/i));
     add("Operating system", capture(source, /(?:operating system|os)\s*[:\-]?\s*((?:windows|macos|chromeos|linux)[^,;|.]{0,45})/i));
+  } else if (profile === "mobile") {
+    add("Processor", capture(source, /(?:processor|chipset|snapdragon|mediatek)\s*[:\-]?\s*([^,;|.]{3,60})/i));
+    add("RAM", capture(source, /(?:ram|memory)\s*[:\-]?\s*(\d+(?:\.\d+)?\s*gb)/i));
+    add("Storage", capture(source, /(?:storage|rom)\s*[:\-]?\s*(\d+(?:\.\d+)?\s*(?:gb|tb))/i));
+    add("Display", capture(source, /(?:display|screen)\s*[:\-]?\s*([^,;|.]{3,70})/i));
+    add("Camera", capture(source, /(?:camera)\s*[:\-]?\s*([^,;|.]{3,70})/i));
+    add("Battery", capture(source, /(?:battery)\s*[:\-]?\s*(\d{3,5}\s*mah)/i));
+    add("Network", capture(source, /(\b(?:4g|5g)\b)/i));
+    add("Warranty", capture(source, /(?:warranty)\s*[:\-]?\s*([^,;|.]{2,60})/i));
+  } else if (profile === "tyre") {
+    add("Size", capture(source, /(?:size|fitment)\s*[:\-]?\s*(\d{2,3}\/\d{2}\s*R?\s*\d{2})/i) ?? capture(source, /(\d{2,3}\/\d{2}\s*R?\s*\d{2})/i));
+    add("Construction", capture(source, /(tubeless|radial|bias)/i));
+    add("Load index", capture(source, /(?:load\s*index)\s*[:\-]?\s*([A-Z0-9]{2,5})/i));
+    add("Speed rating", capture(source, /(?:speed\s*rating)\s*[:\-]?\s*([A-Z])\b/i));
+    add("Warranty", capture(source, /(?:warranty)\s*[:\-]?\s*([^,;|.]{2,60})/i));
+  } else if (profile === "furniture") {
+    add("Material", capture(source, /(?:material|made\s+of)\s*[:\-]?\s*([^,;|.]{2,60})/i));
+    add("Dimensions", capture(source, /(?:dimensions?)\s*[:\-]?\s*([^,;|.]{3,90})/i));
+    add("Weight capacity", capture(source, /(?:weight\s*capacity|supports)\s*[:\-]?\s*(\d+(?:\.\d+)?\s*kg)/i));
+    add("Adjustability", capture(source, /(adjustable\s+(?:height|armrests|backrest)|height[- ]adjustable)/i));
+    add("Support", capture(source, /(lumbar\s+support|ergonomic)/i));
+    add("Warranty", capture(source, /(?:warranty)\s*[:\-]?\s*([^,;|.]{2,60})/i));
+  } else if (profile === "gpu") {
+    add("GPU model", capture(source, /((?:nvidia\s+)?(?:geforce\s+)?rtx\s*\d{3,4}(?:\s*(?:ti|super))?|radeon\s+rx\s*\d{3,4})/i));
+    add("VRAM", capture(source, /(?:vram|graphics\s+memory)\s*[:\-]?\s*(\d+(?:\.\d+)?\s*gb)/i));
+    add("Memory type", capture(source, /(GDDR[456X])/i));
+    add("Form factor", capture(source, /(?:form\s*factor)\s*[:\-]?\s*([^,;|.]{2,50})/i));
+    add("Warranty", capture(source, /(?:warranty)\s*[:\-]?\s*([^,;|.]{2,60})/i));
+  } else if (profile === "mouse") {
+    add("Connection", capture(source, /(Bluetooth|2\.4\s*GHz|wired|wireless)/i));
+    add("Sensitivity", capture(source, /(?:dpi|sensitivity)\s*[:\-]?\s*(\d{3,5}\s*dpi)/i));
+    add("Buttons", capture(source, /(?:buttons?)\s*[:\-]?\s*(\d+)/i));
+    add("Compatibility", capture(source, /(?:compatib(?:ility|le)|works\s+with)\s*[:\-]?\s*([^,;|.]{3,60})/i));
+    add("Warranty", capture(source, /(?:warranty)\s*[:\-]?\s*([^,;|.]{2,60})/i));
+  } else if (profile === "printer") {
+    add("Print mode", capture(source, /(duplex|single-sided|colour|color|monochrome)/i));
+    add("Print speed", capture(source, /(?:print\s+speed)\s*[:\-]?\s*(\d+(?:\.\d+)?\s*ppm)/i));
+    add("Connectivity", capture(source, /(?:connectivity|connection)\s*[:\-]?\s*(usb|wi[- ]?fi|ethernet|wireless)/i));
+    add("Paper size", capture(source, /(?:paper\s+size|media\s+size)\s*[:\-]?\s*([^,;|.]{2,40})/i));
+    add("Warranty", capture(source, /(?:warranty)\s*[:\-]?\s*([^,;|.]{2,60})/i));
   } else if (profile === "motorcycle") {
     add("Engine", capture(source, /(?:engine|displacement)\s*[:\-]?\s*(\d+(?:\.\d+)?\s*cc)/i) ?? capture(source, /(\d+(?:\.\d+)?\s*cc)/i));
     add("Mileage", capture(source, /(?:mileage|fuel efficiency)\s*[:\-]?\s*(\d+(?:\.\d+)?\s*(?:kmpl|km\/l|km per litre))/i) ?? capture(source, /(\d+(?:\.\d+)?\s*(?:kmpl|km\/l|km per litre))/i));
