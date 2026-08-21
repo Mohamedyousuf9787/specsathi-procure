@@ -2,7 +2,7 @@
 
 ## Architecture
 
-SpecSathi is now a full-stack application. Real NLP will run only in a server-side tRPC procedure using the platform-injected LLM credential. The browser will never receive a model key. The LLM is limited to structured extraction; deterministic validation, vendor comparison, authorization, confirmation, mock purchase, and audit logic remain code-owned.
+Specanic is now a full-stack application. Real NLP will run only in a server-side tRPC procedure using the platform-injected LLM credential. The browser will never receive a model key. The LLM is limited to structured extraction; deterministic validation, vendor comparison, authorization, confirmation, mock purchase, and audit logic remain code-owned.
 
 ## Provider decisions
 

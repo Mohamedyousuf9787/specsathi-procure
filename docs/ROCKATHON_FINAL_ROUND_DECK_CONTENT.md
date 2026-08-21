@@ -1,8 +1,8 @@
-# SpecSathi Procure — Rockathon’26 Final Round
+# Specanic — Rockathon’26 Final Round
 
 ## Cover
 
-**SpecSathi Procure**
+**Specanic**
 
 **Autonomous procurement control with human-held authorization boundaries**
 
@@ -12,7 +12,7 @@
 
 - Requesters need faster sourcing across online options, but price alone cannot authorize a purchase.
 - Procurement decisions must preserve budget, delivery, specification, availability, and approval constraints.
-- SpecSathi turns an ordinary-language brief into an inspectable decision record.
+- Specanic turns an ordinary-language brief into an inspectable decision record.
 
 ## Slide 2
 
@@ -52,7 +52,7 @@
 ### Mandatory edge case: the top vendor is unavailable
 
 - The dedicated scenario makes the nominal top-fit Vendor A offer unavailable.
-- SpecSathi records the unavailable evidence, re-ranks the full candidate set, and selects the next eligible Vendor B offer.
+- Specanic records the unavailable evidence, re-ranks the full candidate set, and selects the next eligible Vendor B offer.
 - The audit thread records the reason without changing the requester’s requirements.
 
 ## Slide 7

@@ -14,7 +14,7 @@ related:
 
 ## Delivered capability
 
-SpecSathi now has opt-in server-side structured NLP, authenticated live Tavily evidence, strict deterministic procurement controls, authenticated persistence of provider metadata and actual generic audit events, plus an explicit anonymous local-audit fallback. Payments remain simulated.
+Specanic now has opt-in server-side structured NLP, authenticated live Tavily evidence, strict deterministic procurement controls, authenticated persistence of provider metadata and actual generic audit events, plus an explicit anonymous local-audit fallback. Payments remain simulated.
 
 ## Security behavior
 

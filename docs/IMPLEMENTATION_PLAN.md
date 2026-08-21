@@ -1,4 +1,4 @@
-# SpecSathi Procure — Implementation Plan
+# Specanic — Implementation Plan
 
 ## Goal
 

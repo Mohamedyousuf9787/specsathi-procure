@@ -2,7 +2,7 @@
 
 ## Assessment conclusion
 
-> **SpecSathi Procure now demonstrates the three P0 commerce-control behaviours needed for a defensible final-round core build: a visible all-candidates comparison, an interactive vendor-confirmation/counter-offer boundary, and an explicit unavailable-top-vendor re-ranking scenario.**
+> **Specanic now demonstrates the three P0 commerce-control behaviours needed for a defensible final-round core build: a visible all-candidates comparison, an interactive vendor-confirmation/counter-offer boundary, and an explicit unavailable-top-vendor re-ranking scenario.**
 
 The system remains deliberate about its evidence boundary. **Live SerpAPI marketplace cards** are distinct from the clearly labelled deterministic Vendor A/Vendor B challenge data. Every recommendation is policy-scored, every material vendor change is re-evaluated, and all purchases remain simulated with no payment action.
 

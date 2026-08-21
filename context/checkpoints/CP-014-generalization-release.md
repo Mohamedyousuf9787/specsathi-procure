@@ -17,7 +17,7 @@ related:
 
 ## Outcome
 
-SpecSathi Procure is category-agnostic in its procurement mechanism and laptop-focused in its primary demonstration. Natural-language brief input is primary; demos are shortcuts, not category tabs. The original multi-item flow remains an offline compatibility path.
+Specanic is category-agnostic in its procurement mechanism and laptop-focused in its primary demonstration. Natural-language brief input is primary; demos are shortcuts, not category tabs. The original multi-item flow remains an offline compatibility path.
 
 ## Verified matrix
 

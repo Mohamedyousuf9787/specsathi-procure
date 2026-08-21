@@ -11,7 +11,7 @@ related:
   - "[[03-next-actions]]"
 ---
 
-# SpecSathi Context Vault
+# Specanic Context Vault
 
 This vault is the recoverable working memory for the offline-first procurement-control demo. Start every resumed session with [[01-current-state]], then read [[02-active-work]] and [[03-next-actions]].
 

@@ -1,8 +1,8 @@
-# SpecSathi Procure Complete Context Archive
+# Specanic Complete Context Archive
 
 ## Purpose
 
-This archive is the safe, reviewable handoff for the final project state. It contains the full tracked implementation context required to inspect, test, and rebuild SpecSathi Procure without including environment credentials or machine-specific runtime output.
+This archive is the safe, reviewable handoff for the final project state. It contains the full tracked implementation context required to inspect, test, and rebuild Specanic without including environment credentials or machine-specific runtime output.
 
 ## Included Roots
 

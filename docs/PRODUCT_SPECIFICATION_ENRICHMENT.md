@@ -2,7 +2,7 @@
 
 ## Purpose
 
-After a requester confirms a buying brief, SpecSathi already receives marketplace product URLs with its automatic product cards. The enrichment layer fetches **only those returned product URLs** server-side and displays evidence-bound technical specifications beneath each card. It never invents specifications, treats scraped text as an approved offer, or changes a card’s procurement-policy state.
+After a requester confirms a buying brief, Specanic already receives marketplace product URLs with its automatic product cards. The enrichment layer fetches **only those returned product URLs** server-side and displays evidence-bound technical specifications beneath each card. It never invents specifications, treats scraped text as an approved offer, or changes a card’s procurement-policy state.
 
 ## Category profiles
 

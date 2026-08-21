@@ -12,7 +12,7 @@ related:
 
 # Checkpoint CP-015 — Real NLP and Live Evidence
 
-SpecSathi now has a server-side, opt-in real NLP route with strict schema and deterministic fallback, plus authenticated server-side Tavily evidence search. The live model and Tavily endpoints were exercised successfully. External snippets remain evidence only; local deterministic offers retain control of compliance, policy, confirmation, and mock purchase outcomes. Twenty-five unit tests cover the unified server/client application before the live evidence adapter’s health test is added to the final full suite.
+Specanic now has a server-side, opt-in real NLP route with strict schema and deterministic fallback, plus authenticated server-side Tavily evidence search. The live model and Tavily endpoints were exercised successfully. External snippets remain evidence only; local deterministic offers retain control of compliance, policy, confirmation, and mock purchase outcomes. Twenty-five unit tests cover the unified server/client application before the live evidence adapter’s health test is added to the final full suite.
 
 The final verification suite contains 28 tests. Corrected provider enablement order: adapter + normalization test, credential reprovisioning + authenticated health test, fallback regression, then workspace enablement.
 

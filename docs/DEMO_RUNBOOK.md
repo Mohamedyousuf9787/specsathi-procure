@@ -14,7 +14,7 @@
 2. Select **Inspect policy record**, then **Start procurement**.
 3. Show that the same comparison, policy tape, confirmation, simulated order, and audit flow work without a chair tab.
 4. Return to **New brief** and enter: `Find 5 office printers with duplex printing under ₹75,000 total.`
-5. Show that SpecSathi searches both local sources and blocks safely instead of inventing a printer offer.
+5. Show that Specanic searches both local sources and blocks safely instead of inventing a printer offer.
 
 ## Compatibility proof
 

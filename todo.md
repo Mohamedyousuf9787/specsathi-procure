@@ -195,7 +195,7 @@
 - [x] Re-run and record the complete integration QA matrix after audit persistence and safety-hardening changes.
 - [x] Test the full NLP procedure’s 429 fallback path with a mocked provider and verify the final hardening records before release.
 
-- [x] Read the full migration prompt and compare it with the current SpecSathi implementation.
+- [x] Read the full migration prompt and compare it with the current Specanic implementation.
 - [x] Audit source, tests, documentation, and the existing context vault; record laptop-demo preservation risks.
 - [x] Run and record the current baseline test, type, build, and visual checks without changing behavior.
 - [x] Add the required Phase 11–16 migration notes, agent notes, error template, and laptop baseline checkpoint.
@@ -206,3 +206,10 @@
 - [x] Generalize the intake and confirmation UI without adding fixed product-category tabs.
 - [x] Add laptop and non-laptop regression tests, then run repeatable offline QA and visual verification.
 - [x] Update migration documentation, save a release checkpoint, and provide revised demo instructions.
+
+## Specanic Branding-Only Rename
+
+- [x] Inventory all visible and metadata branding references, separating safe user-facing replacements from internal identifiers that must remain stable.
+- [x] Rename user-facing application, export, metadata, documentation, test-fixture, and demo branding from the prior brand to Specanic without changing workflow or integrations.
+- [x] Update the existing judge presentation branding only, preserving slide content, layout, and presentation structure.
+- [x] Verify the final branding scan, TypeScript, full tests, production build, runtime, desktop/mobile UI, checkpoint, and GitHub synchronization.

@@ -1,6 +1,10 @@
-# SpecSathi Procure
+# Specanic
 
-SpecSathi Procure is a **category-agnostic, offline-first procurement-control desk** with a polished laptop demonstration. A user provides a natural-language buying brief; the application normalizes product, quantity, requirements, budget, delivery, and authorization; compares local Vendor A and Vendor B evidence; acts only within policy; pauses at a human authorization boundary; performs a final confirmation check; creates a simulated order; and records every material event.
+**Specanic — Autonomous AI Procurement Agent**
+
+*From requirements to the right purchase.*
+
+Specanic is a **category-agnostic, offline-first procurement-control desk** with a polished laptop demonstration. A user provides a natural-language buying brief; the application normalizes product, quantity, requirements, budget, delivery, and authorization; compares local Vendor A and Vendor B evidence; acts only within policy; pauses at a human authorization boundary; performs a final confirmation check; creates a simulated order; and records every material event.
 
 ## Local startup
 

@@ -2,7 +2,7 @@
 
 ## Scope
 
-This record covers the complete capability list requested for the final SpecSathi Procure release. It separates deterministic procurement controls from external-provider checks and preserves the project’s simulated-purchase boundary.
+This record covers the complete capability list requested for the final Specanic release. It separates deterministic procurement controls from external-provider checks and preserves the project’s simulated-purchase boundary.
 
 | Capability | Verified implementation and evidence | Audit outcome |
 | --- | --- | --- |

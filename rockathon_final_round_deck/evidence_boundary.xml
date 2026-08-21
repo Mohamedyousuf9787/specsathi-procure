@@ -4,7 +4,7 @@
   <shape id="header-rule" type="line" x="110" y="94" width="88" height="0" stroke="accent" stroke-width="4"/>
   <text id="kicker" x="110" y="58" width="290" height="22" font="caption" color="muted" wrap="false">03 · EVIDENCE BOUNDARY</text>
   <text id="title" x="110" y="132" width="770" height="68" font="display" size="46" color="primary" line-height="1.05">Real data is fast; verification stays explicit.</text>
-  <text id="subtitle" x="110" y="222" width="760" height="58" font="body" size="20" color="muted" line-height="1.35">SpecSathi separates useful marketplace discovery from evidence a requester must deliberately verify.</text>
+  <text id="subtitle" x="110" y="222" width="760" height="58" font="body" size="20" color="muted" line-height="1.35">Specanic separates useful marketplace discovery from evidence a requester must deliberately verify.</text>
   <shape id="card-live" type="rect" x="110" y="320" width="320" height="245" fill="surface" stroke="hairline" stroke-width="1"/>
   <icon id="card-live-icon" name="search" x="140" y="354" width="36" height="36" color="accent"/>
   <text id="card-live-number" x="140" y="407" width="120" height="20" font="caption" color="accent" wrap="false">01 · IMMEDIATE</text>

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { resolveApproval, runDemo, transitionStatus } from "./procurement";
 
-describe("SpecSathi deterministic procurement demo", () => {
+describe("Specanic deterministic procurement demo", () => {
   it("auto-purchases the compliant items and pauses the monitor exception", () => {
     const session = runDemo();
     expect(session.itemStates.map((state) => state.status)).toEqual(["PURCHASED", "PURCHASED", "PENDING_APPROVAL"]);

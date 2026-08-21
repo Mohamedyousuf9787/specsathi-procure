@@ -2,7 +2,7 @@
   <background color="primary"/>
   <shape id="cover-accent-line" type="line" x="80" y="145" width="190" height="0" stroke="accent" stroke-width="5"/>
   <text id="cover-label" x="80" y="74" width="500" height="24" font="caption" size="14" color="#C9DBF3" wrap="false">ROCKATHON’26 · GRAND FINALE</text>
-  <text id="cover-title" x="80" y="188" width="730" height="180" font="display" size="64" color="#FFFFFF" line-height="1.02" autofit="shrink"><p>SpecSathi</p><p>Procure</p></text>
+  <text id="cover-title" x="80" y="188" width="730" height="180" font="display" size="64" color="#FFFFFF" line-height="1.02" autofit="shrink"><p>Specanic</p></text>
   <text id="cover-subtitle" x="80" y="430" width="660" height="64" font="body" size="24" color="#DCE7F5" line-height="1.28">Autonomous procurement control with human-held authorization boundaries.</text>
   <shape id="cover-record-frame" type="rect" x="900" y="135" width="290" height="420" fill="none" stroke="#6B85BE" stroke-width="1"/>
   <text id="cover-record-kicker" x="930" y="180" width="210" height="22" font="caption" size="14" color="#C9DBF3" wrap="false">CONTROL RECORD</text>

@@ -1,4 +1,4 @@
-# SpecSathi Procure — Design Ground Truth
+# Specanic — Design Ground Truth
 
 ## Reference commitment
 
@@ -45,7 +45,7 @@ Use `Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif` as the ac
 
 ### Brand essence
 
-**SpecSathi Procure is the procurement control desk for teams that want autonomous buying without surrendering authorization or evidence.**
+**Specanic is the procurement control desk for teams that want autonomous buying without surrendering authorization or evidence.**
 
 Personality: **disciplined, calm, accountable**.
 

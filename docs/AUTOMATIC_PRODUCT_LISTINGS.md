@@ -2,7 +2,7 @@
 
 ## Chosen approach
 
-SpecSathi uses the server-side **SerpAPI Google Shopping adapter** to retrieve structured marketplace records after a requester confirms the editable procurement brief. This is an automatic discovery path: the requester does not maintain a spreadsheet, create an eBay developer application, or manually curate product cards.
+Specanic uses the server-side **SerpAPI Google Shopping adapter** to retrieve structured marketplace records after a requester confirms the editable procurement brief. This is an automatic discovery path: the requester does not maintain a spreadsheet, create an eBay developer application, or manually curate product cards.
 
 The application renders the returned title, merchant, price, image when supplied, rating when supplied, availability, delivery information, and original product URL directly inside its procurement workspace. The original listing URL is an evidence link for that individual card; it does not become a procurement order or authorization action.
 

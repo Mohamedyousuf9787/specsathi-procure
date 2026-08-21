@@ -1,8 +1,8 @@
 {
   "project_info": {
-    "title": "SpecSathi Procure",
+    "title": "Specanic",
     "created": 1787309078.176,
-    "last_updated": 1787309310.839,
+    "last_updated": 1787327492.536,
     "total_slides": 10
   },
   "slides": [
@@ -60,7 +60,7 @@
   "outline": [
     {
       "id": "cover",
-      "title": "SpecSathi Procure",
+      "title": "Specanic",
       "summary": "Cover slide with the final-round title and human-held authorization-boundary proposition.",
       "image_plan": "Use a suitable image if needed"
     },
