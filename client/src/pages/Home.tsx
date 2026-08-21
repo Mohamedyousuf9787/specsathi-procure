@@ -44,11 +44,12 @@ import { laptopDemoBrief } from "@/domain/generic-procurement";
 import { runGenericProcurement, type GenericProcurementSession } from "@/domain/generic-vendor-flow";
 import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
+import type { ProductListingViewState } from "@/components/ProductListingsPanel";
 
 const BRAND_MARK = "/manus-storage/specsathi-mark_01ab55be.png";
 const NIGHT_DESK = "/manus-storage/specsathi-night-desk_d321b227.png";
 const EVIDENCE_TILE = "/manus-storage/specsathi-evidence-tile_76cfabb8.png";
-type ProductListingState = { status: "idle" | "loading" | "live" | "fallback"; message?: string; listings: Array<{ id: string; title: string; merchant: string | null; priceText: string | null; priceInr: number | null; rating: number | null; reviews: number | null; imageUrl: string | null; productUrl: string | null; delivery: string | null; availability: string | null; completeness: "complete" | "unverified"; policy: "eligible" | "approval_needed" | "blocked" | "unverified" }> };
+type ProductListingState = ProductListingViewState;
 const goldenBrief =
   "For 8 new joiners, buy adjustable aluminum laptop stands under ₹3,000 each, ergonomic office chairs under ₹12,000 each, and 27-inch QHD HDMI monitors under ₹20,000 each. Delivery is required within 7 days. The agent may approve purchases only within the stated unit limits.";
 
@@ -287,7 +288,22 @@ export default function Home() {
   const [auditPersistence, setAuditPersistence] = useState<"local" | "saving" | "persisted" | "unavailable">("local");
   const persistedAuditKeys = useRef(new Set<string>());
   const liveSearch = trpc.liveSearch.searchEvidence.useMutation({ onSuccess: (result) => setLiveEvidence({ status: result.status, message: result.message, results: result.results }), onError: () => setLiveEvidence({ status: "fallback", message: "Live search could not be reached. Local Vendor A and Vendor B remain active.", results: [] }) });
-  const productSearch = trpc.products.search.useMutation({ onSuccess: (result) => setProductListings({ status: result.status, message: result.message, listings: result.listings }), onError: () => setProductListings({ status: "fallback", message: "Product listing search could not be reached. Local Vendor A and Vendor B remain active.", listings: [] }) });
+  const specificationSearch = trpc.specifications.enrich.useMutation({
+    onSuccess: (result) => setProductListings(current => ({ ...current, listings: current.listings.map(listing => {
+      const enriched = result.results.find(item => item.id === listing.id);
+      return enriched ? { ...listing, specificationStatus: enriched.status, specificationProfile: enriched.profile, specifications: enriched.specifications } : listing;
+    }) })),
+    onError: () => setProductListings(current => ({ ...current, listings: current.listings.map(listing => listing.productUrl ? { ...listing, specificationStatus: "unavailable" } : listing) })),
+  });
+  const productSearch = trpc.products.search.useMutation({
+    onSuccess: (result, variables) => {
+      const listings = result.listings.map(listing => ({ ...listing, specificationStatus: listing.productUrl ? "loading" as const : "idle" as const }));
+      setProductListings({ status: result.status, message: result.message, listings });
+      const products = result.listings.filter(listing => listing.productUrl).map(listing => ({ id: listing.id, title: listing.title, productUrl: listing.productUrl! }));
+      if (result.status === "live" && products.length) specificationSearch.mutate({ category: variables.category, products });
+    },
+    onError: () => setProductListings({ status: "fallback", message: "Product listing search could not be reached. Local Vendor A and Vendor B remain active.", listings: [] }),
+  });
   const auditPersistenceMutation = trpc.audit.persistSession.useMutation({ onSuccess: () => setAuditPersistence("persisted"), onError: () => setAuditPersistence("unavailable") });
   useEffect(() => {
     if (!genericSession) {
@@ -391,7 +407,7 @@ export default function Home() {
     setLiveEvidence({ status: "loading", results: [] });
     setProductListings({ status: "loading", listings: [] });
     liveSearch.mutate({ query });
-    productSearch.mutate({ query, maxUnitPriceInr: confirmedBrief.maxUnitPriceInr, authorizationLimitInr: confirmedBrief.authorizationLimitInr });
+    productSearch.mutate({ query, category: confirmedBrief.productCategory, maxUnitPriceInr: confirmedBrief.maxUnitPriceInr, authorizationLimitInr: confirmedBrief.authorizationLimitInr });
     setView("generic-workspace");
   };
 

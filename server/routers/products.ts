@@ -23,7 +23,7 @@ export function normalizeShoppingResults(payload: z.infer<typeof shoppingRespons
 }
 
 export const productsRouter = router({
-  search: publicProcedure.input(z.object({ query: z.string().trim().min(3).max(600), maxUnitPriceInr: z.number().int().positive().max(100000000).optional(), authorizationLimitInr: z.number().int().positive().max(100000000).optional() })).mutation(async ({ input, ctx }) => {
+  search: publicProcedure.input(z.object({ query: z.string().trim().min(3).max(600), category: z.string().trim().min(1).max(100), maxUnitPriceInr: z.number().int().positive().max(100000000).optional(), authorizationLimitInr: z.number().int().positive().max(100000000).optional() })).mutation(async ({ input, ctx }) => {
     const apiKey = process.env.SERPAPI_API_KEY;
     if (!apiKey) return { status: "fallback" as const, listings: [] as ProductListing[], message: "Product listing search is not configured. Local Vendor A and Vendor B remain active." };
     try {

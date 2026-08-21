@@ -39,6 +39,19 @@
 - [x] Re-read the final QA and card-first context records before saving the release checkpoint.
 - [x] Add regression coverage that proves supporting sources remain a secondary collapsed disclosure, then rerun the suite.
 - [x] Read back the finalized QA report and card-first checkpoint record after the last updates.
+- [x] Define reusable category specification profiles for laptops, motorcycles, and unsupported categories.
+- [x] Evaluate server-side product-page extraction providers and evidence requirements without exposing provider credentials.
+- [x] Normalize and display sourced product specifications beneath each marketplace product card.
+- [x] Keep unknown, unverified, and conflicting specification values explicit and separate from procurement policy decisions.
+- [x] Add extraction, normalization, and responsive product-card specification-panel regression coverage.
+- [x] Configure server-only Firecrawl primary and fallback credentials and validate failover without secret exposure.
+- [x] Extract evidence-bound product specifications from marketplace product URLs using category-aware schemas.
+- [x] Detect and explicitly surface conflicting sourced specification values without changing procurement policy state.
+- [x] Add a Firecrawl router failover regression proving the fallback key is used only after a retryable primary failure.
+- [x] Align the category-aware extraction contract and documentation with the implemented profile-based parser, including source-bound field definitions.
+- [x] Re-read final specification QA and checkpoint context before saving the enrichment release checkpoint.
+- [x] Verify the saved specification documentation, QA report, and CP-019 context record match the final profile, conflict, failover, and 53-test implementation.
+- [x] Read back the finalized specification QA and CP-019 records immediately before saving the enrichment release checkpoint.
 - [x] Add rendered-component coverage proving the supporting-sources disclosure is closed by default and secondary.
 - [x] Re-read the final QA report and card-first checkpoint record after the final rendered-coverage update.
 

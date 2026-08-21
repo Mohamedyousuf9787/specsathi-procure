@@ -35,7 +35,7 @@ The deterministic parser recognizes a focused set of common product and requirem
 | Tavily credential | Passed: bounded server-side authenticated health test; no key appears in source or browser payload. |
 | Live web evidence | Passed: authenticated server query returned normalized external titles, URLs, excerpts, and relevance. |
 | Provider failure | Passed: timeout mock returned local fallback without blocking procurement. |
-| Combined regression | Passed: 44 tests across 18 files, TypeScript, and production build. |
+| Combined regression | Passed: 53 tests across 20 files, TypeScript, and production build. |
 | Privacy audit metadata | Passed: `provider_audit_events` schema exists; unit test verifies metadata bounds and excludes untyped raw brief/query/key fields. |
 | Visual integration review | Passed: the secure-NLP consent disclosure and procurement-control intake render clearly at desktop size. |
 | Procurement audit trail | Passed: authenticated persistence route rejects anonymous writes; authenticated sessions persist bounded actual audit events, while anonymous sessions retain local-only history. |
@@ -51,3 +51,10 @@ The deterministic parser recognizes a focused set of common product and requirem
 | Card-first automatic results | Passed: marketplace cards now lead the workspace with a policy-state summary, visible policy legend, per-card source links, clear loading and no-result states, and a collapsed supporting-web-evidence disclosure. |
 | Card-first responsive review | Passed: 1280px and 390px captures confirm marketplace cards and their policy legend precede every local-comparison and web-link element. |
 | Supporting-source separation | Passed: regression coverage proves web evidence is absent while idle and otherwise represented as a closed Supporting sources only disclosure, never as a primary product result. |
+| Firecrawl primary and fallback credentials | Passed: both server-only credentials completed independent lightweight scrape health checks without values appearing in test output, source, or browser payloads. |
+| Category specification normalization | Passed: sourced laptop hardware, motorcycle engine/fuel/mileage/braking, and generic product-detail values normalize through explicit category profiles; values without source text remain absent. |
+| Specification-panel rendering | Passed: server-rendered regression covers sourced category panels and an explicit unavailable state stating that no values were inferred. |
+| Responsive specification review | Passed: 1280px and 390px renders show laptop and motorcycle specification panels beneath marketplace-card evidence, before policy state and source link. |
+| Specification conflict boundary | Passed: contradictory sourced RAM values are marked as conflicts in the normalized record and rendered as Conflicting source values without changing any product policy state. |
+| Firecrawl retry boundary | Passed: a mocked 429 primary request invokes the fallback credential; a mocked non-retryable 400 primary response does not invoke fallback. |
+| Category field contracts | Passed: explicit laptop, motorcycle, and generic profile field contracts define exactly which source-bound values can be shown. |

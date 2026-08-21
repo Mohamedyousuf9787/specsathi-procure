@@ -1,5 +1,7 @@
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
-import { getProductSearchGuidance, summarizeProductListings, type ProductListing } from "./ProductListingsPanel";
+import { getProductSearchGuidance, SpecificationPanel, summarizeProductListings, type ProductListing } from "./ProductListingsPanel";
 
 const listing = (policy: ProductListing["policy"]): ProductListing => ({ id: policy, title: "Example product", merchant: "Example merchant", priceText: "₹1,000", rating: null, reviews: null, imageUrl: null, productUrl: "https://example.test/product", delivery: "3 days", availability: "In stock", completeness: policy === "unverified" ? "unverified" : "complete", policy });
 
@@ -12,5 +14,17 @@ describe("marketplace product-card summary", () => {
     expect(getProductSearchGuidance("live", 0)).toMatchObject({ tone: "empty", title: "No marketplace product cards matched this confirmed request." });
     expect(getProductSearchGuidance("fallback", 0)).toMatchObject({ tone: "fallback", title: "Marketplace cards are temporarily unavailable." });
     expect(getProductSearchGuidance("live", 1)).toBeNull();
+  });
+
+  it("renders sourced category specifications and makes an unavailable extraction explicit", () => {
+    const sourced = { ...listing("eligible"), specificationStatus: "sourced" as const, specificationProfile: "laptop" as const, specifications: [{ label: "RAM", value: "16 GB DDR5", conflict: true }, { label: "Graphics", value: "RTX 4050" }] };
+    const sourcedMarkup = renderToStaticMarkup(createElement(SpecificationPanel, { listing: sourced }));
+    expect(sourcedMarkup).toContain("Laptop specifications");
+    expect(sourcedMarkup).toContain("RAM");
+    expect(sourcedMarkup).toContain("16 GB DDR5");
+    expect(sourcedMarkup).toContain("Sourced from page");
+    expect(sourcedMarkup).toContain("Conflicting source values");
+    const unavailableMarkup = renderToStaticMarkup(createElement(SpecificationPanel, { listing: { ...listing("unverified"), specificationStatus: "unavailable" } }));
+    expect(unavailableMarkup).toContain("Specifications unavailable from the product page. No values were inferred.");
   });
 });

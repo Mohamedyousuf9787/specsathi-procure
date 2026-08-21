@@ -91,11 +91,11 @@ export async function getUserByOpenId(openId: string) {
 
 type ProviderAuditInput = {
   userId?: number;
-  eventType: "nlp.extraction" | "live_search.evidence";
-  provider: "built-in-llm" | "gemini" | "tavily" | "serpapi" | "local";
+  eventType: "nlp.extraction" | "live_search.evidence" | "product.specifications";
+  provider: "built-in-llm" | "gemini" | "tavily" | "serpapi" | "firecrawl" | "firecrawl_fallback" | "local";
   outcome: "success" | "partial" | "fallback";
   summary: string;
-  metadata: { inputLength?: number; category?: string; issueCount?: number; resultCount?: number };
+  metadata: { inputLength?: number; category?: string; issueCount?: number; resultCount?: number; requestedCount?: number; sourcedCount?: number; categoryLength?: number };
 };
 
 export function serializeProviderAuditMetadata(metadata: ProviderAuditInput["metadata"]): string {
@@ -104,6 +104,9 @@ export function serializeProviderAuditMetadata(metadata: ProviderAuditInput["met
     category: metadata.category?.slice(0, 80),
     issueCount: Math.min(Math.max(metadata.issueCount ?? 0, 0), 20),
     resultCount: Math.min(Math.max(metadata.resultCount ?? 0, 0), 10),
+    ...(metadata.requestedCount !== undefined ? { requestedCount: Math.min(Math.max(metadata.requestedCount, 0), 12) } : {}),
+    ...(metadata.sourcedCount !== undefined ? { sourcedCount: Math.min(Math.max(metadata.sourcedCount, 0), 12) } : {}),
+    ...(metadata.categoryLength !== undefined ? { categoryLength: Math.min(Math.max(metadata.categoryLength, 0), 100) } : {}),
   });
 }
 
