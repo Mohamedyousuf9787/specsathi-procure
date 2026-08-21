@@ -8,6 +8,7 @@ import {
   type BuyingBrief,
   type Requirement,
 } from "./generic-procurement";
+import { CATALOG_FAMILIES, COMMON_PRODUCT_BASES } from "./common-goods-catalog";
 
 export type ValidationConflict = { field: string; message: string };
 
@@ -55,6 +56,14 @@ function extractQuantity(text: string) {
 }
 
 function extractCategory(text: string) {
+  const toPattern = (term: string) => term.replace(/-/g, "[-\\s]+");
+  const qualifiedBase = COMMON_PRODUCT_BASES.find((base) => CATALOG_FAMILIES.some((family) => new RegExp(`\\b${family}\\s+${toPattern(base)}s?\\b`, "i").test(text)));
+  if (qualifiedBase) {
+    const family = CATALOG_FAMILIES.find((candidate) => new RegExp(`\\b${candidate}\\s+${toPattern(qualifiedBase)}s?\\b`, "i").test(text));
+    if (family) return canonicalCategory(`${family} ${qualifiedBase}`);
+  }
+  const commonBase = COMMON_PRODUCT_BASES.find((base) => new RegExp(`\\b${toPattern(base)}s?\\b`, "i").test(text));
+  if (commonBase) return canonicalCategory(commonBase);
   const known = ["laptop", "notebook", "chair", "monitor", "printer", "camera", "stand", "tyre", "tire", "mouse", "mice", "gpu", "graphics card", "video card"];
   const match = known.find((term) => new RegExp(`\\b${term}s?\\b`, "i").test(text));
   if (match) return canonicalCategory(match);

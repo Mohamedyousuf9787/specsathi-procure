@@ -56,7 +56,7 @@ describe("multi-condition procurement reliability matrix", () => {
   });
 
   it("keeps unsupported categories and marketplace fallback provenance explicit in the audit trail", async () => {
-    const unsupported = await runGenericProcurement(parsed("Find 3 office printers with duplex printing under ₹60,000 total."));
+    const unsupported = await runGenericProcurement(parsed("Find 3 industrial reactors with corrosion shielding under ₹60,000 total."));
     expect(unsupported.status).toBe("BLOCKED");
     expect(unsupported.audit.some(event => event.type === "LOCAL_CATALOG_UNAVAILABLE")).toBe(true);
 

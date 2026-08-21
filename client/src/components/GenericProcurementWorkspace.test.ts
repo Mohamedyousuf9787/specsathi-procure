@@ -23,8 +23,8 @@ describe("supporting sources disclosure", () => {
   });
 
   it("explains an unsupported local category as a policy hold instead of rendering an empty comparison table", async () => {
-    const parsed = parseBuyingBrief("Find 5 office printers with duplex printing under ₹75,000 total.");
-    if (parsed.status !== "valid" || !parsed.normalizedBrief) throw new Error("Expected a normalized unsupported printer brief");
+    const parsed = parseBuyingBrief("Find 5 industrial reactors with corrosion shielding under ₹75,000 total.");
+    if (parsed.status !== "valid" || !parsed.normalizedBrief) throw new Error("Expected a normalized unsupported industrial-reactor brief");
     const session = await runGenericProcurement(parsed.normalizedBrief);
     const markup = renderToStaticMarkup(createElement(GenericProcurementWorkspace, {
       session,
@@ -37,6 +37,6 @@ describe("supporting sources disclosure", () => {
     }));
     expect(markup).toContain("Policy is correctly paused — no local offer is available.");
     expect(markup).toContain("No local candidates were fabricated.");
-    expect(markup).toContain("No labelled deterministic Vendor A/B catalog covers printer");
+    expect(markup).toContain("No labelled deterministic Vendor A/B catalog covers industrial-reactor");
   });
 });

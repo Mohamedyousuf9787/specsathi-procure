@@ -49,9 +49,9 @@ describe("deterministic generic buying brief parser", () => {
   });
 
   it("accepts an unknown product category for later no-catalog handling", () => {
-    const result = parseBuyingBrief("Find 5 office printers with duplex printing under ₹75,000 total.");
+    const result = parseBuyingBrief("Find 5 industrial reactors with corrosion shielding under ₹75,000 total.");
     expect(result.status).toBe("valid");
-    expect(result.normalizedBrief?.productCategory).toBe("printer");
+    expect(result.normalizedBrief?.productCategory).toBe("industrial-reactors");
   });
 
   it("asks for clarification when a budget is absent", () => {

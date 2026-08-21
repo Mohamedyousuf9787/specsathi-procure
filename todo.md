@@ -172,6 +172,14 @@
 - [x] Improve the zero-card fallback message so the active deterministic GPU comparison is named directly and the next safe action is clear.
 - [x] Add regression and visual coverage for the repaired GPU path, then checkpoint and push the repair to GitHub.
 
+## Scalable Common-Goods Catalog
+
+- [x] Define a deterministic 1,000-category common-goods descriptor catalog with clear simulated-data provenance and no live-listing implication.
+- [x] Generate exactly one Vendor A and one Vendor B normalized offer on demand for every supported common-goods category, avoiding a 2,000-card eager render or memory-heavy startup.
+- [x] Preserve explicit category requirements, policy holds, ranking, confirmation, audit events, and truthful no-catalog behavior for terms outside the 1,000-category catalog.
+- [x] Add scale, pairing, policy, candidate-ranking, fallback, audit, performance, and requester-flow regressions for representative common-goods terms.
+- [x] Run final full-suite, type, build, source-safety, desktop/mobile visual, checkpoint, and GitHub synchronization verification.
+
 - [x] Inspect available connectors and record the approved provider architecture without exposing credentials.
 - [x] Upgrade the static application to a secure full-stack project and preserve the local demo path.
 - [x] Implement server-side structured NLP extraction with strict schema validation and deterministic post-validation.

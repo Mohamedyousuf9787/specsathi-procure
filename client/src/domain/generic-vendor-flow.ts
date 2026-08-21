@@ -4,6 +4,7 @@
  */
 import type { AuditEvent, ProcurementStatus } from "./procurement";
 import { laptopDemoBrief, type BuyingBrief, type Requirement, type VendorOffer } from "./generic-procurement";
+import { buildCommonGoodsVendorOffers } from "./common-goods-catalog";
 
 export interface VendorSearchProvider {
   search(input: { brief: BuyingBrief; query: string }): Promise<VendorOffer[]>;
@@ -76,7 +77,9 @@ export class LocalDemoVendorProvider implements VendorSearchProvider {
   constructor(private readonly offers: VendorOffer[] = localOffers) {}
 
   async search({ brief }: { brief: BuyingBrief; query: string }): Promise<VendorOffer[]> {
-    return this.offers.filter((offer) => offer.productCategory === brief.productCategory).map((offer) => ({ ...offer, attributes: { ...offer.attributes } }));
+    const directMatches = this.offers.filter((offer) => offer.productCategory === brief.productCategory);
+    const matches = directMatches.length ? directMatches : buildCommonGoodsVendorOffers(brief);
+    return matches.map((offer) => ({ ...offer, attributes: { ...offer.attributes } }));
   }
 
   sources() {
@@ -138,7 +141,8 @@ export function recommendGenericOffer(brief: BuyingBrief, offers: VendorOffer[])
     const overage = selected.offer.unitPriceInr - (brief.authorizationLimitInr ?? 0);
     return { brief, candidates, selected, decision: "PENDING_APPROVAL", reason: `${selected.offer.vendorName} is the highest eligible fit, but exceeds the authorization limit by ₹${overage.toLocaleString("en-IN")} per unit.` };
   }
-  return { brief, candidates, selected, decision: "AUTO_AUTHORIZED", reason: `${selected.offer.vendorName} is the highest eligible verified offer within the authorization limit.` };
+  const evidenceLabel = selected.offer.sourceType === "simulated" ? "labelled deterministic offer" : "verified offer";
+  return { brief, candidates, selected, decision: "AUTO_AUTHORIZED", reason: `${selected.offer.vendorName} is the highest eligible ${evidenceLabel} within the authorization limit.` };
 }
 
 function addEvent(audit: AuditEvent[], event: Omit<AuditEvent, "id" | "timestamp">) {
@@ -167,7 +171,8 @@ export async function runGenericProcurement(brief: BuyingBrief, provider: Vendor
   const query = buildVendorQuery(brief);
   addEvent(audit, { type: "BRIEF_NORMALIZED", actor: "Requester", itemId: brief.id, summary: `Normalized ${brief.quantity} ${brief.productCategory} request from the buying brief.` });
   const offers = await provider.search({ brief, query });
-  (["Vendor A", "Vendor B"] as const).forEach((vendor) => addEvent(audit, { type: "VENDOR_SEARCHED", actor: "Procurement agent", itemId: brief.id, summary: `Searched ${vendor}: ${offers.filter((offer) => offer.vendorName === vendor).length} matching offers found.` }));
+  const usesCommonGoodsTemplates = offers.some(offer => offer.sourceReference?.startsWith("common-goods-"));
+  (["Vendor A", "Vendor B"] as const).forEach((vendor) => addEvent(audit, { type: "VENDOR_SEARCHED", actor: "Procurement agent", itemId: brief.id, summary: `Searched ${vendor}: ${offers.filter((offer) => offer.vendorName === vendor).length} matching offers found.`, detail: usesCommonGoodsTemplates ? "Matched an on-demand labelled deterministic common-goods template; it is not live marketplace evidence." : undefined }));
   const recommendation = recommendGenericOffer(brief, offers);
   addEvent(audit, { type: "OFFERS_COMPARED", actor: "Procurement agent", itemId: brief.id, summary: `Compared ${recommendation.candidates.length} normalized ${brief.productCategory} offers across requirement fit, price, delivery, seller reliability, and returns.` });
   if (!recommendation.selected) {

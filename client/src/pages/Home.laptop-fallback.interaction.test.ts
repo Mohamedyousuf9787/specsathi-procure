@@ -57,6 +57,21 @@ describe("normal laptop product-search fallback", () => {
     expect(screen.getByText(/3 labelled deterministic Vendor A\/B candidates are available below/)).toBeTruthy();
   });
 
+  it("renders paired common-goods ranked evidence after the requester agrees to policy and a live printer search returns no cards", async () => {
+    productMutate.mockClear();
+    render(createElement(Home));
+    fireEvent.change(screen.getByLabelText("Buying brief"), { target: { value: "Find 3 portable printers with duplex printing under ₹20,000 each within 5 days." } });
+    fireEvent.click(screen.getByRole("button", { name: "Inspect policy record" }));
+    await screen.findByText("Make the request record yours.");
+    fireEvent.click(screen.getByLabelText(/Policy agreement required/));
+    fireEvent.click(screen.getByRole("button", { name: /Agree & find products/ }));
+    await waitFor(() => expect(productMutate).toHaveBeenCalledTimes(1));
+    await act(async () => productHandlers.onError?.());
+    expect((await screen.findAllByText("Vendor A · Portable Printer template")).length).toBeGreaterThanOrEqual(2);
+    expect(screen.getByText("2 compared")).toBeTruthy();
+    expect(screen.getByText(/2 labelled deterministic Vendor A\/B candidates are available below/)).toBeTruthy();
+  });
+
   it("renders a verified live marketplace card when the normal product search succeeds", async () => {
     productMutate.mockClear();
     render(createElement(Home));

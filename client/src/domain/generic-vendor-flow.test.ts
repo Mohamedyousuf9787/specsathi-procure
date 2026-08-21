@@ -77,8 +77,8 @@ describe("generic local vendor flow", () => {
     expect(session.recommendation.selected?.offer.vendorName).toBe("Vendor B");
   });
 
-  it("fails an unknown category safely after searching both sources", async () => {
-    const session = await runGenericProcurement(valid("Find 5 office printers with duplex printing under ₹75,000 total."));
+  it("fails a category outside the common-goods catalog safely after searching both sources", async () => {
+    const session = await runGenericProcurement(valid("Find 5 industrial reactors with corrosion shielding under ₹75,000 total."));
     expect(session.status).toBe("BLOCKED");
     expect(session.order).toBeUndefined();
     expect(session.audit.filter((event) => event.type === "VENDOR_SEARCHED")).toHaveLength(2);
@@ -87,7 +87,7 @@ describe("generic local vendor flow", () => {
   });
 
   it("records marketplace fallback provenance without falsely claiming local coverage for unsupported categories", async () => {
-    const session = await runGenericProcurement(valid("Find 5 office printers with duplex printing under ₹75,000 total."));
+    const session = await runGenericProcurement(valid("Find 5 industrial reactors with corrosion shielding under ₹75,000 total."));
     const recorded = recordMarketplaceSearchOutcome(session, { status: "fallback", listingCount: 0, message: "Product listing search is unavailable." });
     const event = recorded.audit.at(-1);
     expect(event?.type).toBe("MARKETPLACE_FALLBACK");
