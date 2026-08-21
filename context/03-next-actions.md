@@ -12,6 +12,6 @@ related:
 
 # Next Actions
 
-1. Run `pnpm dev` on the presentation laptop and rehearse `docs/DEMO_RUNBOOK.md` once.
-2. Keep Demo Mode enabled and avoid any provider integration during the judged workflow.
-3. If future scope requires arbitrary language parsing or live search, add one provider through a secure server-side path without changing the deterministic P0 fallback.
+1. Introduce generic domain types and adapters while preserving the current scenario’s test results.
+2. Add a laptop-focused demo fixture and generic local provider without enabling external APIs.
+3. Implement parser/validator clarification for arbitrary briefs, then verify laptop and non-laptop scenarios against the required migration matrix.

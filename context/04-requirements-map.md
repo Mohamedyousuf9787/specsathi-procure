@@ -11,4 +11,4 @@ related:
 
 # Requirements Map
 
-See `docs/REQUIREMENTS_TRACEABILITY.md` for the user-readable matrix. The implementation must map every P0 requirement to local modules, a screen, a test, and demo evidence.
+See `docs/REQUIREMENTS_TRACEABILITY.md` for the P0 matrix and `docs/MIGRATION_BASELINE.md` for the pre-generalization requirements-to-files map. The migration must map every generic requirement to local modules, a screen, a test, and demo evidence.
