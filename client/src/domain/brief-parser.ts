@@ -22,6 +22,7 @@ export type ValidationResult = {
 
 const unrelatedPattern = /^(?:what|why|who|when|where|how|tell me|explain|hello|hi)\b/i;
 const procurementVerbPattern = /\b(?:buy|purchase|order|find|source|get|need|want)\b/i;
+const nonPurchasableIntentPattern = /\b(?:joke|poem|story|essay|recipe|weather|advice|translation|summary|email|message|source\s+code|programming\s+code|script)\b/i;
 const promptInjectionPattern = /\b(?:ignore|disregard|override)\s+(?:all\s+)?(?:previous|prior|system|developer|instructions?|rules?)\b|\b(?:reveal|show)\s+(?:the\s+)?(?:system|developer)\s+(?:prompt|message|instructions?)\b|\bbypass\s+(?:policy|approval|authorization|guardrail)/i;
 
 const fixedRequirementPatterns: Array<{ pattern: RegExp; requirement: (match: RegExpMatchArray) => Requirement }> = [
@@ -74,7 +75,7 @@ export function parseBuyingBrief(sourceText: string): ValidationResult {
       clarifyingQuestions: ["Please submit a plain buying request without instructions to override system, policy, approval, or authorization controls."],
     };
   }
-  if (!text || unrelatedPattern.test(text) || !procurementVerbPattern.test(text)) {
+  if (!text || unrelatedPattern.test(text) || !procurementVerbPattern.test(text) || nonPurchasableIntentPattern.test(text)) {
     return {
       status: "invalid",
       missingFields: ["procurement intent"],

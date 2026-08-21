@@ -136,6 +136,18 @@
 - [x] Create a downloadable safe complete-context ZIP with project source, tests, documentation, configuration, and presentation source while excluding secrets, dependencies, runtime logs, build artifacts, and Git internals.
 - [x] Save a final checkpoint and push all completed repair source and context records to the user’s GitHub repository.
 
+## Full Capability Hardening Audit
+
+- [x] Verify irrelevant-request rejection preserves online-purchase scope without blocking valid procurement briefs.
+- [x] Verify vendor confirmation and counter-offer re-evaluation preserve authority, policy, and simulated-purchase boundaries.
+- [x] Verify all-candidates comparison renders ranks, evidence, zero-catalog explanations, and policy states for every supported demo.
+- [x] Verify multi-item finance handoff, simulated send event, and JSON/CSV exports contain complete auditable data without payment behavior.
+- [x] Verify curated laptop, mobile, furniture, and tyre demos use clear deterministic provenance and supported category requirements.
+- [x] Verify consented secure NLP, deterministic fallback, prompt-injection rejection, and rate-limit degradation work together safely.
+- [x] Verify live SerpAPI cards and on-demand Firecrawl specification extraction expose correct loading, fallback, and evidence states.
+- [x] Verify the 10-slide judge deck and desktop/mobile layouts remain complete, readable, and aligned with implemented behavior.
+- [ ] Add or update regression coverage for each defect found; then rerun final source-safety, checkpoint, and GitHub-release verification.
+
 - [x] Inspect available connectors and record the approved provider architecture without exposing credentials.
 - [x] Upgrade the static application to a secure full-stack project and preserve the local demo path.
 - [x] Implement server-side structured NLP extraction with strict schema validation and deterministic post-validation.

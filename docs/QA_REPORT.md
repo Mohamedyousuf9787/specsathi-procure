@@ -35,7 +35,7 @@ The deterministic parser recognizes a focused set of common product and requirem
 | Tavily credential | Passed: bounded server-side authenticated health test; no key appears in source or browser payload. |
 | Live web evidence | Passed: authenticated server query returned normalized external titles, URLs, excerpts, and relevance. |
 | Provider failure | Passed: timeout mock returned local fallback without blocking procurement. |
-| Combined regression | Passed: 81 tests across 27 files, TypeScript, and production build. |
+| Combined regression | Passed: 82 tests across 27 files, TypeScript, and production build. |
 | Privacy audit metadata | Passed: `provider_audit_events` schema exists; unit test verifies metadata bounds and excludes untyped raw brief/query/key fields. |
 | Visual integration review | Passed: the secure-NLP consent disclosure and procurement-control intake render clearly at desktop size. |
 | Procurement audit trail | Passed: authenticated persistence route rejects anonymous writes; authenticated sessions persist bounded actual audit events, while anonymous sessions retain local-only history. |
@@ -81,3 +81,5 @@ The deterministic parser recognizes a focused set of common product and requirem
 | P1 final-round regression and visual review | Passed: 76 tests across 27 files, TypeScript, production build, and desktop screenshots of the compact curated intake, multi-item finance handoff, and Vendor A/B challenge workspace. |
 | Urgent tyre, policy, candidate, and audit repair | Passed: ordinary tyre/model input is parsed into an editable policy record; labelled deterministic tyre candidates rank and hold at vendor confirmation; unsupported categories show a truthful zero-catalog policy hold; marketplace fallback provenance is audited; the live tyre route now returns product cards after the bounded timeout was raised from 15 to 25 seconds. |
 | Current complete verification | Passed: 81 tests across 27 files, TypeScript, production build, direct live tyre product-search procedure, and desktop review of the tyre requirement-confirmation record. |
+| Capability hardening audit | Passed: online-purchase scope rejects clear non-procurement content even when it uses purchase-like language; all listed control, evidence, export, demo, provider, and presentation capabilities were verified through code, regressions, direct live provider checks, and responsive screenshots. |
+| Final hardening verification | Passed: 82 tests across 27 files, TypeScript, and production build. The live Gemini extraction check returned a structured laptop record; live SerpAPI checks returned product cards across the curated categories with truthful fallback retained; an explicit live Firecrawl check returned a sourced laptop Processor field. |
