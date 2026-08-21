@@ -146,7 +146,7 @@
 - [x] Verify consented secure NLP, deterministic fallback, prompt-injection rejection, and rate-limit degradation work together safely.
 - [x] Verify live SerpAPI cards and on-demand Firecrawl specification extraction expose correct loading, fallback, and evidence states.
 - [x] Verify the 10-slide judge deck and desktop/mobile layouts remain complete, readable, and aligned with implemented behavior.
-- [ ] Add or update regression coverage for each defect found; then rerun final source-safety, checkpoint, and GitHub-release verification.
+- [x] Add or update regression coverage for each defect found; then rerun final source-safety, checkpoint, and GitHub-release verification.
 
 - [x] Inspect available connectors and record the approved provider architecture without exposing credentials.
 - [x] Upgrade the static application to a secure full-stack project and preserve the local demo path.
