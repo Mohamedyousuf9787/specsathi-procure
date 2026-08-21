@@ -154,7 +154,7 @@
 - [x] Add a clearly labelled deterministic mouse profile, editable demo fixture, and Vendor A/Vendor B candidate records without presenting them as live listings.
 - [x] Ensure compatible mouse requests produce ranked local candidate evidence, policy state, vendor confirmation, and audit events.
 - [x] Improve marketplace-card guidance so unreported stock and missing concise specifications clearly direct the user to explicit verification without claiming verification prematurely.
-- [ ] Add regression and visual coverage for the repaired mouse path and its marketplace-evidence states, then checkpoint and push the repair to GitHub.
+- [x] Add regression and visual coverage for the repaired mouse path and its marketplace-evidence states, then checkpoint and push the repair to GitHub.
 
 - [x] Inspect available connectors and record the approved provider architecture without exposing credentials.
 - [x] Upgrade the static application to a secure full-stack project and preserve the local demo path.
