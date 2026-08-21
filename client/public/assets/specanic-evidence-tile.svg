@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 240" role="img" aria-labelledby="title desc">
+  <title id="title">Specanic evidence record</title>
+  <desc id="desc">A receipt, evidence card, delivery mark, and approval seal</desc>
+  <rect width="600" height="240" rx="18" fill="#edf6ff"/>
+  <g transform="translate(42 28) rotate(-6 86 88)">
+    <path d="M16 0h140v178l-18-11-18 11-18-11-18 11-18-11-18 11-18-11-14 11V0Z" fill="#fff" stroke="#c9d9e8" stroke-width="3"/>
+    <path d="M42 38h88M42 56h67M42 82h92M42 100h65M42 128h88M42 146h52" stroke="#9fb5c7" stroke-width="5" stroke-linecap="round"/>
+    <circle cx="117" cy="155" r="16" fill="#1aae39"/>
+    <path d="m109 155 6 6 11-14" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <g transform="translate(218 47) rotate(4 130 63)">
+    <rect width="260" height="126" rx="12" fill="#d8ebfb" stroke="#a8cde9" stroke-width="3"/>
+    <path d="M28 34h128M28 56h80M28 79h174" stroke="#567892" stroke-width="6" stroke-linecap="round"/>
+    <path d="M213 30v66" stroke="#83aecb" stroke-width="3" stroke-dasharray="6 8"/>
+    <circle cx="216" cy="92" r="15" fill="#0075de"/>
+    <path d="m209 92 5 5 10-12" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <g transform="translate(454 142)">
+    <path d="M0 16h48l12 14v50H0Z" fill="#e6c28b" stroke="#a87838" stroke-width="3"/>
+    <path d="M0 16 14 0h48l-14 16Z" fill="#f1d4a5" stroke="#a87838" stroke-width="3"/>
+    <path d="M24 16v64M14 0l34 16" fill="none" stroke="#b88b4c" stroke-width="3"/>
+    <path d="M24 40h12M30 34v12" stroke="#36506a" stroke-width="4" stroke-linecap="round"/>
+  </g>
+  <g transform="translate(438 18)">
+    <circle cx="54" cy="54" r="43" fill="#213183"/>
+    <circle cx="54" cy="54" r="31" fill="none" stroke="#fff" stroke-width="3"/>
+    <path d="m38 54 11 11 23-27" fill="none" stroke="#9bd66a" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

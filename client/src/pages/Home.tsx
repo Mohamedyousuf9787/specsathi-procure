@@ -55,9 +55,9 @@ import ProcurementInfoPanel from "@/components/ProcurementInfoPanel";
 
 const GenericProcurementWorkspace = lazy(() => import("@/components/GenericProcurementWorkspace"));
 
-const BRAND_MARK = "/manus-storage/specanic-mark_c2fb1e15.png";
+const BRAND_MARK = "/assets/specanic-mark.svg";
 const NIGHT_DESK = "/assets/specanic-night-desk.png";
-const EVIDENCE_TILE = "/manus-storage/specanic-evidence-tile_0e62362b.png";
+const EVIDENCE_TILE = "/assets/specanic-evidence-tile.svg";
 type ProductListingState = ProductListingViewState;
 const goldenBrief =
   "For 8 new joiners, buy adjustable aluminum laptop stands under ₹3,000 each, ergonomic office chairs under ₹12,000 each, and 27-inch QHD HDMI monitors under ₹20,000 each. Delivery is required within 7 days. The agent may approve purchases only within the stated unit limits.";
