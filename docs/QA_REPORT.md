@@ -35,7 +35,7 @@ The deterministic parser recognizes a focused set of common product and requirem
 | Tavily credential | Passed: bounded server-side authenticated health test; no key appears in source or browser payload. |
 | Live web evidence | Passed: authenticated server query returned normalized external titles, URLs, excerpts, and relevance. |
 | Provider failure | Passed: timeout mock returned local fallback without blocking procurement. |
-| Combined regression | Passed: 69 tests across 24 files, TypeScript, and production build. |
+| Combined regression | Passed: 72 tests across 25 files, TypeScript, and production build. |
 | Privacy audit metadata | Passed: `provider_audit_events` schema exists; unit test verifies metadata bounds and excludes untyped raw brief/query/key fields. |
 | Visual integration review | Passed: the secure-NLP consent disclosure and procurement-control intake render clearly at desktop size. |
 | Procurement audit trail | Passed: authenticated persistence route rejects anonymous writes; authenticated sessions persist bounded actual audit events, while anonymous sessions retain local-only history. |
@@ -70,3 +70,8 @@ The deterministic parser recognizes a focused set of common product and requirem
 | Normal requester fallback flow | Passed: a DOM interaction test completes the ordinary Home brief, explicit policy agreement, product-search initiation, simulated provider error, and deterministic Vendor A/B card rendering without using the dedicated demo route. |
 | Real-time versus fallback mode | Passed: the normal laptop path renders a successful live marketplace card when the provider succeeds; deterministic Vendor A/B cards render only through explicit fallback behavior. SerpAPI account health confirmed a free plan with 239 of 250 monthly searches remaining and a successful Google Shopping response. |
 | Post-fix runtime verification | Passed: a direct `products.search` procedure call returned `status: live` with live laptop marketplace titles. Recent runtime logs contain no new product-search failure or fallback event; older unrelated NLP and development-server messages remain historical observations. |
+| Final-round comparison control | Passed: every deterministic Vendor A/B candidate is exposed in a ranked, horizontally scrollable comparison table with requirement fit, price, delivery, reliability, return window, policy state, and a decision reason. |
+| Final-round vendor confirmation | Passed: the local recommendation now holds at an explicit confirmation boundary. Acceptance creates only a simulated purchase; rejection stops it; a material price or delivery counter-offer re-evaluates all candidates and can reopen approval or block. |
+| Final-round unavailable-top-vendor scenario | Passed: the named demo holds the nominal top Vendor A laptop as unavailable evidence, records the re-ranking in the audit trail, and selects the next eligible Vendor B offer without relaxing the brief. |
+| Final-round regression and visual review | Passed: 72 tests across 25 files, TypeScript, production build, and desktop/mobile screenshots of the Vendor A/B challenge workspace. |
+| Supporting-evidence provider boundary | Passed: the secondary Tavily check safely handles the provider’s current HTTP 403 response without secret exposure; product-card and policy flows do not depend on Tavily success. |

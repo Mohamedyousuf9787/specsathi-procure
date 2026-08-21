@@ -3,7 +3,7 @@
  * No provider or parser output may approve a purchase; all checks remain code-owned.
  */
 import type { AuditEvent, ProcurementStatus } from "./procurement";
-import type { BuyingBrief, Requirement, VendorOffer } from "./generic-procurement";
+import { laptopDemoBrief, type BuyingBrief, type Requirement, type VendorOffer } from "./generic-procurement";
 
 export interface VendorSearchProvider {
   search(input: { brief: BuyingBrief; query: string }): Promise<VendorOffer[]>;
@@ -42,12 +42,13 @@ export type GenericProcurementSession = {
   recommendation: GenericRecommendation;
   audit: AuditEvent[];
   approvedException: boolean;
+  scenario?: "unavailable-top-vendor";
   order?: GenericMockOrder;
 };
 
 const localOffers: VendorOffer[] = [
   { id: "laptop-a-1", vendorId: "vendor-a", vendorName: "Vendor A", productCategory: "laptop", productName: "Atlas Business 14", description: "Intel i5 business laptop, 16 GB RAM, 512 GB SSD", attributes: { ram_gb: 16, storage_gb: 512, cpu: "i5", display_inches: 14 }, unitPriceInr: 44200, availableQuantity: 14, availability: "in_stock", deliveryDays: 4, sellerRating: 4.8, returnDays: 14, returnPolicy: "14 days", sourceType: "simulated", sourceReference: "laptop-a-1" },
-  { id: "laptop-b-1", vendorId: "vendor-b", vendorName: "Vendor B", productCategory: "laptop", productName: "Vector Work 14", description: "Ryzen 5 laptop, 16 GB RAM, 512 GB SSD", attributes: { ram_gb: 16, storage_gb: 512, cpu: "ryzen 5", display_inches: 14 }, unitPriceInr: 42800, availableQuantity: 16, availability: "in_stock", deliveryDays: 5, sellerRating: 4.3, returnDays: 7, returnPolicy: "7 days", sourceType: "simulated", sourceReference: "laptop-b-1" },
+  { id: "laptop-b-1", vendorId: "vendor-b", vendorName: "Vendor B", productCategory: "laptop", productName: "Vector Work 14", description: "Intel i5 business laptop, 16 GB RAM, 512 GB SSD", attributes: { ram_gb: 16, storage_gb: 512, cpu: "i5", display_inches: 14 }, unitPriceInr: 42800, availableQuantity: 16, availability: "in_stock", deliveryDays: 5, sellerRating: 4.3, returnDays: 7, returnPolicy: "7 days", sourceType: "simulated", sourceReference: "laptop-b-1" },
   { id: "laptop-a-2", vendorId: "vendor-a", vendorName: "Vendor A", productCategory: "laptop", productName: "Atlas Lite 14", description: "Intel i5 laptop, 8 GB RAM, 512 GB SSD", attributes: { ram_gb: 8, storage_gb: 512, cpu: "i5", display_inches: 14 }, unitPriceInr: 39800, availableQuantity: 20, availability: "in_stock", deliveryDays: 3, sellerRating: 4.5, returnDays: 14, returnPolicy: "14 days", sourceType: "simulated", sourceReference: "laptop-a-2" },
   { id: "laptop-b-2", vendorId: "vendor-b", vendorName: "Vendor B", productCategory: "laptop", productName: "Vector Plus 15", description: "Intel i5 laptop, 16 GB RAM, 1 TB SSD", attributes: { ram_gb: 16, storage_gb: 1024, cpu: "i5", display_inches: 15 }, unitPriceInr: 48600, availableQuantity: 4, availability: "low_stock", deliveryDays: 4, sellerRating: 4.6, returnDays: 10, returnPolicy: "10 days", sourceType: "simulated", sourceReference: "laptop-b-2" },
   { id: "chair-a-generic", vendorId: "vendor-a", vendorName: "Vendor A", productCategory: "chair", productName: "Ergo Frame Chair", description: "Ergonomic office chair with adjustable height and lumbar support", attributes: { ergonomic: true, adjustable_height: true, lumbar_support: true }, unitPriceInr: 9700, availableQuantity: 30, availability: "in_stock", deliveryDays: 3, sellerRating: 4.7, returnDays: 14, returnPolicy: "14 days", sourceType: "simulated", sourceReference: "chair-a-generic" },
@@ -152,10 +153,51 @@ export async function runGenericProcurement(brief: BuyingBrief, provider: Vendor
     return { brief, query, status: "PENDING_APPROVAL", recommendation, audit, approvedException: false };
   }
   addEvent(audit, { type: "AUTO_AUTHORIZED", actor: "Procurement agent", itemId: brief.id, summary: "Policy check passed. Purchase is within the agent’s authorization." });
-  addEvent(audit, { type: "VENDOR_CONFIRMED", actor: "Procurement agent", itemId: brief.id, summary: `Final vendor terms re-checked: ₹${selected.unitPriceInr.toLocaleString("en-IN")} per unit, delivery in ${selected.deliveryDays ?? "an unverified"} day window.` });
-  const order = orderFor(brief, selected, 1);
-  addEvent(audit, { type: "MOCK_PURCHASE_CONFIRMED", actor: "Procurement agent", itemId: brief.id, summary: `Simulated purchase confirmed. Order ${order.id} recorded.`, detail: "No real payment was created." });
-  return { brief, query, status: "PURCHASED", recommendation, audit, approvedException: false, order };
+  addEvent(audit, { type: "VENDOR_CONFIRMATION_REQUESTED", actor: "Procurement agent", itemId: brief.id, summary: `Awaiting ${selected.vendorName} confirmation. Terms may be accepted, rejected, or countered before a simulated purchase.` });
+  return { brief, query, status: "CONFIRMING", recommendation, audit, approvedException: false };
+}
+
+export function resolveVendorConfirmation(session: GenericProcurementSession, decision: "accept" | "reject" | "counter", counterOffer?: Partial<Pick<VendorOffer, "unitPriceInr" | "deliveryDays" | "availableQuantity" | "availability">>): GenericProcurementSession {
+  if (session.status !== "CONFIRMING" || !session.recommendation.selected) return session;
+  const audit = [...session.audit];
+  const selected = session.recommendation.selected.offer;
+  if (decision === "reject") {
+    addEvent(audit, { type: "VENDOR_CONFIRMATION_REJECTED", actor: "Requester", itemId: session.brief.id, summary: `Vendor confirmation rejected for ${selected.vendorName}. No simulated purchase was created.` });
+    return { ...session, status: "REJECTED", audit };
+  }
+  const amended = { ...selected, ...counterOffer };
+  const materialChange = amended.unitPriceInr !== selected.unitPriceInr || amended.deliveryDays !== selected.deliveryDays || amended.availableQuantity !== selected.availableQuantity || amended.availability !== selected.availability;
+  if (decision === "counter" && materialChange) {
+    addEvent(audit, { type: "VENDOR_COUNTER_OFFER", actor: "Requester", itemId: session.brief.id, summary: `Counter-offer received from ${selected.vendorName}; policy is being re-evaluated before any simulated purchase.`, detail: `Proposed ₹${amended.unitPriceInr.toLocaleString("en-IN")} per unit with ${amended.deliveryDays ?? "unverified"}-day delivery.` });
+    const offers = session.recommendation.candidates.map(candidate => candidate.offer.id === selected.id ? amended : candidate.offer);
+    const recommendation = recommendGenericOffer(session.brief, offers);
+    addEvent(audit, { type: "OFFERS_REEVALUATED", actor: "Procurement agent", itemId: session.brief.id, summary: "Re-evaluated all candidates after the vendor counter-offer across requirement fit, price, delivery, reliability, and returns." });
+    if (!recommendation.selected) {
+      addEvent(audit, { type: "WORKFLOW_BLOCKED", actor: "Procurement agent", itemId: session.brief.id, summary: recommendation.reason });
+      return { ...session, recommendation, status: "BLOCKED", audit };
+    }
+    if (recommendation.decision === "PENDING_APPROVAL") {
+      addEvent(audit, { type: "APPROVAL_REQUESTED", actor: "Procurement agent", itemId: session.brief.id, summary: "The counter-offer crossed the authorization boundary. Explicit approval is required." });
+      return { ...session, recommendation, status: "PENDING_APPROVAL", audit, approvedException: false };
+    }
+    const reselected = recommendation.selected.offer;
+    addEvent(audit, { type: "VENDOR_CONFIRMED", actor: "Procurement agent", itemId: session.brief.id, summary: `Counter-offer accepted after re-evaluation: ${reselected.vendorName} at ₹${reselected.unitPriceInr.toLocaleString("en-IN")} per unit.` });
+    const order = orderFor(session.brief, reselected, audit.length + 1);
+    addEvent(audit, { type: "MOCK_PURCHASE_CONFIRMED", actor: "Procurement agent", itemId: session.brief.id, summary: `Simulated purchase confirmed. Order ${order.id} recorded.`, detail: "No real payment was created." });
+    return { ...session, recommendation, status: "PURCHASED", audit, order };
+  }
+  addEvent(audit, { type: "VENDOR_CONFIRMED", actor: "Procurement agent", itemId: session.brief.id, summary: `Final vendor terms accepted: ₹${selected.unitPriceInr.toLocaleString("en-IN")} per unit, delivery in ${selected.deliveryDays ?? "an unverified"} day window.` });
+  const order = orderFor(session.brief, selected, audit.length + 1);
+  addEvent(audit, { type: "MOCK_PURCHASE_CONFIRMED", actor: "Procurement agent", itemId: session.brief.id, summary: `Simulated purchase confirmed. Order ${order.id} recorded.`, detail: "No real payment was created." });
+  return { ...session, status: "PURCHASED", audit, order };
+}
+
+export async function runUnavailableTopVendorScenario(): Promise<GenericProcurementSession> {
+  const provider = new LocalDemoVendorProvider(localOffers.map((offer) => offer.id === "laptop-a-1" ? { ...offer, availability: "unavailable" as const, availableQuantity: 0 } : offer));
+  const session = await runGenericProcurement(laptopDemoBrief, provider);
+  const audit = [...session.audit];
+  addEvent(audit, { type: "TOP_VENDOR_UNAVAILABLE", actor: "Procurement agent", itemId: laptopDemoBrief.id, summary: "Scenario: nominal top-fit Vendor A offer became unavailable. The comparison was re-ranked without relaxing any requirement.", detail: `Selected next eligible offer: ${session.recommendation.selected?.offer.vendorName ?? "none"}.` });
+  return { ...session, scenario: "unavailable-top-vendor", audit };
 }
 
 export function resolveGenericApproval(session: GenericProcurementSession, approve: boolean, confirmationOverride?: Partial<VendorOffer>): GenericProcurementSession {

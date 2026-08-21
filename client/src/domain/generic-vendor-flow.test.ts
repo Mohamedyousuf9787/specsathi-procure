@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { parseBuyingBrief } from "./brief-parser";
 import { laptopDemoBrief } from "./generic-procurement";
-import { genericLocalCatalog, LocalDemoVendorProvider, resolveGenericApproval, runGenericProcurement } from "./generic-vendor-flow";
+import { genericLocalCatalog, LocalDemoVendorProvider, resolveGenericApproval, resolveVendorConfirmation, runGenericProcurement, runUnavailableTopVendorScenario } from "./generic-vendor-flow";
 
 const valid = (text: string) => {
   const result = parseBuyingBrief(text);
@@ -10,11 +10,14 @@ const valid = (text: string) => {
 };
 
 describe("generic local vendor flow", () => {
-  it("auto-purchases a compliant laptop through two simulated vendor sources", async () => {
+  it("holds a compliant laptop for explicit vendor confirmation after searching two simulated sources", async () => {
     const session = await runGenericProcurement(laptopDemoBrief);
-    expect(session.status).toBe("PURCHASED");
-    expect(session.order?.vendorName).toBe("Vendor A");
+    expect(session.status).toBe("CONFIRMING");
+    expect(session.order).toBeUndefined();
     expect(session.audit.filter((event) => event.type === "VENDOR_SEARCHED")).toHaveLength(2);
+    const confirmed = resolveVendorConfirmation(session, "accept");
+    expect(confirmed.status).toBe("PURCHASED");
+    expect(confirmed.order?.vendorName).toBe("Vendor A");
   });
 
   it("requests approval for a category-agnostic over-limit laptop and only orders after approval", async () => {
@@ -25,15 +28,15 @@ describe("generic local vendor flow", () => {
     expect(resolveGenericApproval(pending, true).status).toBe("PURCHASED");
   });
 
-  it("auto-purchases a compliant chair and supports a monitor request", async () => {
-    expect((await runGenericProcurement(valid("Buy 20 ergonomic chairs with adjustable height under ₹10,000 each within 5 days."))).status).toBe("PURCHASED");
-    expect((await runGenericProcurement(valid("Find 5 27 inch QHD HDMI monitors under ₹25,000 each within 7 days."))).status).toBe("PURCHASED");
+  it("holds compliant chair and monitor requests for vendor confirmation", async () => {
+    expect((await runGenericProcurement(valid("Buy 20 ergonomic chairs with adjustable height under ₹10,000 each within 5 days."))).status).toBe("CONFIRMING");
+    expect((await runGenericProcurement(valid("Find 5 27 inch QHD HDMI monitors under ₹25,000 each within 7 days."))).status).toBe("CONFIRMING");
   });
 
   it("re-ranks a monitor when the top vendor becomes unavailable", async () => {
     const provider = new LocalDemoVendorProvider(genericLocalCatalog.map((offer) => offer.id === "monitor-a-generic" ? { ...offer, availableQuantity: 0, availability: "unavailable" as const } : offer));
     const session = await runGenericProcurement(valid("Find 5 27 inch QHD HDMI monitors under ₹25,000 each within 7 days."), provider);
-    expect(session.status).toBe("PURCHASED");
+    expect(session.status).toBe("CONFIRMING");
     expect(session.recommendation.selected?.offer.vendorName).toBe("Vendor B");
   });
 
@@ -50,5 +53,22 @@ describe("generic local vendor flow", () => {
     expect(changed.status).toBe("PENDING_APPROVAL");
     expect(changed.order).toBeUndefined();
     expect(changed.audit.some((event) => event.type === "TERMS_CHANGED")).toBe(true);
+  });
+
+  it("re-evaluates a vendor counter-offer and pauses again when it crosses authority", async () => {
+    const session = await runGenericProcurement({ ...laptopDemoBrief, maxUnitPriceInr: 50000, authorizationLimitInr: 45000 });
+    const countered = resolveVendorConfirmation(session, "counter", { unitPriceInr: 47000, deliveryDays: 4 });
+    expect(countered.status).toBe("PENDING_APPROVAL");
+    expect(countered.order).toBeUndefined();
+    expect(countered.audit.some((event) => event.type === "VENDOR_COUNTER_OFFER")).toBe(true);
+    expect(countered.audit.some((event) => event.type === "OFFERS_REEVALUATED")).toBe(true);
+  });
+
+  it("provides a named unavailable-top-vendor scenario that re-ranks to the next eligible offer", async () => {
+    const session = await runUnavailableTopVendorScenario();
+    expect(session.scenario).toBe("unavailable-top-vendor");
+    expect(session.recommendation.selected?.offer.vendorName).toBe("Vendor B");
+    expect(session.recommendation.candidates.find((candidate) => candidate.offer.id === "laptop-a-1")?.hardFailures).toContain("Vendor reported this offer unavailable");
+    expect(session.audit.some((event) => event.type === "TOP_VENDOR_UNAVAILABLE")).toBe(true);
   });
 });
